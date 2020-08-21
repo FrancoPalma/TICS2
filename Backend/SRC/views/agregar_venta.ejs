@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Venta </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+
+  <p id="numero_venta"><%= venta.numero_venta%></p>
+    <div class="container">
+        <h1> Venta </h1>
+
+        <form  action="/agregar_venta/<%= venta._id %>" method="post" autocomplete="off">
+            <div class="form-group">
+                <input type="date" id= "fecha" class="form-control" name="fecha" placeholder="Fecha">
+            </div>
+
+            <div class="form-group">
+                <input type="text" id= "metodo_pago" class="form-control" name="metodo_pago" placeholder="Método de pago">
+            </div>
+
+            <div class="form-group">
+                <input type="number" id="descuento" class="form-control" name="descuento" placeholder="Descuento">
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="cliente" class="form-control" name="cliente" placeholder="Cliente">
+            </div>
+
+
+            <div class="form-group">
+                <input type="number" id="total" class="form-control" name="total" placeholder="Total">
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary">
+                    Finalizar venta
+                </button>
+                <a class="btn btn-secondary" href="/productos"><i class="fa fa-list-alt"></i>Ver Todo</a>
+            </div>
+        </form>
+
+
+</body>
+</html>

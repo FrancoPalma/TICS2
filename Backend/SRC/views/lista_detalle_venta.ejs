@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> lista </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <style>
+    body {
+      margin: 0;
+    }
+
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      width: 10%;
+      background-color: #f1f1f1;
+      position: fixed;
+      height: 100%;
+      overflow: auto;
+    }
+
+    li a {
+      display: block;
+      color: #000;
+      padding: 8px 16px;
+      text-decoration: none;
+    }
+
+    li a.active {
+      background-color: #44443C;
+      color: white;
+    }
+
+    li a:hover:not(.active) {
+      background-color: #76766E;
+      color: white;
+    }
+    </style>
+
+</head>
+<body>
+
+
+
+    <div class="container" style="margin-left:10%;padding:1px 16px;height:1000px;">
+        <h1> Lista de venta actual </h1>
+        <form action="/agregar" method="post">
+            <div class="form-group">
+                <a class="btn btn-secondary" href="/lista_productos"><i class="fa fa-list-alt"></i>Agregar lista</a>
+            </div>
+        </form>
+
+        <hr>
+
+        <table class ='table table-bordered table-hover'>
+            <thead>
+                <tr>
+                  <th>Codigo</th>
+                  <th>Tipo</th>
+                  <th>Material</th>
+                  <th>Piedra Preciosa</th>
+                  <th>Cantidad</th>
+                  <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+              <% let total = 0%>
+                <% for(var i = 0; i < lista.length; i++){ %>
+                    <tr>
+                      <td><%= lista[i].codigo %></td>
+                      <td><%= lista[i].tipo %></td>
+                      <td><%= lista[i].material %></td>
+                      <td><%= lista[i].piedra %></td>
+                      <td><%= lista[i].cantidad %></td>
+                      <td><%= lista[i].precio %></td>
+                      <% total = total + lista[i].precio %>
+                    </tr>
+                 <%}%>
+
+            </tbody>
+        </table>
+
+          <h1 id="total"><%= total%></h1>
+
+        <form action="/crear_venta" method="post">
+            <div class="form-group">
+                <input type="submit" name="" value="Aceptar">
+
+            </div>
+        </form>
+
+        <hr>
+
+        <a href="/venta_cancelar" class="btn btn-light btn-sm">
+          Cancelar venta
+        </a>
+
+    </div>
+
+
+    <script>
+
+
+        document.getElementById('delete_lista').addEventListener('click',function (e){
+            let response = confirm('Esta seguro de eliminar');
+            if(!response){
+                e.preventDefault();
+            }
+        });
+
+</script>
+</body>
+</html>

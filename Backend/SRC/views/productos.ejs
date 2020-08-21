@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Productos </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <style>
+    body {
+      margin: 0;
+    }
+
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      width: 10%;
+      background-color: #f1f1f1;
+      position: fixed;
+      height: 100%;
+      overflow: auto;
+    }
+
+    li a {
+      display: block;
+      color: #000;
+      padding: 8px 16px;
+      text-decoration: none;
+    }
+
+    li a.active {
+      background-color: #44443C;
+      color: white;
+    }
+
+    li a:hover:not(.active) {
+      background-color: #76766E;
+      color: white;
+    }
+    </style>
+
+</head>
+<body>
+
+
+
+    <ul>
+      <li><a href="/inicio">Inicio</a></li>
+      <li><a href="/venta">Venta</a></li>
+      <% if ( user.rol == 'duena' || user.rol == 'JT'){%>
+      <li><a class="active" href="/productos">Productos</a></li>
+      <%}%>
+      <li><a href="/pedidos">Pedidos</a></li>
+      <% if ( user.rol == 'duena' ){%>
+          <li><a href="/empleados">Empleados</a></li>
+      <%}%>
+      <li><a href="/profile">Perfil</a></li>
+    </ul>
+
+    <div class="container" style="margin-left:10%;padding:1px 16px;height:1000px;">
+        <h1> Productos </h1>
+        <form action="/agregar_prod" method="post">
+            <div class="form-group">
+                <a class="btn btn-secondary" href="/agregar_prod"><i class="fa fa-list-alt"></i>Agregar</a>
+            </div>
+        </form>
+
+        <form action="/productos" method="GET" class="form-inline">
+          <div class="form-group">
+            <input type="text" name="search" placeholder="Buscar producto" class="form-control">
+            <input type="submit" value="Search" class="btn btn-default">
+          </div>
+        </form>
+
+        <hr>
+        <table class ='table table-bordered table-hover'>
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Tipo</th>
+                    <th>Material</th>
+                    <th>Piedra Preciosa</th>
+                    <th>Precio</th>
+                    <th>Descripción</th>
+                    <th>Operaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(var i = 0; i < producto.length; i++){ %>
+                    <tr>
+                        <td><%= producto[i].codigo %></td>
+                        <td><%= producto[i].tipo %></td>
+                        <td><%= producto[i].material %></td>
+                        <td><%= producto[i].piedra %></td>
+                        <td><%= producto[i].precio %></td>
+                        <td><%= producto[i].descripcion %></td>
+                        <td>
+                            <!--
+                            <a
+                            class="btn btn-success"
+                             href="/agregar_prod/<%= producto[i]._id %>">Modificar</a>-->
+                             <a
+                             class="btn btn-success"
+                              href="/editar_prod/<%= producto[i]._id%>"> <i class="fa fa-list-alt" aria-hidden="true"></i>Modificar</a>
+                            <a
+                            id = "delete"
+                            class="btn btn-danger"
+                            href="/delete_producto/<%= producto[i]._id%>">Eliminar</a>
+                        </td>
+                    </tr>
+                 <%}%>
+
+            </tbody>
+        </table>
+
+    </div>
+    <script>
+
+        document.getElementById('delete_producto').addEventListener('click',function (e){
+            let response = confirm('Esta seguro de eliminar');
+            if(!response){
+                e.preventDefault();
+            }
+        });
+
+</script>
+</body>
+</html>

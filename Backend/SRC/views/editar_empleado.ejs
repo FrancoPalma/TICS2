@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> <%= title%> </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <h1> <%= title%> </h1>
+
+        <form  method="post" >  
+            <div class="form-group">
+               <%= empleado.rut%>
+            </div>
+
+            <div class="form-group">
+                <%= empleado.password%>
+            </div>
+
+            <div class="form-group">
+                <%= empleado.nombre%>
+            </div>
+
+            <div class="form-group">
+                <%= empleado.nacimiento%>
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="estado" class="form-control" name="estado" placeholder="Estado" value="<%= empleado.telefono%>">
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="estado" class="form-control" name="estado" placeholder="Estado" value="<%= empleado.rol%>">
+            </div>
+            
+            <div class="form-group">
+                <input type="text" id="estado" class="form-control" name="estado" placeholder="Estado" value="<%= empleado.id_sucursal%>">
+            </div>
+
+            <input type="submit" class="btn btn-primary">
+
+        </form>
+
+
+</body>
+</html>
