@@ -335,7 +335,7 @@ router.post('/crear_venta', async (req,res) => {
 
 	await venta.find({} , async (err, venta) => {
 		if( venta.length == null || venta.length == 0 ){
-			let aux = await new Venta({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total})
+			let aux = await new Venta({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods})
 			await aux.save( (err, aux)=> {
 				for(i = 0; i < prods.length; i++){
 					detalle_venta.create({numero_venta: aux.numero_venta, cod_prod: prods[i]}, (err) => {
@@ -420,7 +420,7 @@ router.get('/empleados', isLoggedIn, (req,res) =>{
 });
 
 router.post('/crear_empleado', function (req,res) {
-			passport.authenticate('local-signup', function(err, user) {
+			passport.authenticate('local-signup', function(err) {
 			if (err) { return res.sendStatus(404); }
 			if (!user) { return res.sendStatus(404); }
 			return res.sendStatus(201); //res.sendStatus(201) para mandar 201 y res.json(user) para mandar usuari

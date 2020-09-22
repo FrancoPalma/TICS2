@@ -23,7 +23,7 @@ const Usuario = require('../app/models/usuario');
     passReqToCallback : true // allows us to pass back the entire request to the callback
   },
   function (req, rut, password, done) {
-    Usuario.findOne({'rut': rut}, function (err, usuario) {
+    Usuario.findOne({'rut': req.body.rut}, function (err, usuario) {
       if (err) {
         return done(err);
       }
@@ -33,7 +33,6 @@ const Usuario = require('../app/models/usuario');
         var newUsuario = new Usuario();
         newUsuario.rut = rut;
         newUsuario.nombre = req.body.nombre;
-        newUsuario.nacimiento = req.body.nacimiento;
         newUsuario.telefono = req.body.telefono;
         newUsuario.rol = req.body.rol;
         newUsuario.cod_sucursal = req.body.cod_sucursal;
