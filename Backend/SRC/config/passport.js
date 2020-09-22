@@ -39,7 +39,7 @@ const Usuario = require('../app/models/usuario');
         newUsuario.password = newUsuario.generateHash(password);
         newUsuario.save(function (err) {
           if (err) { throw err; }
-          return done(null, newUsuario);
+          res.sendStatus(201)//done(null, newUsuario);
         });
       }
     });
