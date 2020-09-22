@@ -428,8 +428,6 @@ router.post('/eliminar_venta/:id', (req,res) =>{
 });
 
 
-
-
 router.get('/detalle_venta_crear/:codProd/:numero_venta', isLoggedIn, async (req,res) => {
 	let num = req.params.numero_venta;
 	/*let det = await new Detalle_venta({numero_venta: num, cod_prod: req.params.codProd});
