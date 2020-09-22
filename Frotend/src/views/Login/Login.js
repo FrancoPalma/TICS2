@@ -93,7 +93,7 @@ export default class Login extends React.Component {
 
    if (regex.test(value) && value.length <10 && value.length > 8) {
      console.log(name, value);
-     this.setState({usuario: newValue});
+     this.setState({usuario: value});
      this.setState({estado: null})
    } else {
      console.log("no es rut");

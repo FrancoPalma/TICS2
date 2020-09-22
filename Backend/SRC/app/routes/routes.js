@@ -116,38 +116,13 @@ function isLoggedIn (req, res, next) {
 
 //Administrar productos
 router.get('/productos', async function(req, res){  //lista de productos, tiene buscador
-    if(req.query.search) {
-        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-        await producto.find({codigo: regex}, function(err, producto){
-           if(err){
-               res.sendStatus(404);
-           } else {
-
-							/*res.render({
-								user: req.user,
-								producto: producto
-							});*/
-							res.json(producto);
-					 }
-        });
-    } else {
-        await producto.find({}, function(err, producto){
-           if(err){
-               console.log(err);
-           } else {
-              //res.render("productos",{user: req.user, producto: producto});
-							res.json(producto);
-           }
-        });
-    }
-});
-
-router.get('/agregar_prod', isLoggedIn, (req,res) =>{
-
-    res.render('agregar_prod',{
-        title: 'Agregar Producto'
-    });
-
+	producto.find(function(err, producto){
+      if(err){
+         res.sendStatus(404);
+      } else {
+				res.json(producto);
+			}
+	});
 });
 
 router.post('/agregar_prod', (req,res) => {
@@ -202,25 +177,13 @@ router.post('/editar_prod/:id', function(req, res) {
 
 //Gestionar pedidos
 router.get('/pedidos', async function(req, res){  //lista de productos, tiene buscador
-    if(req.query.search) {
-        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-        await pedido.find({codigo: regex}, function(err, pedido){
-           if(err){
-               res.sendStatus(404)
-           } else {
-							res.json(pedido)
-					 }
-        });
-    } else {
-        await pedido.find({}, function(err, pedido){
-           if(err){
-               res.sendStatus(404)
-           } else {
-              //res.render("productos",{user: req.user, pedido: pedido});
-							res.json(pedido);
-           }
-        });
-    }
+	 pedido.find(function(err, pedido){
+     if(err){
+       res.sendStatus(404)
+     } else {
+				res.json(pedido)
+		 }
+  });
 });
 
 router.post('/agregar_pedido', (req,res) => {
@@ -236,8 +199,6 @@ router.post('/agregar_pedido', (req,res) => {
 			}
 			else{
 				res.sendStatus(404)
-				console.log(err)
-				console.log(estado)
 			}
     });
 });
@@ -319,22 +280,18 @@ router.post('/editar_estado_pedido/:id', function(req, res) {
   });
 });
 
-
-
 //Realizar venta, se usa una lista para guardar los productos que desea el usuario
 router.get('/lista_venta', isLoggedIn, (req,res) =>{
-  			lista.find(function (err,lista) {
-					if (!err){
-						res.json(lista);
-					}else{
-						res.sendStatus(404);
-					}
-    });
+  	lista.find(function (err,lista) {
+			if (!err){
+				res.json(lista);
+			}else{
+				res.sendStatus(404);
+			}
+	});
 });
 
-
 router.get('/ventasdia', async function(req,res) {
-
 	let fecha = Date.now();
 	let dias = fecha/ (24*60*60*1000); //paso a dias
 	let dia_actual = dias%1;
@@ -361,15 +318,11 @@ router.post('/ventasperiodo', async function(req,res) {
 				res.sendStatus(404);
 			}
 			else{
-				console.log(fi);
-				console.log(ff);
 				res.json(venta);
 			}
 		});
 
 });
-
-
 
 router.post('/crear_venta', async (req,res) => {
 	let prods = req.body.lista;
@@ -379,13 +332,6 @@ router.post('/crear_venta', async (req,res) => {
 	let sucursal = req.body.sucursal.toString();
 	let vendedor = req.body.vendedor.toUpperCase();
 	let total = req.body.total;
-	console.log(prods)
-	console.log(fecha)
-	console.log(metodo_pago)
-	console.log(descuento)
-	console.log(sucursal)
-	console.log(vendedor)
-	console.log(total)
 
 	await venta.find({} , async (err, venta) => {
 		if( venta.length == null || venta.length == 0 ){
@@ -411,7 +357,6 @@ router.post('/crear_venta', async (req,res) => {
 		};
 	});
 });
-
 
 router.post('/eliminar_venta/:id', (req,res) =>{
     let id = req.params.id;
@@ -478,12 +423,7 @@ router.post('/crear_empleado', function (req,res) {
 			passport.authenticate('local-signup', function(err, user) {
 			if (err) { return res.sendStatus(404); }
 			if (!user) { return res.sendStatus(404); }
-			console.log("Usuario recibido")
-
-
-			return res.sendStatus(201); //res.sendStatus(201) para mandar 201 y res.json(user) para mandar usuario
-
-
+			return res.sendStatus(201); //res.sendStatus(201) para mandar 201 y res.json(user) para mandar usuari
 		}) (req, res);
 });
 
