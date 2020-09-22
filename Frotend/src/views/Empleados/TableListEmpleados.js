@@ -156,7 +156,8 @@ export default class InventarioTableList extends React.Component {
     },
     body: JSON.stringify({
       nombre: newData.nombre,
-      nacimiento: newData.nacimiento,
+      password: "Joyeria",
+      rut: newData.rut,
       telefono: newData.telefono,
       rol: newData.rol,
       sucursal: this.state.tabIndex.toString()
@@ -246,36 +247,6 @@ export default class InventarioTableList extends React.Component {
     if(this.state.estado === 1) this.setState({estado: 0})
   }
 
-  AgregarEmpleado() {
-    console.log(this.state.tabIndex)
-    fetch('/agregar_empleado', {
-    method: 'POST',
-    headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      nombre : this.state.nombre,
-      rut : this.state.rut,
-      sucursal : this.state.sucursal,
-      edad: this.state.edad,
-      rol: this.state.rol,
-      telefono: this.state.telefono,
-      salario: this.state.salio,
-    })
-    })
-    .then( (response) => {
-        if(response.status === 201) {
-            console.log("Añadido correctamente")
-        } else {
-            console.log('Hubo un error')
-        }
-    })
-    .catch((error) => {
-        console.log(error)
-    });
-  }
-
   render() {
 
     if(this.state.ready === true) {
@@ -304,6 +275,7 @@ export default class InventarioTableList extends React.Component {
                   <MaterialTable
                       title='Lo Castillo'
                       columns={ [{ title: 'Nombre', field: 'nombre'},
+                                {title: 'Rut', field: 'rut'},
                                 { title: 'Fecha', field: 'nacimiento'},
                                 { title: 'Telefono', field: 'telefono'},
                                 { title: 'Rol', field: 'rol', lookup: { 'duena': 'DUEÑA', 'jefe': 'JEFE' ,'vendedor': 'VENDEDOR'}}]}
