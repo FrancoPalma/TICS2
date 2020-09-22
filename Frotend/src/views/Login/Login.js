@@ -83,48 +83,65 @@ export default class Login extends React.Component {
       isAutentificado: false
     }
     this.EnviarDatos = this.EnviarDatos.bind(this)
+    this.handleChangeInput = this.handleChangeInput.bind(this);
   }
+
+  handleChangeInput(evento, newValue) {
+   //destructurin de los valores enviados por el metodo onchange de cada input
+   const { name, value } = evento.target;
+   let regex = new RegExp("^[0-9 '-' k]+$");
+
+   if (regex.test(value) && value.length <10 && value.length > 8) {
+     console.log(name, value);
+     this.setState({usuario: newValue});
+     this.setState({estado: null})
+   } else {
+     console.log("no es rut");
+     this.setState({estado: 3})
+   }
+ }
 
   EnviarDatos() { //
     console.log('usuario: ' + this.state.usuario)
     console.log('password: ' + this.state.password)
+    if(this.state.estado != 3){
+      fetch('/login', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        rut: this.state.usuario,
+        password: this.state.password,
+      })
+      })
+      .then( (response) => {
 
-    fetch('/login', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      rut: this.state.usuario,
-      password: this.state.password,
-    })
-    })
-    .then( (response) => {
+        if(response.status != 404) {
+          this.setState({isAutentificado: true})
+          return response.json()
 
-      if(response.status != 404) {
-        this.setState({isAutentificado: true})
-        return response.json()
+        } else {
+          console.log('FALLO EL INGRESO');
+          this.setState({estado: 2, isAutentificado: false})
+        }
 
-      } else {
-        console.log('FALLO EL INGRESO');
-        this.setState({estado: 2, isAutentificado: false})
-      }
+      })
+      .then(users => {
+        if(this.state.isAutentificado === true) {
+          console.log("LOGEADO")
+          console.log(users)
+          localStorage.setItem('usuario', JSON.stringify(users));
+          this.setState({estado: 1})
+          ReactDOM.render(<Inicio/>, document.getElementById('root'))
+        }
 
-    })
-    .then(users => {
-      if(this.state.isAutentificado === true) {
-        console.log("LOGEADO")
-        console.log(users)
-        localStorage.setItem('usuario', JSON.stringify(users));
-        this.setState({estado: 1})
-        ReactDOM.render(<Inicio/>, document.getElementById('root'))
-      }
-
-    })
-    .catch((error) => {
-      console.log(error)
-    });
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+    }
   }
 
   render(){
@@ -134,6 +151,8 @@ export default class Login extends React.Component {
       mensajito = <Alert severity="success">Se ha iniciado sesion correctamente</Alert>
     } else if(this.state.estado === 2) {
       mensajito = <Alert severity="error">Hubo un error con las credenciales/conexion</Alert>
+    }else if(this.state.estado === 3) {
+      mensajito = <Alert severity="error">Rut invalido</Alert>
     }
 
 
@@ -157,9 +176,10 @@ export default class Login extends React.Component {
               label="Rut"
               name="rut"
               autoComplete="rut"
-              autoFocus
-              onChange={(event) => this.setState({usuario:event.target.value})}
+              value={this.state.usuario}
+              onChange={this.handleChangeInput}
             />
+            Sin punto ni guion
             <TextField
               variant="outlined"
               margin="normal"
@@ -182,9 +202,8 @@ export default class Login extends React.Component {
             </Button>
           </form>
         </div>
-        <Box mt={8}>
+        <Box mt={2}>
           {mensajito}
-
           <Copyright />
         </Box>
       </Container>
