@@ -148,7 +148,7 @@ export default class InventarioTableList extends React.Component {
       estados = 0;
     }
 
-    fetch('/agregar_empleado', {
+    fetch('/crear_empleado', {
     method: 'POST',
     headers: {
         Accept: 'application/json',
@@ -206,7 +206,7 @@ export default class InventarioTableList extends React.Component {
 
   EliminarEmpleado(oldData) {
     console.log(oldData._id)
-    fetch('/eliminar_empleado/' + oldData._id, {
+    fetch('/delete_empleado/' + oldData._id, {
     method: 'POST',
     headers: {
         Accept: 'application/json',
