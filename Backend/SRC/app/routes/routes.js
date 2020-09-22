@@ -419,8 +419,8 @@ router.get('/empleados', isLoggedIn, (req,res) =>{
     });
 });
 
-router.post('/crear_empleado', function (req,res) {
-			passport.authenticate('local-signup', function(err) {
+router.post('/crear_empleado', function (req, res) {
+			passport.authenticate('local-signup', function(err, user) {
 			if (err) { return res.sendStatus(404); }
 			if (!user) { return res.sendStatus(404); }
 			return res.sendStatus(201); //res.sendStatus(201) para mandar 201 y res.json(user) para mandar usuari

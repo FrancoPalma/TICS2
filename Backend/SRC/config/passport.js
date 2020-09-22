@@ -35,7 +35,7 @@ const Usuario = require('../app/models/usuario');
         newUsuario.nombre = req.body.nombre;
         newUsuario.telefono = req.body.telefono;
         newUsuario.rol = req.body.rol;
-        newUsuario.cod_sucursal = req.body.cod_sucursal;
+        newUsuario.sucursal = req.body.sucursal;
         newUsuario.password = newUsuario.generateHash(password);
         newUsuario.save(function (err) {
           if (err) { throw err; }
