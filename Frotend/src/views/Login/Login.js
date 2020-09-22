@@ -97,6 +97,7 @@ export default class Login extends React.Component {
      this.setState({estado: null})
    } else {
      console.log("no es rut");
+     this.setState({usuario: value});
      this.setState({estado: 3})
    }
  }
