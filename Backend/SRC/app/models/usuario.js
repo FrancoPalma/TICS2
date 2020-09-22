@@ -6,7 +6,6 @@ const usuario = new mongoose.Schema({
   rut: {type: String},
   password: {type: String},
   nombre: {type: String},
-  nacimiento: {type: String},
   telefono: {type: String},
   rol: {type: String},
   sucursal: {type: String}},
