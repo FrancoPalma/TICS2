@@ -324,7 +324,7 @@ export default class Ventas extends React.Component {
       mensajito = <Alert severity="error">Hubo un error con la venta</Alert>
     }
 
-    if(this.state.priv_descuento <= this.state.descuento) {
+    if(this.state.priv_descuento < this.state.descuento) {
       mensajito = <Alert severity="error">Excede el descuento maximo permitido.</Alert>
     }else if(this.state.descuento < 0){
       mensajito = <Alert severity="error">Valor invalido.</Alert>
