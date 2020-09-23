@@ -335,13 +335,20 @@ router.post('/crear_venta', async (req,res) => {
 
 	await venta.find({} , async (err, venta) => {
 		if( venta.length == null || venta.length == 0 ){
-			let aux = await new Venta({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods})
-				res.sendStatus(201)
-			});
+			venta.create({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods}, (err) =>{
+				if(!err){
+					res.sendStatus(201);
+				}else{
+					res.sendStatus(404);
+				}
 		}else{
-			let aux = await new Venta({numero_venta: venta.length, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods})
-				res.sendStatus(201)
-			});
+			venta.create({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods}, (err) =>{
+				if(!err){
+					res.sendStatus(201);
+				}else{
+					res.sendStatus(404);
+				}
+		});
 		};
 	});
 });
