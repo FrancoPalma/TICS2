@@ -9,11 +9,15 @@ var venta = new Schema   ({
       total: {type: Number, require: true},
       vendedor: {type: String, require: true},
       sucursal: {type: String, require: true},
-      productos: {
+      productos: [{
         codigo: {type: String, require: true},
+        tipo: {type: String, require: true},
+        material: {type: String, require: true},
+        piedra: {type: String, require: true},
+        precio: {type: Number, require: true},
         descripcion:{type:String,require:true},
         sucursal: {type: String, require: true}
-      }
+      }]
     },
       {collection: 'venta'}
     );
