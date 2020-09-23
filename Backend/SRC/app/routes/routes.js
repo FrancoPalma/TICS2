@@ -6,6 +6,7 @@ const inventario = require('../models/inventario');
 const pedido = require('../models/pedido');
 const Venta = require('../models/venta');
 const venta = require('../models/venta');
+const crearVenta = require('../models/venta');
 const empleado = require('../models/usuario');
 const passport = require('../../config/passport');
 
@@ -335,20 +336,21 @@ router.post('/crear_venta', async (req,res) => {
 
 	await venta.find({} , async (err, venta) => {
 		if( venta.length == null || venta.length == 0 ){
-			venta.create({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods}, (err) =>{
+			crearVenta.create({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods}, (err) =>{
 				if(!err){
 					res.sendStatus(201);
 				}else{
 					res.sendStatus(404);
-				}
+				};
+			});
 		}else{
-			venta.create({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods}, (err) =>{
+			crearVenta.create({numero_venta: venta.length + 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods}, (err) =>{
 				if(!err){
 					res.sendStatus(201);
 				}else{
 					res.sendStatus(404);
-				}
-		});
+				};
+		 });
 		};
 	});
 });
