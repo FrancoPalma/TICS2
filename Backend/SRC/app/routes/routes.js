@@ -336,22 +336,10 @@ router.post('/crear_venta', async (req,res) => {
 	await venta.find({} , async (err, venta) => {
 		if( venta.length == null || venta.length == 0 ){
 			let aux = await new Venta({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods})
-			await aux.save( (err, aux)=> {
-				for(i = 0; i < prods.length; i++){
-					detalle_venta.create({numero_venta: aux.numero_venta, cod_prod: prods[i]}, (err) => {
-						if (err){res.sendStatus(404)}
-					});
-				}
 				res.sendStatus(201)
 			});
 		}else{
-			let aux = await new Venta({numero_venta: venta.length, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total})
-			await aux.save( (err, aux)=> {
-				for(i = 0; i < prods.length; i++){
-					detalle_venta.create({numero_venta: aux.numero_venta, cod_prod: prods[i]}, (err) => {
-						if (err){res.sendStatus(404)}
-					});
-				}
+			let aux = await new Venta({numero_venta: venta.length, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods})
 				res.sendStatus(201)
 			});
 		};
@@ -370,22 +358,6 @@ router.post('/eliminar_venta/:id', (req,res) =>{
     });
 });
 
-
-router.get('/detalle_venta_crear/:codProd/:numero_venta', isLoggedIn, async (req,res) => {
-	let num = req.params.numero_venta;
-	/*let det = await new Detalle_venta({numero_venta: num, cod_prod: req.params.codProd});
-	await det.save()*/
-	let cod_producto = req.params.codProd;
-	await detalle_venta.create({numero_venta: num, cod_prod: cod_Prod})
-		producto.find((err, producto) => {
-			 res.render('productos_venta',{
-					 user: req.user,
-					 producto: producto,
-					 numero_venta: num
-			 });
-	 });
-});
-
 router.get('/agregar_venta/:numVenta', isLoggedIn, (req,res) => {
 		venta.findOne({numero_venta: req.params.numVenta}, (err, venta) =>{
 			res.render('agregar_venta', {
@@ -394,8 +366,6 @@ router.get('/agregar_venta/:numVenta', isLoggedIn, (req,res) => {
 			});
 		});
 });
-
-
 
 router.post('/agregar_venta/:id', function(req, res) {
     venta.findByIdAndUpdate(req.params.id, req.body, function (err) {
