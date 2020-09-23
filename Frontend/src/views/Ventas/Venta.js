@@ -123,7 +123,7 @@ export default class Ventas extends React.Component {
     this.state = {
       ready: false,
       ListaProductos: "",
-      descuento: '',
+      descuento: 0,
       metodo_pago: 'efectivo',
       vendedor: '',
       sucursal: '0',
@@ -132,7 +132,9 @@ export default class Ventas extends React.Component {
       indexMetodo: 0,
       indexSucursal: 0,
       completado: 0,
-      perfil: null
+      perfil: null,
+      priv_dios: true,
+      priv_descuento: 5
     }
     this.handleChange = this.handleChange.bind(this)
     this.ActualizarInventario = this.ActualizarInventario.bind(this)
@@ -277,39 +279,41 @@ export default class Ventas extends React.Component {
 
 
   imprimir = () => {
-    fetch('/crear_venta', {
-      method: 'POST',
-      headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        lista: this.state.targetKeys,
-        metodo_pago: this.state.metodo_pago,
-        descuento: this.state.descuento,
-        sucursal: this.state.sucursal,
-        vendedor: this.state.vendedor,
-        total: this.state.total
-      })
-      })
-      .then( (response) => {
-          if(response.status === 201) {
-              console.log("Añadido correctamente")
-              this.setState({completado: 1})
-              for(let i = 0; i<this.state.targetKeys.length;i++) {
-                this.EliminarProducto(this.state.targetKeys[i])
-                this.ActualizarInventario()
-              }
-          } else {
-              console.log('Hubo un error')
-              this.setState({completado: 2})
-          }
-      })
-      .catch((error) => {
-          console.log(error)
-      });
-
-
+    if(this.state.priv_descuento >= this.state.descuento && this.state.descuento >= 0){
+      fetch('/crear_venta', {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          lista: this.state.targetKeys,
+          metodo_pago: this.state.metodo_pago,
+          descuento: this.state.descuento,
+          sucursal: this.state.sucursal,
+          vendedor: this.state.vendedor,
+          total: this.state.total
+        })
+        })
+        .then( (response) => {
+            if(response.status === 201) {
+                console.log("Añadido correctamente")
+                this.setState({completado: 1})
+                for(let i = 0; i<this.state.targetKeys.length;i++) {
+                  this.EliminarProducto(this.state.targetKeys[i])
+                  this.ActualizarInventario()
+                }
+            } else {
+                console.log('Hubo un error')
+                this.setState({completado: 2})
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+    }else{
+      console.log("No se mando, wena")
+    }
   }
   render() {
 
@@ -319,8 +323,14 @@ export default class Ventas extends React.Component {
     } else if(this.state.completado === 2) {
       mensajito = <Alert severity="error">Hubo un error con la venta</Alert>
     }
+
+    if(this.state.priv_descuento <= this.state.descuento) {
+      mensajito = <Alert severity="error">Excede el descuento maximo permitido.</Alert>
+    }else if(this.state.descuento < 0){
+      mensajito = <Alert severity="error">Valor invalido.</Alert>
+    }
     if(this.state.ready === true){
-      if(this.state.perfil.rol === 'duena'){
+      if(this.state.priv_dios === true){
         return (
           <div>
             <Card>

@@ -80,6 +80,7 @@ export default class Login extends React.Component {
       password: null,
       usuario: null,
       estado: null,
+      estadorut: null,
       isAutentificado: false
     }
     this.EnviarDatos = this.EnviarDatos.bind(this)
@@ -89,22 +90,21 @@ export default class Login extends React.Component {
   handleChangeInput(evento, newValue) {
    //destructurin de los valores enviados por el metodo onchange de cada input
    const { name, value } = evento.target;
-   let regex = new RegExp("^[0-9 '-' k]+$");
+   let regex = new RegExp("^[0-9 k]+$");
 
-   if (regex.test(value) && value.length <10 && value.length > 8) {
-     console.log(name, value);
+   if (regex.test(value) && value.length <10 && value.length >= 8 && (value.indexOf('k') === -1 || value.indexOf('k') === 8 || value.indexOf('k') === 9)) {
      this.setState({usuario: value});
      this.setState({estado: null})
-   } else {
-     console.log("no es rut");
+   } else if(value.length <10 && regex.test(value)){
      this.setState({usuario: value});
+     this.setState({estadorut: null})
      this.setState({estado: 3})
+   }else if(value.length <10){
+     this.setState({usuario: value});
    }
  }
 
   EnviarDatos() { //
-    console.log('usuario: ' + this.state.usuario)
-    console.log('password: ' + this.state.password)
     if(this.state.estado != 3){
       fetch('/login', {
       method: 'POST',
@@ -142,6 +142,9 @@ export default class Login extends React.Component {
       .catch((error) => {
         console.log(error)
       });
+    }else{
+      this.setState({estadorut: 3})
+
     }
   }
 
@@ -152,7 +155,7 @@ export default class Login extends React.Component {
       mensajito = <Alert severity="success">Se ha iniciado sesion correctamente</Alert>
     } else if(this.state.estado === 2) {
       mensajito = <Alert severity="error">Hubo un error con las credenciales/conexion</Alert>
-    }else if(this.state.estado === 3) {
+    }else if(this.state.estadorut === 3) {
       mensajito = <Alert severity="error">Rut invalido</Alert>
     }
 
