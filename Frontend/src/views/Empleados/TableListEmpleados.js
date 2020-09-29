@@ -102,7 +102,6 @@ export default class InventarioTableList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tabIndex: 0,
       estado: 0,
       ListaEmpleados: null,
       ready: false,
@@ -110,6 +109,7 @@ export default class InventarioTableList extends React.Component {
       rut : null,
       sucursal : null,
       edad: null,
+      priv_emple: true,
       rol: null,
       telefono: null,
       salario: null,
@@ -160,7 +160,7 @@ export default class InventarioTableList extends React.Component {
       rut: newData.rut,
       telefono: newData.telefono,
       rol: newData.rol,
-      sucursal: this.state.tabIndex.toString()
+      sucursal: newData.sucursal
     })
     })
     .then( (response) => {
@@ -187,10 +187,10 @@ export default class InventarioTableList extends React.Component {
     body: JSON.stringify({
       id: newData._id,
       nombre: newData.nombre,
-      nacimiento: newData.nacimiento,
+      nacimiento: newData.nacimiento.toString(),
       telefono: newData.telefono,
       rol: newData.rol,
-      sucursal: this.state.tabIndex.toString()
+      sucursal: newData.sucursal
     })
     })
     .then( (response) => {
@@ -251,35 +251,21 @@ export default class InventarioTableList extends React.Component {
 
     if(this.state.ready === true) {
 
-      let nombresucursal;
-      if(this.state.tabIndex === '0') { nombresucursal = 'Lo Castillo'}
-      if(this.state.tabIndex === '1') { nombresucursal = 'Apumanque'}
-      if(this.state.tabIndex === '2') { nombresucursal = 'Vitacura'}
-
-
-      if(this.state.perfil.rol === 'duena') {
+      if(this.state.priv_emple === true) {
 
         return (
           <div style={styles.root}>
               <Card>
-                <AppBar position="static" color="primary" >
-                  <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="simple tabs example" >
-                    <Tab label="Lo Castillo" {...a11yProps(0)}/>
-                    <Tab label="Apumanque" {...a11yProps(1)}/>
-                    <Tab label="Vitacura" {...a11yProps(2)}/>
-                  </Tabs>
-                </AppBar>
-
                 <CardBody>
-                  <TabPanel value={this.state.tabIndex} index={0}>
                   <MaterialTable
-                      title='Lo Castillo'
+                      title='Empleados'
                       columns={ [{ title: 'Nombre', field: 'nombre'},
                                 {title: 'Rut', field: 'rut'},
-                                { title: 'Fecha', field: 'nacimiento'},
+                                { title: 'Fecha', field: 'nacimiento',type:'date'},
                                 { title: 'Telefono', field: 'telefono'},
+                                { title: 'Sucursal', field: 'sucursal', lookup: { 0: 'Lo Castillo', 1: 'Apumanque' ,2: 'Vitacura'}},
                                 { title: 'Rol', field: 'rol', lookup: { 'duena': 'DUEÑA', 'jefe': 'JEFE' ,'vendedor': 'VENDEDOR'}}]}
-                      data={this.state.ListaEmpleados.filter(({sucursal}) => sucursal === '0')}
+                      data={this.state.ListaEmpleados}
                       editable={{
                         onRowAdd: newData =>
                           new Promise((resolve, reject) => {
@@ -308,99 +294,6 @@ export default class InventarioTableList extends React.Component {
                           }),
                       }}
                     />
-                  </TabPanel>
-
-                  <TabPanel value={this.state.tabIndex} index={1}>
-                  <MaterialTable
-                      title='Apumanque'
-                      columns={ [{ title: 'Nombre', field: 'nombre'},
-                                { title: 'Fecha', field: 'nacimiento'},
-                                { title: 'Telefono', field: 'telefono'},
-                                { title: 'Rol', field: 'rol', lookup: { 'duena': 'DUEÑA', 'jefe': 'JEFE' ,'vendedor': 'VENDEDOR'}}]}
-                      data={this.state.ListaEmpleados.filter(({sucursal}) => sucursal === '1')}
-                      editable={{
-                        onRowAdd: (newData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarEmpleados();
-                            }, 2000);
-                            this.AgregarEmpleado(newData);
-                          }),
-                          onRowUpdate: (newData, oldData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarEmpleados();
-                            }, 2000)
-                            this.EditarEmpleado(newData)
-                          }),
-                        onRowDelete: (oldData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarEmpleados();
-                            }, 2000)
-                            this.EliminarEmpleado(oldData)
-                          }),
-                      }}
-                    />
-                  </TabPanel>
-
-                  <TabPanel value={this.state.tabIndex} index={2}>
-                  <MaterialTable
-                      title='Vitacura'
-                      columns={ [{ title: 'Nombre', field: 'nombre'},
-                                { title: 'Fecha', field: 'nacimiento'},
-                                { title: 'Telefono', field: 'telefono'},
-                                { title: 'Rol', field: 'rol', lookup: { 'duena': 'DUEÑA', 'jefe': 'JEFE' ,'vendedor': 'VENDEDOR'}}]}
-                      data={this.state.ListaEmpleados.filter(({sucursal}) => sucursal === '2')}
-                      editable={{
-                        onRowAdd: (newData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarEmpleados();
-                            }, 2000);
-                            this.AgregarEmpleado(newData);
-                          }),
-                        onRowUpdate: (newData, oldData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarEmpleados();
-                            }, 2000)
-                            this.EditarEmpleado(newData)
-                          }),
-                        onRowDelete: (oldData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarEmpleados();
-                            }, 2000)
-                            this.EliminarEmpleado(oldData)
-                          }),
-                      }}
-                    />
-                  </TabPanel>
-                </CardBody>
-              </Card>
-          </div>
-        )
-      } else if(this.state.perfil.rol === 'jefe') {
-        return (
-          <div style={styles.root}>
-              <Card>
-                <CardBody>
-                  <MaterialTable
-                      title= {nombresucursal}
-                      columns={ [{ title: 'Nombre', field: 'nombre'},
-                                { title: 'Fecha', field: 'nacimiento', type:'date'},
-                                { title: 'Telefono', field: 'telefono'},
-                                { title: 'Rol', field: 'rol', lookup: { 'duena': 'DUEÑA', 'jefe': 'JEFE' ,'vendedor': 'VENDEDOR'}}]}
-                      data={this.state.ListaEmpleados.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
-                      editable={{}}
-                      />
                 </CardBody>
               </Card>
           </div>

@@ -122,13 +122,13 @@ export default class Ventas extends React.Component {
       ready: false,
       total0: 0,
       total1: 0,
-      total2: 0,
-      estado:null,
-      estadosucursal:null,
       perfil: null,
+      estado:null,
+      estadosucursal:2,
+      total2: 0,
       ListaVentasDia: null
     }
-    this.handleChange2 = this.handleChange2.bind(this)
+    this.handleChange = this.handleChange.bind(this)
     this.ActualizarVentasDia = this.ActualizarVentasDia.bind(this)
     this.CalcularTotal = this.CalcularTotal.bind(this)
 
@@ -219,7 +219,7 @@ export default class Ventas extends React.Component {
     });
   }
 
-  handleChange2(event, newValue) {
+  handleChange(event, newValue) {
     this.setState({tabIndex: newValue});
   }
 
@@ -261,7 +261,7 @@ export default class Ventas extends React.Component {
           <div style={styles.root}>
             <Card>
               <AppBar position="static" color="primary" style={styles.Barrita}>
-                <Tabs value={this.state.tabIndex} onChange={this.handleChange2} aria-label="simple tabs example">
+                <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="simple tabs example">
                   <Tab label="Lo Castillo" {...a11yProps(0)} />
                   <Tab label="Apumanque" {...a11yProps(1)} />
                   <Tab label="Vitacura" {...a11yProps(2)} />
