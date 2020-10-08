@@ -376,7 +376,7 @@ export default class Ventas extends React.Component {
       })
       .then(users => {
         console.log(users)
-        this.setState({ListaProductos: users, ready: true});
+        this.setState({ListaProductos: users});
         this.getMock();
       });
   }
