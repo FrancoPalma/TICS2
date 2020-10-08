@@ -285,7 +285,9 @@ router.post('/editar_estado_pedido/:id', function(req, res) {
 router.get('/lista_venta', isLoggedIn, (req,res) =>{
   	lista.find(function (err,lista) {
 			if (!err){
-				res.json(lista);
+				if(lista.length != null){
+					res.json(lista);
+				}
 			}else{
 				res.sendStatus(404);
 			}
