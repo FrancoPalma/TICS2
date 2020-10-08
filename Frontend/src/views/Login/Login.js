@@ -190,6 +190,7 @@ export default class Login extends React.Component {
               required
               fullWidth
               type="password"
+              submit
               name="contraseña"
               label="Contraseña"
               id="contraseña"

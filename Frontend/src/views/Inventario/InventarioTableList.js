@@ -110,7 +110,6 @@ function a11yProps(index) {
   };
 }
 
-
 export default class InventarioTableList extends React.Component {
 
   constructor(props) {

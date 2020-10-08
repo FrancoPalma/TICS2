@@ -89,7 +89,6 @@ function TabPanel(props) {
   );
 }
 
-
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -102,7 +101,6 @@ export default class InventarioTableList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      estado: 0,
       ListaEmpleados: null,
       ready: false,
       nombre : null,
@@ -113,7 +111,7 @@ export default class InventarioTableList extends React.Component {
       rol: null,
       telefono: null,
       salario: null,
-
+      tabIndex: 0,
     }
     this.handleChange = this.handleChange.bind(this)
     this.MostrarNuevoMenu = this.MostrarNuevoMenu.bind(this)
@@ -124,8 +122,8 @@ export default class InventarioTableList extends React.Component {
     let info = JSON.parse(localStorage.getItem('usuario'));
     this.setState({
       perfil: info,
-      isReady: true,
-      tabIndex: Number(info.sucursal)
+      priv_emple: info.priv_empleado,
+      isReady: true
     })
   }
 
@@ -187,7 +185,6 @@ export default class InventarioTableList extends React.Component {
     body: JSON.stringify({
       id: newData._id,
       nombre: newData.nombre,
-      nacimiento: newData.nacimiento.toString(),
       telefono: newData.telefono,
       rol: newData.rol,
       sucursal: newData.sucursal
@@ -198,6 +195,7 @@ export default class InventarioTableList extends React.Component {
             console.log("Editado correctamente")
         } else {
             console.log('Hubo un error')
+            console.log(response.status)
         }
     })
     .catch((error) => {
@@ -234,6 +232,34 @@ export default class InventarioTableList extends React.Component {
     this.ActualizarEmpleados()
   }
 
+  EditarPrivilegios(newData) {
+    console.log(newData._id)
+    fetch('/editar_privilegios/' + newData._id, {
+    method: 'POST',
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: newData._id,
+      priv_empleado: newData.priv_empleado,
+      priv_inventario: newData.priv_inventario,
+      priv_privilegio: newData.priv_privilegio,
+      priv_descuento: newData.priv_descuento
+    })
+    })
+    .then( (response) => {
+        if(response.status === 201) {
+            console.log("Editado correctamente")
+        } else {
+            console.log('Hubo un error')
+        }
+    })
+    .catch((error) => {
+        console.log(error)
+    });
+  }
+
   handleChange(event, newValue) {
     this.setState({tabIndex: newValue});
   }
@@ -250,18 +276,24 @@ export default class InventarioTableList extends React.Component {
   render() {
 
     if(this.state.ready === true) {
-
-      if(this.state.priv_emple === true) {
+      if(this.state.priv_emple) {
 
         return (
           <div style={styles.root}>
               <Card>
+                <AppBar position="static" color="primary" >
+                  <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="Sucursales" >
+                    <Tab label="Datos" {...a11yProps(0)}/>
+                    <Tab label="Privilegios" {...a11yProps(1)}/>
+                  </Tabs>
+                </AppBar>
                 <CardBody>
+
+                  <TabPanel value={this.state.tabIndex} index={0}>
                   <MaterialTable
                       title='Empleados'
                       columns={ [{ title: 'Nombre', field: 'nombre'},
                                 {title: 'Rut', field: 'rut'},
-                                { title: 'Fecha', field: 'nacimiento',type:'date'},
                                 { title: 'Telefono', field: 'telefono'},
                                 { title: 'Sucursal', field: 'sucursal', lookup: { 0: 'Lo Castillo', 1: 'Apumanque' ,2: 'Vitacura'}},
                                 { title: 'Rol', field: 'rol', lookup: { 'duena': 'DUEÑA', 'jefe': 'JEFE' ,'vendedor': 'VENDEDOR'}}]}
@@ -294,6 +326,28 @@ export default class InventarioTableList extends React.Component {
                           }),
                       }}
                     />
+                  </TabPanel>
+                  <TabPanel value={this.state.tabIndex} index={1}>
+                  <MaterialTable
+                      title='Privilegios'
+                      columns={ [{ title: 'Nombre', field: 'nombre'},
+                                {title: 'Gestión Empleados', field: 'priv_empleado', type:'boolean'},
+                                { title: 'Gestión Invetario', field: 'priv_inventario', type:'boolean'},
+                                { title: 'Gestión Privilegios', field: 'priv_privilegio', type:'boolean'},
+                                { title: 'Descuento Permitido', field: 'priv_descuento', type:'numeric'}]}
+                      data={this.state.ListaEmpleados}
+                      editable={{
+                        onRowUpdate: (newData, oldData) =>
+                          new Promise((resolve) => {
+                            setTimeout(() => {
+                              resolve();
+                              this.ActualizarEmpleados();
+                            }, 2000)
+                              this.EditarEmpleado(newData)
+                          })
+                      }}
+                    />
+                  </TabPanel>
                 </CardBody>
               </Card>
           </div>
