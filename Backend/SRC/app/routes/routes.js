@@ -333,6 +333,9 @@ router.post('/crear_venta', async (req,res) => {
 	let sucursal = req.body.sucursal.toString();
 	let vendedor = req.body.vendedor.toUpperCase();
 	let total = req.body.total;
+	let largo = prods.length;
+
+	descuento(prods,largo);
 
 	await venta.find({} , async (err, venta) => {
 		if( venta.length == null || venta.length == 0 ){
@@ -354,6 +357,21 @@ router.post('/crear_venta', async (req,res) => {
 		};
 	});
 });
+
+function descuento(lista, largo){
+
+	let id = lista[largo].id;
+	let cantidad = lista[largo].cantidad;
+	productos.findByIdAndUpdate(id, $subtract[{cantidad: cantidad},1], function(err){
+		if (largo < 0){
+			return 0
+		}
+		largo = largo-1;
+		descuento(lista,largo);
+	});
+
+
+}
 
 router.post('/eliminar_venta/:id', (req,res) =>{
     let id = req.params.id;
