@@ -294,6 +294,7 @@ export default class InventarioTableList extends React.Component {
                       title='Lo Castillo'
                       columns={ [{ title: 'Fecha', field: 'fecha', type: 'date' },
                                 { title: 'Cliente', field: 'cliente' },
+                                { title: 'Venta', field: 'venta' },
                                 { title: 'Descripcion', field: 'descripcion'},
                                 { title: 'Estado', field: 'estado', lookup: { 0: 'EN PROCESO', 1: 'LISTO PARA RETIRO' ,2: 'ENTREGADO'}},
                                 { title: 'Total', field: 'total' ,type: 'numeric'}]}

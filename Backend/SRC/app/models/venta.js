@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const {Schema} = mongoose
+const {Schema} = mongoose;
+const Producto = mongoose.model('Producto');
 
 var venta = new Schema   ({
       numero_venta: {type: Number, require: true},
@@ -11,14 +12,7 @@ var venta = new Schema   ({
       sucursal: {type: String, require: true},
       //cantidad: {type: Number, require: true},
       productos: [{
-        codigo: {type: String, require: true},
-        tipo: {type: String, require: true},
-        material: {type: String, require: true},
-        piedra: {type: String, require: true},
-        precio: {type: Number, require: true},
-        descripcion:{type:String,require:true},
-        sucursal: {type: String, require: true}
-      }]
+        type: Schema.ObjectId, ref: "Producto"}]
     },
       {collection: 'venta'}
     );

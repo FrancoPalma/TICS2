@@ -7,6 +7,7 @@ const pedido = new Schema({
   sucursal : {type: String, required: true},
   descripcion: {type: String, required: true},
   estado : {type: String, required: true},
+  es_venta: {type: Boolean, required: true},
   total: {type: Number, required: true},
   },
   {collection: 'pedido'}
