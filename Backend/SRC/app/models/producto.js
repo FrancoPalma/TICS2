@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const {Schema} = mongoose
+const {Schema} = mongoose;
 
 var producto = new Schema   ({
         codigo: {type: String, require: true},

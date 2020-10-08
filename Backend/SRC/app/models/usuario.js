@@ -1,13 +1,13 @@
-
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
+const {Schema} = mongoose;
 
 const usuario = new mongoose.Schema({
   rut: {type: String},
   password: {type: String},
   nombre: {type: String},
   telefono: {type: String},
-  rol: {type: String},
+  privilegios: [{type: Schema.ObjectId, ref: "Privilegios"}],
   sucursal: {type: String}},
   { collection : 'usuario'}
 );
