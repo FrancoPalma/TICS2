@@ -450,7 +450,7 @@ router.post('/delete_empleado/:id', isLoggedIn, (req,res) =>{
 
 router.post('/editar_empleado/:id', function(req, res) {
 	let telefono= req.body.telefono;
-    console.log(telefono) 
+    console.log(telefono)
 	let sucursal = req.body.sucursal.toUpperCase();
 	empleado.findByIdAndUpdate(req.params.id,{telefono: telefono, sucursal: sucursal}, function (err) {
 		if(!err){
