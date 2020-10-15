@@ -121,7 +121,7 @@ export default class InventarioTableList extends React.Component {
     let info = JSON.parse(localStorage.getItem('usuario'));
     this.setState({
       perfil: info,
-      priv_emple: info.priv_empleado,
+      priv_emple: info.gestion_privilegios,
       isReady: true
     })
   }
@@ -230,7 +230,6 @@ export default class InventarioTableList extends React.Component {
   }
 
   EditarPrivilegios(newData) {
-    console.log(newData._id)
     fetch('/editar_privilegios/' + newData._id, {
     method: 'POST',
     headers: {
@@ -288,7 +287,7 @@ export default class InventarioTableList extends React.Component {
 
                   <TabPanel value={this.state.tabIndex} index={0}>
                   <MaterialTable
-                      title='Empleados'
+                      title=''
                       columns={ [{ title: 'Nombre', field: 'nombre'},
                                 {title: 'Rut', field: 'rut'},
                                 { title: 'Telefono', field: 'telefono'},
@@ -327,10 +326,10 @@ export default class InventarioTableList extends React.Component {
                   <MaterialTable
                       title='Privilegios'
                       columns={ [{ title: 'Nombre', field: 'nombre'},
-                                {title: 'Gestión Empleados', field: 'priv_empleado', type:'boolean'},
-                                { title: 'Gestión Invetario', field: 'priv_inventario', type:'boolean'},
-                                { title: 'Gestión Privilegios', field: 'priv_privilegio', type:'boolean'},
-                                { title: 'Descuento Permitido', field: 'priv_descuento', type:'numeric'}]}
+                                {title: 'Gestión Empleados', field: 'gestion_empledo', type:'boolean'},
+                                { title: 'Gestión Invetario', field: 'gestion_inventario', type:'boolean'},
+                                { title: 'Gestión Privilegios', field: 'gestion_privilegios', type:'boolean'},
+                                { title: 'Descuento Permitido', field: 'descuento_permitido', type:'numeric'}]}
                       data={this.state.ListaEmpleados}
                       editable={{
                         onRowUpdate: (newData, oldData) =>

@@ -298,29 +298,20 @@ export default class InventarioTableList extends React.Component {
         if(this.state.perfil.sucursal === '1') { nombresucursal = 'Apumanque'}
         if(this.state.perfil.sucursal === '2') { nombresucursal = 'Vitacura'}
 
-      if(this.state.perfil.priv_inventario === true){
+      if(this.state.perfil.gestion_inventario === true){
         return (
           <div style={styles.root}>
               <Card>
-                  <AppBar position="static" color="primary" >
-                    <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="Sucursales" >
-                      <Tab label="Lo Castillo" {...a11yProps(0)}/>
-                      <Tab label="Apumanque" {...a11yProps(1)}/>
-                      <Tab label="Vitacura" {...a11yProps(2)}/>
-                    </Tabs>
-                  </AppBar>
                 <CardBody>
-
-                <TabPanel value={this.state.tabIndex} index={0}>
                 <MaterialTable
-                    title='Lo Castillo'
+                    title= {nombresucursal}
                     columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric'},
                               { title: 'Material', field: 'material' },
                               { title: 'Tipo', field: 'tipo'},
                               { title: 'Piedra', field: 'piedra' },
                               { title: 'Precio', field: 'precio' ,type: 'numeric'},
                               { title: 'Descripcion', field: 'descripcion' }]}
-                    data={this.state.ListaProductos.filter(({sucursal}) => sucursal === '0')}
+                    data={this.state.ListaProductos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                     editable={{
                       onRowAdd: newData =>
                         new Promise((resolve, reject) => {
@@ -348,85 +339,6 @@ export default class InventarioTableList extends React.Component {
                         }),
                     }}
                   />
-                </TabPanel>
-
-                <TabPanel value={this.state.tabIndex} index={1}>
-                <MaterialTable
-                    title='Apumanque'
-                    columns={ [{ title: 'Codigo', field: 'codigo' },
-                              { title: 'Material', field: 'material' },
-                              { title: 'Tipo', field: 'tipo'},
-                              { title: 'Piedra', field: 'piedra' },
-                              { title: 'Precio', field: 'precio' ,type: 'numeric'},
-                              { title: 'Descripcion', field: 'descripcion' }]}
-                    data={this.state.ListaProductos.filter(({sucursal}) => sucursal === '1')}
-                    editable={{
-                      onRowAdd: (newData) =>
-                        new Promise((resolve) => {
-                          setTimeout(() => {
-                            resolve();
-                            this.ActualizarInventario();
-                          }, 2000);
-                          this.AgregarProducto(newData);
-                        }),
-                        onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve) => {
-                          setTimeout(() => {
-                            resolve();
-                            this.ActualizarInventario();
-                          }, 2000)
-                          this.EditarProducto(newData)
-                        }),
-                      onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                          setTimeout(() => {
-                            resolve();
-                            this.ActualizarInventario();
-                          }, 2000)
-                          this.EliminarProducto(oldData)
-                        }),
-                    }}
-                  />
-                </TabPanel>
-
-                <TabPanel value={this.state.tabIndex} index={2}>
-                <MaterialTable
-                    title='Vitacura'
-                    columns={ [{ title: 'Codigo', field: 'codigo' },
-                              { title: 'Material', field: 'material' },
-                              { title: 'Tipo', field: 'tipo'},
-                              { title: 'Piedra', field: 'piedra' },
-                              { title: 'Precio', field: 'precio' ,type: 'numeric'},
-                              { title: 'Descripcion', field: 'descripcion' }]}
-                    data={this.state.ListaProductos.filter(({sucursal}) => sucursal === '2')}
-                    editable={{
-                      onRowAdd: (newData) =>
-                        new Promise((resolve) => {
-                          setTimeout(() => {
-                            resolve();
-                            this.ActualizarInventario();
-                          }, 2000);
-                          this.AgregarProducto(newData);
-                        }),
-                      onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve) => {
-                          setTimeout(() => {
-                            resolve();
-                            this.ActualizarInventario();
-                          }, 2000)
-                          this.EditarProducto(newData)
-                        }),
-                      onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                          setTimeout(() => {
-                            resolve();
-                            this.ActualizarInventario();
-                          }, 2000)
-                          this.EliminarProducto(oldData)
-                        })
-                    }}
-                  />
-                </TabPanel>
                 </CardBody>
               </Card>
               <Grid
