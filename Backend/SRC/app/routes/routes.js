@@ -334,7 +334,7 @@ router.post('/crear_venta', async (req,res) => {
 	let vendedor = req.body.vendedor.toUpperCase();
 	let total = req.body.total;
 	let largo = prods.length;
-	let id = prods[i].id
+	let id = prods[0].id
 
 	productos.findByIdAndUpdate(id, $subtract[{cantidad: cantidad},1], function(err){
 		if (err){
@@ -450,7 +450,7 @@ router.post('/delete_empleado/:id', isLoggedIn, (req,res) =>{
 
 router.post('/editar_empleado/:id', function(req, res) {
 	let telefono= req.body.telefono;
-    console.log(telefono)
+    console.log(telefono) 
 	let sucursal = req.body.sucursal.toUpperCase();
 	empleado.findByIdAndUpdate(req.params.id,{telefono: telefono, sucursal: sucursal}, function (err) {
 		if(!err){
@@ -472,6 +472,20 @@ router.post('/editar_empleado/:id', function(req, res) {
 					res.sendStatus(404)
 			}
 	  });
+	});
+
+	router.post('/editar_privilegios/:id',function(req,res){
+		let gestion_e = req.body.gestion_empleado;
+		let gestion_i = req.body.gestion_inventario;
+		let gestion_p = req.body.gestion_privilegios;
+		let descuento_permitido = req.body.descuento_permitido;
+		empleado.findByIdAndUpdate(req.params.id,{gestion_empleado:gestion_e},{gestion_empleado:gestion_i},{gestion_empleado:gestion_p},{gestion_empleado:descuento_permitido},function(err){
+			if (!err){
+				res.sendStatus(201);
+			}else{
+				res.sendStatus(404);
+			}
+		});
 	});
 
 module.exports = router;
