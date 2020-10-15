@@ -157,7 +157,7 @@ export default class InventarioTableList extends React.Component {
       rut: newData.rut,
       telefono: newData.telefono,
       sucursal: newData.sucursal,
-      gestion_empledo: false,
+      gestion_empleado: false,
       gestion_inventario: false,
       gestion_privilegios: false,
       descuento_permitido: 0
@@ -234,6 +234,7 @@ export default class InventarioTableList extends React.Component {
   }
 
   EditarPrivilegios(newData) {
+    console.log(newData._id)
     fetch('/editar_privilegios/' + newData._id, {
     method: 'POST',
     headers: {
@@ -242,7 +243,7 @@ export default class InventarioTableList extends React.Component {
     },
     body: JSON.stringify({
       id: newData._id,
-      gestion_empledo: newData.gestion_empledo,
+      gestion_empleado: newData.gestion_empleado,
       gestion_inventario: newData.gestion_inventario,
       gestion_privilegios: newData.gestion_privilegios,
       descuento_permitido: newData.descuento_permitido
@@ -276,8 +277,7 @@ export default class InventarioTableList extends React.Component {
   render() {
 
     if(this.state.ready === true) {
-      if(this.state.priv_emple) {
-
+      if(this.state.priv_emple && this.state.perfil.gestion_privilegios === true) {
         return (
           <div style={styles.root}>
               <Card>
@@ -330,7 +330,7 @@ export default class InventarioTableList extends React.Component {
                   <MaterialTable
                       title='Privilegios'
                       columns={ [{ title: 'Nombre', field: 'nombre'},
-                                {title: 'Gestión Empleados', field: 'gestion_empledo', type:'boolean'},
+                                {title: 'Gestión Empleados', field: 'gestion_empleado', type:'boolean'},
                                 { title: 'Gestión Invetario', field: 'gestion_inventario', type:'boolean'},
                                 { title: 'Gestión Privilegios', field: 'gestion_privilegios', type:'boolean'},
                                 { title: 'Descuento Permitido', field: 'descuento_permitido', type:'numeric'}]}
@@ -342,7 +342,7 @@ export default class InventarioTableList extends React.Component {
                               resolve();
                               this.ActualizarEmpleados();
                             }, 2000)
-                              this.EditarEmpleado(newData)
+                              this.EditarPrivilegios(newData)
                           })
                       }}
                     />
@@ -351,7 +351,120 @@ export default class InventarioTableList extends React.Component {
               </Card>
           </div>
         )
-      } else{
+      }else if(this.state.priv_emple === false && this.state.perfil.gestion_privilegios === true){
+        return (
+          <div style={styles.root}>
+              <Card>
+                <AppBar position="static" color="primary" >
+                  <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="Sucursales" >
+                    <Tab label="Datos" {...a11yProps(0)}/>
+                    <Tab label="Privilegios" {...a11yProps(1)}/>
+                  </Tabs>
+                </AppBar>
+                <CardBody>
+
+                  <TabPanel value={this.state.tabIndex} index={0}>
+                  <MaterialTable
+                      title=''
+                      columns={ [{ title: 'Nombre', field: 'nombre'},
+                                {title: 'Rut', field: 'rut'},
+                                { title: 'Telefono', field: 'telefono'},
+                                { title: 'Sucursal', field: 'sucursal', lookup: { 0: 'Lo Castillo', 1: 'Apumanque' ,2: 'Vitacura'}}]}
+                      data={this.state.ListaEmpleados}
+                      editable={{}}
+                    />
+                  </TabPanel>
+                  <TabPanel value={this.state.tabIndex} index={1}>
+                  <MaterialTable
+                      title='Privilegios'
+                      columns={ [{ title: 'Nombre', field: 'nombre'},
+                                {title: 'Gestión Empleados', field: 'gestion_empleado', type:'boolean'},
+                                { title: 'Gestión Invetario', field: 'gestion_inventario', type:'boolean'},
+                                { title: 'Gestión Privilegios', field: 'gestion_privilegios', type:'boolean'},
+                                { title: 'Descuento Permitido', field: 'descuento_permitido', type:'numeric'}]}
+                      data={this.state.ListaEmpleados}
+                      editable={{
+                        onRowUpdate: (newData, oldData) =>
+                          new Promise((resolve) => {
+                            setTimeout(() => {
+                              resolve();
+                              this.ActualizarEmpleados();
+                            }, 2000)
+                              this.EditarPrivilegios(newData)
+                          })
+                      }}
+                    />
+                  </TabPanel>
+                </CardBody>
+              </Card>
+          </div>
+        )
+      } else if(this.state.priv_emple === true && this.state.perfil.gestion_privilegios === false){
+        return (
+          <div style={styles.root}>
+              <Card>
+                <AppBar position="static" color="primary" >
+                  <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="Sucursales" >
+                    <Tab label="Datos" {...a11yProps(0)}/>
+                    <Tab label="Privilegios" {...a11yProps(1)}/>
+                  </Tabs>
+                </AppBar>
+                <CardBody>
+
+                  <TabPanel value={this.state.tabIndex} index={0}>
+                  <MaterialTable
+                      title=''
+                      columns={ [{ title: 'Nombre', field: 'nombre'},
+                                {title: 'Rut', field: 'rut'},
+                                { title: 'Telefono', field: 'telefono'},
+                                { title: 'Sucursal', field: 'sucursal', lookup: { 0: 'Lo Castillo', 1: 'Apumanque' ,2: 'Vitacura'}}]}
+                      data={this.state.ListaEmpleados}
+                      editable={{
+                        onRowAdd: newData =>
+                          new Promise((resolve, reject) => {
+                            setTimeout(() => {
+                              resolve();
+                              this.ActualizarEmpleados();
+                            }, 2000)
+                            this.AgregarEmpleado(newData);
+
+                          }),
+                        onRowUpdate: (newData, oldData) =>
+                          new Promise((resolve) => {
+                            setTimeout(() => {
+                              resolve();
+                              this.ActualizarEmpleados();
+                            }, 2000)
+                            this.EditarEmpleado(newData)
+                          }),
+                        onRowDelete: (oldData) =>
+                          new Promise((resolve) => {
+                            setTimeout(() => {
+                              resolve();
+                              this.ActualizarEmpleados();
+                            }, 2000)
+                            this.EliminarEmpleado(oldData)
+                          }),
+                      }}
+                    />
+                  </TabPanel>
+                  <TabPanel value={this.state.tabIndex} index={1}>
+                  <MaterialTable
+                      title='Privilegios'
+                      columns={ [{ title: 'Nombre', field: 'nombre'},
+                                {title: 'Gestión Empleados', field: 'gestion_empleado', type:'boolean'},
+                                { title: 'Gestión Invetario', field: 'gestion_inventario', type:'boolean'},
+                                { title: 'Gestión Privilegios', field: 'gestion_privilegios', type:'boolean'},
+                                { title: 'Descuento Permitido', field: 'descuento_permitido', type:'numeric'}]}
+                      data={this.state.ListaEmpleados}
+                      editable={{}}
+                    />
+                  </TabPanel>
+                </CardBody>
+              </Card>
+          </div>
+        )
+      }else{
         return (
           <GridContainer>
             <GridItem xs={12} sm={12} md={12} style={{display: 'flex',  justifyContent:'center', height: '100vh'}}>
