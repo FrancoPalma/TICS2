@@ -333,9 +333,6 @@ router.post('/crear_venta', async (req,res) => {
 	let sucursal = req.body.sucursal.toString();
 	let vendedor = req.body.vendedor.toUpperCase();
 	let total = req.body.total;
-<<<<<<< HEAD
-
-=======
 	let largo = prods.length;
 	let id = prods[i].id
 	
@@ -348,7 +345,6 @@ router.post('/crear_venta', async (req,res) => {
 			descuento(prods,largo);
 		}
 	});
->>>>>>> 52213c2fccfb054189fab35bee863daba70c8ee0
 	await venta.find({} , async (err, venta) => {
 		if( venta.length == null || venta.length == 0 ){
 			crearVenta.create({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods}, (err) =>{
@@ -370,27 +366,6 @@ router.post('/crear_venta', async (req,res) => {
 	});
 });
 
-<<<<<<< HEAD
-=======
-function descuento(lista, largo){
-    if (largo > 0){
-		let id = lista[largo].id;
-		let cantidad = lista[largo].cantidad;
-		productos.findByIdAndUpdate(id, $subtract[{cantidad: cantidad},1], function(err){
-			if (largo < 0){
-				return 0
-			}
-			else{
-			largo = largo-1;
-			res.sendStatus(201);
-			descuento(lista,largo);
-			}
-	});
-	}
-
-}
-
->>>>>>> 52213c2fccfb054189fab35bee863daba70c8ee0
 router.post('/eliminar_venta/:id', (req,res) =>{
     let id = req.params.id;
     venta.remove({_id: id}, (err, task) =>{
