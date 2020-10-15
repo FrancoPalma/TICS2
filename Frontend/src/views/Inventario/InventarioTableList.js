@@ -167,36 +167,41 @@ export default class InventarioTableList extends React.Component {
   }
 
   AgregarProducto(newData) {
-    fetch('/agregar_prod', {
-    method: 'POST',
-    headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      codigo: newData.codigo,
-      material: newData.material,
-      tipo: newData.tipo,
-      piedra: newData.piedra,
-      precio: newData.precio,
-      descripcion: newData.descripcion,
-      sucursal: this.state.tabIndex.toString()
-    })
-    })
-    .then( (response) => {
-        if(response.status === 201) {
-            console.log("Añadido correctamente")
-            this.setState({estado:1})
-            this.setState({estadosucursal:1})
-        } else {
-            console.log('Hubo un error')
-            this.setState({estado:2})
-            this.setState({estadosucursal:2})
-        }
-    })
-    .catch((error) => {
-        console.log(error)
-    });
+    let regex = new RegExp("^[a-z A-Z]+$");
+    if(regex.test(newData.material) && regex.test(newData.Tipo)){
+      fetch('/agregar_prod', {
+      method: 'POST',
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        codigo: newData.codigo,
+        material: newData.material,
+        tipo: newData.tipo,
+        piedra: newData.piedra,
+        precio: newData.precio,
+        descripcion: newData.descripcion,
+        sucursal: this.state.tabIndex.toString()
+      })
+      })
+      .then( (response) => {
+          if(response.status === 201) {
+              console.log("Añadido correctamente")
+              this.setState({estado:1})
+              this.setState({estadosucursal:1})
+          } else {
+              console.log('Hubo un error')
+              this.setState({estado:2})
+              this.setState({estadosucursal:2})
+          }
+      })
+      .catch((error) => {
+          console.log(error)
+      });
+    }else{
+      //no paso
+    }
   }
 
   EditarProducto(newData) {
@@ -293,7 +298,7 @@ export default class InventarioTableList extends React.Component {
         if(this.state.perfil.sucursal === '1') { nombresucursal = 'Apumanque'}
         if(this.state.perfil.sucursal === '2') { nombresucursal = 'Vitacura'}
 
-      if(this.state.perfil.rol === 'duena'){
+      if(this.state.perfil.priv_inventario === true){
         return (
           <div style={styles.root}>
               <Card>
@@ -309,7 +314,7 @@ export default class InventarioTableList extends React.Component {
                 <TabPanel value={this.state.tabIndex} index={0}>
                 <MaterialTable
                     title='Lo Castillo'
-                    columns={ [{ title: 'Codigo', field: 'codigo' },
+                    columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric'},
                               { title: 'Material', field: 'material' },
                               { title: 'Tipo', field: 'tipo'},
                               { title: 'Piedra', field: 'piedra' },
@@ -439,7 +444,7 @@ export default class InventarioTableList extends React.Component {
               </Grid>
           </div>
         )
-      } else if(this.state.perfil.rol === 'vendedor'){
+      }else{
         return (
           <div style={styles.root}>
               <Card>
@@ -454,64 +459,6 @@ export default class InventarioTableList extends React.Component {
                               { title: 'Descripcion', field: 'descripcion' }]}
                     data={this.state.ListaProductos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                     editable={{ }}
-                  />
-                </CardBody>
-              </Card>
-              <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              spacing={3}>
-                <Grid item xs={6} text-align= "center">
-                <Box mt={8}>
-                  {mensajitosucursal}
-                  <Copyright />
-                </Box>
-                </Grid>
-              </Grid>
-          </div>
-        )
-      } else if(this.state.perfil.rol === 'jefe'){
-        return (
-          <div style={styles.root}>
-              <Card>
-                <CardBody>
-                <MaterialTable
-                    title= {nombresucursal}
-                    columns={ [{ title: 'Codigo', field: 'codigo' },
-                              { title: 'Material', field: 'material' },
-                              { title: 'Tipo', field: 'tipo'},
-                              { title: 'Piedra', field: 'piedra' },
-                              { title: 'Precio', field: 'precio' ,type: 'numeric'},
-                              { title: 'Descripcion', field: 'descripcion' }]}
-                    data={this.state.ListaProductos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
-                    editable={{
-                      onRowAdd: (newData) =>
-                        new Promise((resolve) => {
-                          setTimeout(() => {
-                            resolve();
-                            this.ActualizarInventario();
-                          }, 2000);
-                          this.AgregarProducto(newData);
-                        }),
-                      onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve) => {
-                          setTimeout(() => {
-                            resolve();
-                            this.ActualizarInventario();
-                          }, 2000)
-                          this.EditarProducto(newData)
-                        }),
-                      onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                          setTimeout(() => {
-                            resolve();
-                            this.ActualizarInventario();
-                          }, 2000)
-                          this.EliminarProducto(oldData)
-                        })
-                    }}
                   />
                 </CardBody>
               </Card>
