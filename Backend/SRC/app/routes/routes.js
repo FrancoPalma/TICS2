@@ -373,7 +373,7 @@ router.post('/crear_venta', async (req,res) => {
 <<<<<<< HEAD
 =======
 function descuento(lista, largo){
-    if (largo>=0){
+    if (largo > 0){
 		let id = lista[largo].id;
 		let cantidad = lista[largo].cantidad;
 		productos.findByIdAndUpdate(id, $subtract[{cantidad: cantidad},1], function(err){
