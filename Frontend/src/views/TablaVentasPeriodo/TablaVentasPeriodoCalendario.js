@@ -147,6 +147,8 @@ export default class TablaVentasPeriodo extends React.Component {
   }
 
   ActualizarVentasPeriodo() {
+    console.log(this.state.desde)
+    console.log(this.state.hasta)
     fetch('/ventasperiodo', {
     method: 'POST',
     headers: {

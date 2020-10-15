@@ -229,8 +229,8 @@ export default class Ventas extends React.Component {
     this.state = {
       //Periodo
       ListaVentasPeriodo: null,
-      desde : "",
-      hasta : "",
+      desde : "2019-10-01",
+      hasta : "2020-10-15",
       totalp0: 0,
       totalp1: 0,
       totalp2: 0,
@@ -809,7 +809,7 @@ export default class Ventas extends React.Component {
                                 { title: 'Pago', field: 'metodo_pago' ,type: 'numeric'},
                                 { title: 'Total', field: 'total' ,type: 'numeric'},
                                 { title: 'Vendedor', field: 'vendedor'} ]}
-                      data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
+                      data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.sucursal)}
                       editable={{
                           onRowDelete: (oldData) =>
                           new Promise((resolve) => {
