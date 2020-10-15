@@ -126,7 +126,7 @@ router.get('/productos', isLoggedIn,async function(req, res){  //lista de produc
 	});
 });
 
-router.post('/agregar_prod', isLoggedIn,async function(req,res) => {
+router.post('/agregar_prod', isLoggedIn, async function(req,res){
 	let codigo = req.body.codigo.toUpperCase();
 	let material = req.body.material.toUpperCase();
 	let tipo = req.body.tipo.toUpperCase();
@@ -143,7 +143,7 @@ router.post('/agregar_prod', isLoggedIn,async function(req,res) => {
   });
 });
 
-router.post('/editar_prod/:id', isLoggedIn, async function(req, res) {
+router.post('/editar_prod/:id', isLoggedIn, async function(req, res){
 	let id = req.params.id;
 	let codigo = req.body.codigo.toUpperCase();
 	let material = req.body.material.toUpperCase();
@@ -163,7 +163,7 @@ router.post('/editar_prod/:id', isLoggedIn, async function(req, res) {
   });
  });
 
- router.post('/delete_producto/:id', isLoggedIn, async function(req,res) =>{
+ router.post('/delete_producto/:id', isLoggedIn, async function(req,res){
     let id = req.params.id;
     await producto.remove({_id: id}, (err, task) =>{
 			if(!err){
@@ -187,7 +187,7 @@ router.get('/pedidos', isLoggedIn, async function(req, res){  //lista de product
   });
 });
 
-router.post('/agregar_pedido', isLoggedIn, async function(req,res) => {
+router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 	let fecha = req.body.fecha;
 	let cliente = req.body.cliente.toUpperCase();
 	let descripcion = req.body.descripcion.toUpperCase();
@@ -204,7 +204,7 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res) => {
     });
 });
 
-router.get('/delete_pedido/:id', isLoggedIn, async function(req,res) =>{
+router.get('/delete_pedido/:id', isLoggedIn, async function(req,res){
     let id = req.params.id;
     await pedido.remove({_id: id}, (err, task) =>{
 			if(!err){
@@ -217,7 +217,7 @@ router.get('/delete_pedido/:id', isLoggedIn, async function(req,res) =>{
 });
 
 
-router.post('/eliminar_pedido/:id', isLoggedIn, async function(req,res) =>{
+router.post('/eliminar_pedido/:id', isLoggedIn, async function(req,res){
     let id = req.params.id;
     await pedido.remove({_id: id}, (err, task) =>{
 			if(!err){
@@ -229,7 +229,7 @@ router.post('/eliminar_pedido/:id', isLoggedIn, async function(req,res) =>{
     });
 });
 
-router.post('/editar_pedido/:id', isLoggedIn, async function(req, res) {
+router.post('/editar_pedido/:id', isLoggedIn, async function(req, res){
 	let id = req.body.id
 	let fecha = req.body.fecha;
 	let cliente = req.body.cliente.toUpperCase();
@@ -247,7 +247,7 @@ router.post('/editar_pedido/:id', isLoggedIn, async function(req, res) {
 });
 });
 
-router.post('/editar_descripcion_pedido/:id', isLoggedIn, async function(req, res) {
+router.post('/editar_descripcion_pedido/:id', isLoggedIn, async function(req, res){
 		let fecha = req.body.fecha;
 		let cliente = req.body.cliente.toUpperCase();
 		let sucursal = req.body.sucursal.toUpperCase();
@@ -264,7 +264,7 @@ router.post('/editar_descripcion_pedido/:id', isLoggedIn, async function(req, re
   });
 });
 
-router.post('/editar_estado_pedido/:id', isLoggedIn, async function(req, res) {
+router.post('/editar_estado_pedido/:id', isLoggedIn, async function(req, res){
 		let fecha = req.body.fecha;
 		let cliente = req.body.cliente.toUpperCase();
 		let sucursal = req.body.sucursal.toUpperCase();
@@ -282,7 +282,7 @@ router.post('/editar_estado_pedido/:id', isLoggedIn, async function(req, res) {
 });
 
 //Realizar venta, se usa una lista para guardar los productos que desea el usuario
-router.get('/lista_venta', isLoggedIn, isLoggedIn, async function(req,res) =>{
+router.get('/lista_venta', isLoggedIn, isLoggedIn, async function(req,res){
   	await lista.find(function (err,lista) {
 			if (!err){
 				res.json(lista);
@@ -309,7 +309,7 @@ router.get('/ventasdia', isLoggedIn, async function(req,res) {
 	});
 });
 
-router.post('/ventasperiodo', isLoggedIn, async function(req,res) {
+router.post('/ventasperiodo', isLoggedIn, async function(req,res){
 		const fecha1 = req.body.desde;
 		const fecha2 = req.body.hasta;
 		const fi = fecha1.concat("T00:00:00-04:00");
@@ -325,7 +325,7 @@ router.post('/ventasperiodo', isLoggedIn, async function(req,res) {
 
 });
 
-router.post('/crear_venta', isLoggedIn, async function(req,res) => {
+router.post('/crear_venta', isLoggedIn, async function(req,res){
 	let prods = req.body.lista;
 	let fecha = Date.now();
 	let metodo_pago = req.body.metodo_pago.toUpperCase();
@@ -357,7 +357,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res) => {
 	});
 });
 
-router.post('/eliminar_venta/:id', isLoggedIn, async function(req,res) =>{
+router.post('/eliminar_venta/:id', isLoggedIn, async function(req,res){
     let id = req.params.id;
     await venta.remove({_id: id}, (err, task) =>{
 			if(!err){
@@ -369,7 +369,7 @@ router.post('/eliminar_venta/:id', isLoggedIn, async function(req,res) =>{
     });
 });
 
-router.get('/agregar_venta/:numVenta', isLoggedIn, async function(req,res) => {
+router.get('/agregar_venta/:numVenta', isLoggedIn, async function(req,res){
 		await venta.findOne({numero_venta: req.params.numVenta}, (err, venta) =>{
 			res.render('agregar_venta', {
 				user: req.user,
@@ -378,7 +378,7 @@ router.get('/agregar_venta/:numVenta', isLoggedIn, async function(req,res) => {
 		});
 });
 
-router.post('/agregar_venta/:id', isLoggedIn, async function(req, res) {
+router.post('/agregar_venta/:id', isLoggedIn, async function(req, res){
     await venta.findByIdAndUpdate(req.params.id, req.body, function (err) {
       if(err){
         res.sendStatus(404);
@@ -390,7 +390,7 @@ router.post('/agregar_venta/:id', isLoggedIn, async function(req, res) {
 
 
 //Gestionar empleados
-router.get('/empleados', isLoggedIn, async function(req,res) =>{
+router.get('/empleados', isLoggedIn, async function(req,res){
     await empleado.find(function (err, empleado) {
 			if (!err){
 				res.json(empleado);
@@ -400,7 +400,7 @@ router.get('/empleados', isLoggedIn, async function(req,res) =>{
     });
 });
 
-router.post('/crear_empleado', async function(req, res) {
+router.post('/crear_empleado', async function(req, res){
 			await passport.authenticate('local-signup', function(err, user) {
 			if (err) { return res.sendStatus(404); }
 			if (!user) { return res.sendStatus(404); }
@@ -408,7 +408,7 @@ router.post('/crear_empleado', async function(req, res) {
 		}) (req, res);
 });
 
-router.post('/delete_empleado/:id', isLoggedIn, async function(req,res) =>{
+router.post('/delete_empleado/:id', isLoggedIn, async function(req,res){
     let id = req.params.id;
     await empleado.remove({_id: id}, (err) =>{
 			if(!err){
@@ -421,7 +421,7 @@ router.post('/delete_empleado/:id', isLoggedIn, async function(req,res) =>{
 });
 
 
-router.post('/editar_empleado/:id', async function(req, res) {
+router.post('/editar_empleado/:id', async function(req, res){
 	let telefono= req.body.telefono;
 
 	let sucursal = req.body.sucursal.toUpperCase();
@@ -435,7 +435,7 @@ router.post('/editar_empleado/:id', async function(req, res) {
 });
   });
 
-	router.post('/editar_password', async function(req, res) {
+	router.post('/editar_password', async function(req, res){
 			let new_pass = req.body.new_pass;
 	    await empleado.findByIdAndUpdate(req.params.rut,{password: empleado.generateHash(new_pass)}, function (err) {
 				if(!err){
