@@ -452,7 +452,7 @@ router.post('/editar_empleado/:id', function(req, res) {
 	let telefono= req.body.telefono;
 	//let rol = req.body.rol.toUpperCase();
 	let sucursal = req.body.sucursal.toUpperCase();
-	empleado.findByIdAndUpdate(req.parmas.id,{telefono: telefono, rol: rol, sucursal: sucursal}, function (err) {
+	empleado.findByIdAndUpdate(req.parmas.id,{telefono: telefono, sucursal: sucursal}, function (err) {
 		if(!err){
 			res.sendStatus(201)
 		}
