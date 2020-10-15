@@ -119,6 +119,8 @@ export default class InventarioTableList extends React.Component {
       estado:null,
       estadosucursal:null,
       perfil: null,
+      priv_emple: null,
+      priv_priv: null,
       ListaProductos: null,
       sucursal : null,
       ready: false,
@@ -135,6 +137,8 @@ export default class InventarioTableList extends React.Component {
     this.setState({
       perfil: info,
       isReady: true,
+      priv_emple: info.gestion_empleado,
+      priv_priv: info.gestion_privilegios,
       tabIndex: Number(info.sucursal)
     })
   }
