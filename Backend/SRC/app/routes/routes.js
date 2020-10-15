@@ -433,7 +433,7 @@ router.post('/editar_empleado/:id', function(req, res) {
 });
   });
 
-	router.post('/editar_password/', function(req, res) {
+	router.post('/editar_password', function(req, res) {
 			let new_pass = req.body.new_pass;
 	    empleado.findByIdAndUpdate(req.params.rut,{password: new_pass}, function (err) {
 				if(!err){

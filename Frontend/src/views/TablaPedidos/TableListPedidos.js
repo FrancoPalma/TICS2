@@ -138,40 +138,46 @@ export default class InventarioTableList extends React.Component {
     }
 
   AgregarPedido(newData) {
-    let estados = null;
-    if(newData.estado === true) {
-      estados = 1;
-    } else {
-      estados = 0;
-    }
+    let regex = new RegExp("^[a-z A-Z]+$");
 
-    fetch('/agregar_pedido', {
-    method: 'POST',
-    headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      fecha: newData.fecha,
-      cliente: newData.cliente,
-      descripcion: newData.descripcion,
-      estado: estados,
-      total: newData.total,
-      sucursal: this.state.tabIndex.toString()
-    })
-    })
-    .then( (response) => {
-        if(response.status === 201) {
-            console.log("Añadido correctamente")
-            this.setState({mensaje: 1})
-        } else {
-            console.log('Hubo un error')
-            this.setState({mensaje: 2})
-        }
-    })
-    .catch((error) => {
-        console.log(error)
-    });
+    if(regex.test(newData.cliente) && regex.test(newData.descripcion) ){
+
+      let estados = null;
+      if(newData.estado === true) {
+        estados = 1;
+      } else {
+        estados = 0;
+      }
+
+      fetch('/agregar_pedido', {
+      method: 'POST',
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        fecha: newData.fecha,
+        cliente: newData.cliente,
+        descripcion: newData.descripcion,
+        estado: estados,
+        total: newData.total,
+        sucursal: this.state.tabIndex.toString()
+      })
+      })
+      .then( (response) => {
+          if(response.status === 201) {
+              console.log("Añadido correctamente")
+              this.setState({mensaje: 1})
+          } else {
+              console.log('Hubo un error')
+              this.setState({mensaje: 2})
+          }
+      })
+      .catch((error) => {
+          console.log(error)
+      });
+
+    }
   }
 
   EditarPedido(newData) {
