@@ -257,9 +257,7 @@ export default class TablaVentasPeriodo extends React.Component {
     }else if(this.state.estado === 4) {
       mensajito = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
     }
-
     let mensajitosucursal;
-
     if(this.state.estadosucursal === 1) {
       mensajitosucursal = <Alert severity="success">Hay ventas!</Alert>
     } else if(this.state.estadosucursal === 2) {
