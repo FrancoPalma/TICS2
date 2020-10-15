@@ -501,40 +501,6 @@ export default class Ventas extends React.Component {
     this.setState({tabIndex: newValue, estado:null, estadosucursal:null, completado:null, descuento:null});
   }
 
-  CalcularTotal(){
-    let tot0 = 0;
-    let tot1 = 0;
-    let tot2 = 0;
-    for(let i = 0; i<this.state.ListaVentasPeriodo.length;i++) {
-      if(this.state.ListaVentasPeriodo[i].sucursal === '0'){
-        tot0 = tot0 + this.state.ListaVentasPeriodo[i].total;
-        if(this.state.perfil.sucursal=== '0'){
-          this.setState({estadosucursal:1})
-        }
-      }
-      else if(this.state.ListaVentasPeriodo[i].sucursal === '1'){
-        tot1 = tot1 + this.state.ListaVentasPeriodo[i].total;
-        if(this.state.perfil.sucursal=== '1'){
-          this.setState({estadosucursal:1})
-        }
-      }
-      else if(this.state.ListaVentasPeriodo[i].sucursal === '2'){
-        tot2 = tot2 + this.state.ListaVentasPeriodo[i].total;
-        if(this.state.perfil.sucursal=== '2'){
-          this.setState({estadosucursal:1})
-        }
-      }
-    }
-    if(this.state.ListaVentasPeriodo.length === 0){
-      this.setState({estado: 2})
-    }else{
-      this.setState({estado: 1})
-    }
-    this.setState({totalp0:tot0})
-    this.setState({totalp1:tot1})
-    this.setState({totalp2:tot2})
-  }
-
   CalcularTotal3(){
     let tot0 = 0;
     let tot1 = 0;

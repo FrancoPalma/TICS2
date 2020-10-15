@@ -22,7 +22,7 @@ const dashboardRoutes = [
   },
   {
     path: "/venta",
-    name: "Crear Venta",
+    name: "Ventas",
     rtlName: "لوحة القيادة",
     icon: "store",
     component: Venta,
@@ -34,22 +34,6 @@ const dashboardRoutes = [
     rtlName: "لوحة القيادة",
     icon: "shopping_cart",
     component: TableListPedidos,
-    layout: "/admin"
-  },
-  {
-    path: "/ListaVentas",
-    name: "Ventas por Día",
-    rtlName: "لوحة القيادة",
-    icon: "list_alt",
-    component: ListaDeVentas,
-    layout: "/admin"
-  },
-  {
-    path: "/VentasporPeriodo",
-    name: "Ventas por Periodo",
-    rtlName: "لوحة القيادة",
-    icon: "list_alt",
-    component: ListaDeVentasPeriodo,
     layout: "/admin"
   },
   {

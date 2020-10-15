@@ -107,7 +107,8 @@ export default class InventarioTableList extends React.Component {
       rut : null,
       sucursal : null,
       edad: null,
-      priv_emple: true,
+      priv_emple: null,
+      priv_priv : null,
       telefono: null,
       salario: null,
       tabIndex: 0,
@@ -121,7 +122,8 @@ export default class InventarioTableList extends React.Component {
     let info = JSON.parse(localStorage.getItem('usuario'));
     this.setState({
       perfil: info,
-      priv_emple: info.gestion_privilegios,
+      priv_emple: info.gestion_empleado,
+      priv_priv: info.gestion_privilegios,
       isReady: true
     })
   }
@@ -277,7 +279,7 @@ export default class InventarioTableList extends React.Component {
   render() {
 
     if(this.state.ready === true) {
-      if(this.state.priv_emple && this.state.perfil.gestion_privilegios === true) {
+      if(this.state.priv_emple && this.state.priv_priv) {
         return (
           <div style={styles.root}>
               <Card>
@@ -351,30 +353,11 @@ export default class InventarioTableList extends React.Component {
               </Card>
           </div>
         )
-      }else if(this.state.priv_emple === false && this.state.perfil.gestion_privilegios === true){
+      }else if(this.state.priv_emple === false && this.state.priv_priv){
         return (
           <div style={styles.root}>
               <Card>
-                <AppBar position="static" color="primary" >
-                  <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="Sucursales" >
-                    <Tab label="Datos" {...a11yProps(0)}/>
-                    <Tab label="Privilegios" {...a11yProps(1)}/>
-                  </Tabs>
-                </AppBar>
                 <CardBody>
-
-                  <TabPanel value={this.state.tabIndex} index={0}>
-                  <MaterialTable
-                      title=''
-                      columns={ [{ title: 'Nombre', field: 'nombre'},
-                                {title: 'Rut', field: 'rut'},
-                                { title: 'Telefono', field: 'telefono'},
-                                { title: 'Sucursal', field: 'sucursal', lookup: { 0: 'Lo Castillo', 1: 'Apumanque' ,2: 'Vitacura'}}]}
-                      data={this.state.ListaEmpleados}
-                      editable={{}}
-                    />
-                  </TabPanel>
-                  <TabPanel value={this.state.tabIndex} index={1}>
                   <MaterialTable
                       title='Privilegios'
                       columns={ [{ title: 'Nombre', field: 'nombre'},
@@ -394,24 +377,15 @@ export default class InventarioTableList extends React.Component {
                           })
                       }}
                     />
-                  </TabPanel>
                 </CardBody>
               </Card>
           </div>
         )
-      } else if(this.state.priv_emple === true && this.state.perfil.gestion_privilegios === false){
+      } else if(this.state.priv_emple  && this.state.priv_priv === false){
         return (
           <div style={styles.root}>
               <Card>
-                <AppBar position="static" color="primary" >
-                  <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="Sucursales" >
-                    <Tab label="Datos" {...a11yProps(0)}/>
-                    <Tab label="Privilegios" {...a11yProps(1)}/>
-                  </Tabs>
-                </AppBar>
                 <CardBody>
-
-                  <TabPanel value={this.state.tabIndex} index={0}>
                   <MaterialTable
                       title=''
                       columns={ [{ title: 'Nombre', field: 'nombre'},
@@ -447,19 +421,6 @@ export default class InventarioTableList extends React.Component {
                           }),
                       }}
                     />
-                  </TabPanel>
-                  <TabPanel value={this.state.tabIndex} index={1}>
-                  <MaterialTable
-                      title='Privilegios'
-                      columns={ [{ title: 'Nombre', field: 'nombre'},
-                                {title: 'Gestión Empleados', field: 'gestion_empleado', type:'boolean'},
-                                { title: 'Gestión Invetario', field: 'gestion_inventario', type:'boolean'},
-                                { title: 'Gestión Privilegios', field: 'gestion_privilegios', type:'boolean'},
-                                { title: 'Descuento Permitido', field: 'descuento_permitido', type:'numeric'}]}
-                      data={this.state.ListaEmpleados}
-                      editable={{}}
-                    />
-                  </TabPanel>
                 </CardBody>
               </Card>
           </div>
