@@ -10,7 +10,7 @@ const usuario = new mongoose.Schema({
   gestion_empledo: {type: Boolean, require: true},
   gestion_inventario: {type: Boolean, require: true},
   gestion_privilegios: {type: Boolean, require: true},
-  descuento_permitido: {type: Number, require: true}  ,
+  descuento_permitido: {type: Number, require: true},
   sucursal: {type: String}},
   { collection : 'usuario'}
 );
