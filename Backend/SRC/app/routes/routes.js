@@ -334,9 +334,17 @@ router.post('/crear_venta', async (req,res) => {
 	let vendedor = req.body.vendedor.toUpperCase();
 	let total = req.body.total;
 	let largo = prods.length;
-
-	descuento(prods,largo);
-
+	let id = prods[i].id
+	
+	productos.findByIdAndUpdate(id, $subtract[{cantidad: cantidad},1], function(err){
+		if (err){
+			res.sendStatus(404);
+		}else{
+			res.sendStatus(201);
+            largo = largo - 1;
+			descuento(prods,largo);
+		}
+	});
 	await venta.find({} , async (err, venta) => {
 		if( venta.length == null || venta.length == 0 ){
 			crearVenta.create({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods}, (err) =>{
@@ -359,17 +367,20 @@ router.post('/crear_venta', async (req,res) => {
 });
 
 function descuento(lista, largo){
-
-	let id = lista[largo].id;
-	let cantidad = lista[largo].cantidad;
-	productos.findByIdAndUpdate(id, $subtract[{cantidad: cantidad},1], function(err){
-		if (largo < 0){
-			return 0
-		}
-		largo = largo-1;
-		descuento(lista,largo);
+    if (largo>=0){
+		let id = lista[largo].id;
+		let cantidad = lista[largo].cantidad;
+		productos.findByIdAndUpdate(id, $subtract[{cantidad: cantidad},1], function(err){
+			if (largo < 0){
+				return 0
+			}
+			else{
+			largo = largo-1;
+			res.sendStatus(201);
+			descuento(lista,largo);
+			}
 	});
-
+	}
 
 }
 
