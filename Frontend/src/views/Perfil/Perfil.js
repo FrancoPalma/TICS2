@@ -82,7 +82,6 @@ export default class UserProfile extends React.Component {
  }
 
  CambioPassword() {
-   console.log(this.state.perfil.rut)
    if(this.state.new_pass === this.state.conf_pass){
      fetch('/editar_password/', {
      method: 'POST',
