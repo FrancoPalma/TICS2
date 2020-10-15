@@ -333,6 +333,11 @@ router.post('/crear_venta', async (req,res) => {
 	let sucursal = req.body.sucursal.toString();
 	let vendedor = req.body.vendedor.toUpperCase();
 	let total = req.body.total;
+<<<<<<< HEAD
+=======
+	let largo = prods.length;
+	let id = prods[0].id
+>>>>>>> 01bc547ba09ff8ff6ba02365c726b19c223a84b2
 
 	await venta.find({} , async (err, venta) => {
 		if( venta.length == null || venta.length == 0 ){
@@ -420,8 +425,13 @@ router.post('/delete_empleado/:id', isLoggedIn, (req,res) =>{
 
 
 router.post('/editar_empleado/:id', function(req, res) {
+<<<<<<< HEAD
 	let telefono= req.body.toUpperCase();
 	let rol = req.body.rol.toUpperCase();
+=======
+	let telefono= req.body.telefono;
+    console.log(telefono) 
+>>>>>>> 01bc547ba09ff8ff6ba02365c726b19c223a84b2
 	let sucursal = req.body.sucursal.toUpperCase();
 	empleado.findByIdAndUpdate(req.parmas.id,{telefono: telefono, rol: rol, sucursal: sucursal}, function (err) {
 		if(!err){
@@ -443,6 +453,20 @@ router.post('/editar_empleado/:id', function(req, res) {
 					res.sendStatus(404)
 			}
 	  });
+	});
+
+	router.post('/editar_privilegios/:id',function(req,res){
+		let gestion_e = req.body.gestion_empleado;
+		let gestion_i = req.body.gestion_inventario;
+		let gestion_p = req.body.gestion_privilegios;
+		let descuento_permitido = req.body.descuento_permitido;
+		empleado.findByIdAndUpdate(req.params.id,{gestion_empleado:gestion_e},{gestion_empleado:gestion_i},{gestion_empleado:gestion_p},{gestion_empleado:descuento_permitido},function(err){
+			if (!err){
+				res.sendStatus(201);
+			}else{
+				res.sendStatus(404);
+			}
+		});
 	});
 
 module.exports = router;
