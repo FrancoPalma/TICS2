@@ -371,7 +371,6 @@ export default class Ventas extends React.Component {
     this.getUsuario();
     this.ActualizarInventario();
     this.ActualizarVentasPeriodo();
-    this.Venta();
     this.ActualizarVentasDia();
   }
 
