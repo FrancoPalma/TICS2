@@ -108,7 +108,6 @@ export default class InventarioTableList extends React.Component {
       sucursal : null,
       edad: null,
       priv_emple: true,
-      rol: null,
       telefono: null,
       salario: null,
       tabIndex: 0,
@@ -157,7 +156,6 @@ export default class InventarioTableList extends React.Component {
       password: "Joyeria",
       rut: newData.rut,
       telefono: newData.telefono,
-      rol: newData.rol,
       sucursal: newData.sucursal
     })
     })
@@ -186,7 +184,6 @@ export default class InventarioTableList extends React.Component {
       id: newData._id,
       nombre: newData.nombre,
       telefono: newData.telefono,
-      rol: newData.rol,
       sucursal: newData.sucursal
     })
     })
@@ -295,8 +292,7 @@ export default class InventarioTableList extends React.Component {
                       columns={ [{ title: 'Nombre', field: 'nombre'},
                                 {title: 'Rut', field: 'rut'},
                                 { title: 'Telefono', field: 'telefono'},
-                                { title: 'Sucursal', field: 'sucursal', lookup: { 0: 'Lo Castillo', 1: 'Apumanque' ,2: 'Vitacura'}},
-                                { title: 'Rol', field: 'rol', lookup: { 'duena': 'DUEÑA', 'jefe': 'JEFE' ,'vendedor': 'VENDEDOR'}}]}
+                                { title: 'Sucursal', field: 'sucursal', lookup: { 0: 'Lo Castillo', 1: 'Apumanque' ,2: 'Vitacura'}}]}
                       data={this.state.ListaEmpleados}
                       editable={{
                         onRowAdd: newData =>
