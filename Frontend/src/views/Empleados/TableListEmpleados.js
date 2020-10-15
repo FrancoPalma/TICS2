@@ -156,7 +156,11 @@ export default class InventarioTableList extends React.Component {
       password: "Joyeria",
       rut: newData.rut,
       telefono: newData.telefono,
-      sucursal: newData.sucursal
+      sucursal: newData.sucursal,
+      gestion_empledo: false,
+      gestion_inventario: false,
+      gestion_privilegios: false,
+      descuento_permitido: 0
     })
     })
     .then( (response) => {

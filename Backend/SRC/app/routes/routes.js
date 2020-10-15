@@ -450,7 +450,7 @@ router.post('/delete_empleado/:id', isLoggedIn, (req,res) =>{
 
 router.post('/editar_empleado/:id', function(req, res) {
 	let telefono= req.body.telefono;
-    console.log(telefono) 
+    console.log(telefono)
 	let sucursal = req.body.sucursal.toUpperCase();
 	empleado.findByIdAndUpdate(req.params.id,{telefono: telefono, sucursal: sucursal}, function (err) {
 		if(!err){
@@ -479,7 +479,7 @@ router.post('/editar_empleado/:id', function(req, res) {
 		let gestion_i = req.body.gestion_inventario;
 		let gestion_p = req.body.gestion_privilegios;
 		let descuento_permitido = req.body.descuento_permitido;
-		empleado.findByIdAndUpdate(req.params.id,{gestion_empleado:gestion_e},{gestion_empleado:gestion_i},{gestion_empleado:gestion_p},{gestion_empleado:descuento_permitido},function(err){
+		empleado.findByIdAndUpdate(req.params.id,{gestion_empleado:gestion_e, gestion_inventario:gestion_i, gestion_privilegios:gestion_p, descuento_permitido:descuento_permitido},function(err){
 			if (!err){
 				res.sendStatus(201);
 			}else{
