@@ -140,7 +140,7 @@ export default class InventarioTableList extends React.Component {
   AgregarPedido(newData) {
     let regex = new RegExp("^[a-z A-Z]+$");
 
-    if(regex.test(newData.cliente) && regex.test(newData.descripcion) ){
+    if(regex.test(newData.cliente)){
 
       let estados = null;
       if(newData.estado === true) {
@@ -177,39 +177,45 @@ export default class InventarioTableList extends React.Component {
           console.log(error)
       });
 
+    }else{
+      this.setState({mensaje: 6})
     }
   }
 
   EditarPedido(newData) {
-    console.log(newData._id)
-    fetch('/editar_pedido/' + newData._id, {
-    method: 'POST',
-    headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      id: newData._id,
-      fecha: newData.fecha,
-      cliente: newData.cliente,
-      descripcion: newData.descripcion,
-      estado: newData.estado,
-      total: newData.total,
-      sucursal: this.state.tabIndex.toString()
-    })
-    })
-    .then( (response) => {
-        if(response.status === 201) {
-            console.log("Editado correctamente")
-            this.setState({mensaje: 3})
-        } else {
-            console.log('Hubo un error')
-            this.setState({mensaje: 2})
-        }
-    })
-    .catch((error) => {
-        console.log(error)
-    });
+    let regex = new RegExp("^[a-z A-Z]+$");
+    if(regex.test(newData.cliente)){
+      fetch('/editar_pedido/' + newData._id, {
+      method: 'POST',
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: newData._id,
+        fecha: newData.fecha,
+        cliente: newData.cliente,
+        descripcion: newData.descripcion,
+        estado: newData.estado,
+        total: newData.total,
+        sucursal: this.state.tabIndex.toString()
+      })
+      })
+      .then( (response) => {
+          if(response.status === 201) {
+              console.log("Editado correctamente")
+              this.setState({mensaje: 3})
+          } else {
+              console.log('Hubo un error')
+              this.setState({mensaje: 2})
+          }
+      })
+      .catch((error) => {
+          console.log(error)
+      });
+    }else{
+      this.setState({mensaje: 6})
+    }
   }
 
   EliminarPedido(oldData) {
@@ -273,6 +279,8 @@ export default class InventarioTableList extends React.Component {
       mensajito = <Alert severity="success">El pedido se eliminó correctamente</Alert>
     }else if(this.state.mensaje === 5) {
       mensajito = <Alert severity="error">Usted solo puede editar el estado y descripción</Alert>
+    }else if(this.state.mensaje === 6){
+      mensajito = <Alert severity="error">No se permiten números en los campos de cliente o descripción</Alert>
     }
 
     if(this.state.ready === true) {
@@ -300,7 +308,7 @@ export default class InventarioTableList extends React.Component {
                       title='Lo Castillo'
                       columns={ [{ title: 'Fecha', field: 'fecha', type: 'date' },
                                 { title: 'Cliente', field: 'cliente' },
-                                { title: 'Venta', field: 'venta' },
+                                { title: 'Venta', field: 'venta', type: 'boolean' },
                                 { title: 'Descripcion', field: 'descripcion'},
                                 { title: 'Estado', field: 'estado', lookup: { 0: 'EN PROCESO', 1: 'LISTO PARA RETIRO' ,2: 'ENTREGADO'}},
                                 { title: 'Total', field: 'total' ,type: 'numeric'}]}
