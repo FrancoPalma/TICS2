@@ -238,10 +238,10 @@ export default class InventarioTableList extends React.Component {
     },
     body: JSON.stringify({
       id: newData._id,
-      priv_empleado: newData.priv_empleado,
-      priv_inventario: newData.priv_inventario,
-      priv_privilegio: newData.priv_privilegio,
-      priv_descuento: newData.priv_descuento
+      gestion_empledo: newData.gestion_empledo,
+      gestion_inventario: newData.gestion_inventario,
+      gestion_privilegios: newData.gestion_privilegios,
+      descuento_permitido: newData.descuento_permitido
     })
     })
     .then( (response) => {
