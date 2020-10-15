@@ -227,6 +227,14 @@ export default class Ventas extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      //Periodo
+      ListaVentasPeriodo: null,
+      desde : "",
+      hasta : "",
+      totalp0: 0,
+      totalp1: 0,
+      totalp2: 0,
+      //
       tabIndex: 0,
       ready: false,
       ListaProductos: "",
@@ -255,6 +263,8 @@ export default class Ventas extends React.Component {
     this.CalcularTotal = this.CalcularTotal.bind(this)
     this.CalcularTotal2 = this.CalcularTotal2.bind(this)
     this.handleChange2 = this.handleChange2.bind(this)
+    this.ActualizarVentasPeriodo = this.ActualizarVentasPeriodo.bind(this)
+    this.CalcularTotal3 = this.CalcularTotal3.bind(this)
   }
   getUsuario = () => {
     let info = JSON.parse(localStorage.getItem('usuario'));
@@ -264,6 +274,27 @@ export default class Ventas extends React.Component {
       sucursal: info.sucursal
     })
     console.log(info.sucursal)
+  }
+
+  ActualizarVentasPeriodo() {
+    fetch('/ventasperiodo', {
+    method: 'POST',
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      desde : this.state.desde,
+      hasta : this.state.hasta
+    })
+    })
+    .then(res => {
+        return res.json()
+    })
+    .then(users => {
+        this.setState({ListaVentasPeriodo: users})
+        this.CalcularTotal3()
+    });
   }
 
   ActualizarVentasDia() {
@@ -339,6 +370,7 @@ export default class Ventas extends React.Component {
   componentDidMount() {
     this.getUsuario();
     this.ActualizarInventario();
+    this.ActualizarVentasPeriodo();
     this.ActualizarVentasDia();
   }
 
@@ -446,7 +478,6 @@ export default class Ventas extends React.Component {
       })
     };
   }
-
   handleInputChange(property) {
     return e => {
       new Promise((resolve) => {
@@ -457,9 +488,51 @@ export default class Ventas extends React.Component {
       })
     };
   }
+  onChange(date, dateString) {
+    this.setState({desde: dateString});
+    console.log(dateString)
+  }
+  onChange2(date, dateString) {
+    this.setState({hasta: dateString});
+    console.log(dateString)
+  }
 
   handleChange2(event, newValue) {
-    this.setState({tabIndex: newValue});
+    this.setState({tabIndex: newValue, estado:null, estadosucursal:null, completado:null, descuento:null});
+  }
+
+  CalcularTotal(){
+    let tot0 = 0;
+    let tot1 = 0;
+    let tot2 = 0;
+    for(let i = 0; i<this.state.ListaVentasPeriodo.length;i++) {
+      if(this.state.ListaVentasPeriodo[i].sucursal === '0'){
+        tot0 = tot0 + this.state.ListaVentasPeriodo[i].total;
+        if(this.state.perfil.sucursal=== '0'){
+          this.setState({estadosucursal:1})
+        }
+      }
+      else if(this.state.ListaVentasPeriodo[i].sucursal === '1'){
+        tot1 = tot1 + this.state.ListaVentasPeriodo[i].total;
+        if(this.state.perfil.sucursal=== '1'){
+          this.setState({estadosucursal:1})
+        }
+      }
+      else if(this.state.ListaVentasPeriodo[i].sucursal === '2'){
+        tot2 = tot2 + this.state.ListaVentasPeriodo[i].total;
+        if(this.state.perfil.sucursal=== '2'){
+          this.setState({estadosucursal:1})
+        }
+      }
+    }
+    if(this.state.ListaVentasPeriodo.length === 0){
+      this.setState({estado: 2})
+    }else{
+      this.setState({estado: 1})
+    }
+    this.setState({totalp0:tot0})
+    this.setState({totalp1:tot1})
+    this.setState({totalp2:tot2})
   }
 
   renderFooter = () => (
@@ -528,6 +601,28 @@ export default class Ventas extends React.Component {
     }else if(this.state.descuento < 0){
       mensajito = <Alert severity="error">Valor invalido.</Alert>
     }
+
+    if(this.state.estado === 1) {
+      mensajito = <Alert severity="success">Hay ventas!</Alert>
+    } else if(this.state.estado === 2) {
+      mensajito = <Alert severity="error">No se encontraron ventas :(</Alert>
+    }else if(this.state.estado === 3) {
+      mensajito = <Alert severity="success">La venta se eliminó correctamente</Alert>
+    }else if(this.state.estado === 4) {
+      mensajito = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
+    }
+
+    let mensajitosucursal;
+    if(this.state.estadosucursal === 1) {
+      mensajitosucursal = <Alert severity="success">Hay ventas!</Alert>
+    } else if(this.state.estadosucursal === 2) {
+      mensajitosucursal = <Alert severity="error">No se encontraron ventas :(</Alert>
+    }else if(this.state.estadosucursal === 3) {
+      mensajito = <Alert severity="success">La venta se eliminó correctamente</Alert>
+    }else if(this.state.estadosucursal === 4) {
+      mensajito = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
+    }
+
     if(this.state.ready === true){
       if(this.state.priv_dios === true){
         return (
@@ -665,7 +760,33 @@ export default class Ventas extends React.Component {
                   </div>
                 </TabPanel>
                 <TabPanel value={this.state.tabIndex} index={2}>
-                  hola
+                  <h4>Desde</h4>
+                  <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
+                  <h4>Hasta</h4>
+                  <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
+                  <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
+                    Listo
+                  </Button>
+                  <MaterialTable
+                      title='Tienda'
+                      columns={ [{ title: 'Numero', field: 'numero_venta', type: 'numeric' },
+                                { title: 'Descuento', field: 'descuento',type: 'numeric' },
+                                { title: 'Fecha', field: 'fecha', type: 'date'},
+                                { title: 'Pago', field: 'metodo_pago' ,type: 'numeric'},
+                                { title: 'Total', field: 'total' ,type: 'numeric'},
+                                { title: 'Vendedor', field: 'vendedor'} ]}
+                      data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
+                      editable={{
+                          onRowDelete: (oldData) =>
+                          new Promise((resolve) => {
+                            setTimeout(() => {
+                              resolve();
+                              this.ActualizarVentasPeriodo();
+                            }, 2000)
+                            this.EliminarVenta(oldData)
+                          }),
+                        }}
+                    />
                 </TabPanel>
               </CardBody>
             </Card>
