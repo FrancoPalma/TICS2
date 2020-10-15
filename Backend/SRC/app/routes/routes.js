@@ -333,10 +333,22 @@ router.post('/crear_venta', async (req,res) => {
 	let sucursal = req.body.sucursal.toString();
 	let vendedor = req.body.vendedor.toUpperCase();
 	let total = req.body.total;
+<<<<<<< HEAD
+
+=======
 	let largo = prods.length;
-
-	descuento(prods,largo);
-
+	let id = prods[i].id
+	
+	productos.findByIdAndUpdate(id, $subtract[{cantidad: cantidad},1], function(err){
+		if (err){
+			res.sendStatus(404);
+		}else{
+			res.sendStatus(201);
+            largo = largo - 1;
+			descuento(prods,largo);
+		}
+	});
+>>>>>>> 52213c2fccfb054189fab35bee863daba70c8ee0
 	await venta.find({} , async (err, venta) => {
 		if( venta.length == null || venta.length == 0 ){
 			crearVenta.create({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods}, (err) =>{
@@ -358,21 +370,27 @@ router.post('/crear_venta', async (req,res) => {
 	});
 });
 
+<<<<<<< HEAD
+=======
 function descuento(lista, largo){
-
-	let id = lista[largo].id;
-	let cantidad = lista[largo].cantidad;
-	productos.findByIdAndUpdate(id, $subtract[{cantidad: cantidad},1], function(err){
-		if (largo < 0){
-			return 0
-		}
-		largo = largo-1;
-		descuento(lista,largo);
+    if (largo > 0){
+		let id = lista[largo].id;
+		let cantidad = lista[largo].cantidad;
+		productos.findByIdAndUpdate(id, $subtract[{cantidad: cantidad},1], function(err){
+			if (largo < 0){
+				return 0
+			}
+			else{
+			largo = largo-1;
+			res.sendStatus(201);
+			descuento(lista,largo);
+			}
 	});
-
+	}
 
 }
 
+>>>>>>> 52213c2fccfb054189fab35bee863daba70c8ee0
 router.post('/eliminar_venta/:id', (req,res) =>{
     let id = req.params.id;
     venta.remove({_id: id}, (err, task) =>{
@@ -439,8 +457,9 @@ router.post('/delete_empleado/:id', isLoggedIn, (req,res) =>{
 
 router.post('/editar_empleado/:id', function(req, res) {
 	let telefono= req.body.telefonotoUpperCase();
+	let rol = req.body.rol.toUpperCase();
 	let sucursal = req.body.sucursal.toUpperCase();
-	empleado.findByIdAndUpdate(req.parmas.id,{telefono: telefono, sucursal: sucursal}, function (err) {
+	empleado.findByIdAndUpdate(req.parmas.id,{telefono: telefono, rol: rol, sucursal: sucursal}, function (err) {
 		if(!err){
 			res.sendStatus(201)
 		}
@@ -450,7 +469,7 @@ router.post('/editar_empleado/:id', function(req, res) {
 });
   });
 
-	router.post('/editar_password/', function(req, res) {
+	router.post('/editar_password', function(req, res) {
 			let new_pass = req.body.new_pass;
 	    empleado.findByIdAndUpdate(req.params.rut,{password: new_pass}, function (err) {
 				if(!err){
