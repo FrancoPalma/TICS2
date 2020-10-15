@@ -168,7 +168,7 @@ export default class InventarioTableList extends React.Component {
 
   AgregarProducto(newData) {
     let regex = new RegExp("^[a-z A-Z]+$");
-    if(regex.test(newData.material) && regex.test(newData.Tipo)){
+    if(regex.test(newData.material) && regex.test(newData.tipo) && regex.test(newData.piedra)){
       fetch('/agregar_prod', {
       method: 'POST',
       headers: {
@@ -200,43 +200,47 @@ export default class InventarioTableList extends React.Component {
           console.log(error)
       });
     }else{
-      //no paso
+      this.setState({mensaje: 5})
     }
   }
 
   EditarProducto(newData) {
-    console.log(newData._id)
-    fetch('/editar_prod/' + newData._id, {
-    method: 'POST',
-    headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      id: newData._id,
-      codigo: newData.codigo,
-      material: newData.material,
-      tipo: newData.tipo,
-      piedra: newData.piedra,
-      precio: newData.precio,
-      descripcion: newData.descripcion,
-      sucursal: this.state.tabIndex
-    })
-    })
-    .then( (response) => {
-        if(response.status === 201) {
-            console.log("Editado correctamente")
-            this.setState({estado:3})
-            this.setState({estadosucursal:3})
-        } else {
-            console.log('Hubo un error')
-            this.setState({estado:2})
-            this.setState({estadosucursal:2})
-        }
-    })
-    .catch((error) => {
-        console.log(error)
-    });
+    let regex = new RegExp("^[a-z A-Z]+$");
+    if(regex.test(newData.material) && regex.test(newData.tipo) && regex.test(newData.piedra)){
+      fetch('/editar_prod/' + newData._id, {
+      method: 'POST',
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: newData._id,
+        codigo: newData.codigo,
+        material: newData.material,
+        tipo: newData.tipo,
+        piedra: newData.piedra,
+        precio: newData.precio,
+        descripcion: newData.descripcion,
+        sucursal: this.state.tabIndex
+      })
+      })
+      .then( (response) => {
+          if(response.status === 201) {
+              console.log("Editado correctamente")
+              this.setState({estado:3})
+              this.setState({estadosucursal:3})
+          } else {
+              console.log('Hubo un error')
+              this.setState({estado:2})
+              this.setState({estadosucursal:2})
+          }
+      })
+      .catch((error) => {
+          console.log(error)
+      });
+    }else{
+      this.setState({mensaje: 5})
+    }
   }
 
   EliminarProducto(oldData) {
@@ -278,6 +282,8 @@ export default class InventarioTableList extends React.Component {
       mensajito = <Alert severity="success">El Producto se editó correctamente</Alert>
     }else if(this.state.estado === 4) {
       mensajito = <Alert severity="success">El Producto se eliminó correctamente</Alert>
+    }else if(this.state.mensaje === 5){
+      mensajito = <Alert severity="error">No se permiten números en los campos tipo, material y piedra</Alert>
     }
 
     let mensajitosucursal;
