@@ -37,7 +37,7 @@ export default function Icons() {
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d6661.681712593749!2d-70.5933666!3d-33.4013159!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662cf36c2bbc915%3A0x91ccfad3b405c76a!2sCentro%20Comercial%20Lo%20Castillo!5e0!3m2!1ses!2scl!4v1589416978616!5m2!1ses!2scl"
                 title="Icons iframe"
-                width="540"
+                width="100%"
                 height="326.25"
                 frameborder="0"
               >
@@ -48,7 +48,7 @@ export default function Icons() {
            <iframe
              src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d6661.681712593749!2d-70.5933666!3d-33.4013159!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662cf36c2bbc915%3A0x91ccfad3b405c76a!2sCentro%20Comercial%20Lo%20Castillo!5e0!3m2!1ses!2scl!4v1589416978616!5m2!1ses!2scl"
              title="Icons iframe"
-             width="275"
+             width="100%"
              height="200"
              frameborder="0"
            >
@@ -81,7 +81,7 @@ export default function Icons() {
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3331.212540306897!2d-70.5721996!3d-33.3916188!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x954f8372e94db863!2sCentro%20Comercial%20Pueblo%20del%20Ingl%C3%A9s!5e0!3m2!1ses!2scl!4v1589666931623!5m2!1ses!2scl"
                 title="Icons iframe"
-                width="540"
+                width="100%"
                 height="326.25"
                 frameborder="0"
               >
@@ -92,7 +92,7 @@ export default function Icons() {
            <iframe
              src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3331.212540306897!2d-70.5721996!3d-33.3916188!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x954f8372e94db863!2sCentro%20Comercial%20Pueblo%20del%20Ingl%C3%A9s!5e0!3m2!1ses!2scl!4v1589666931623!5m2!1ses!2scl"
              title="Icons iframe"
-             width="275"
+             width="100%"
              height="200"
              frameborder="0"
            >
@@ -125,7 +125,7 @@ export default function Icons() {
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3330.5063744951135!2d-70.56976098480176!3d-33.41004028078553!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662cedde4485d87%3A0x7ce640d67d70fa10!2sApumanque!5e0!3m2!1ses!2scl!4v1589667519610!5m2!1ses!2scl"
                 title="Icons iframe"
-                width="540"
+                width="100%"
                 height="326.25"
                 frameborder="0"
               >
@@ -136,7 +136,7 @@ export default function Icons() {
            <iframe
              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3330.5063744951135!2d-70.56976098480176!3d-33.41004028078553!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662cedde4485d87%3A0x7ce640d67d70fa10!2sApumanque!5e0!3m2!1ses!2scl!4v1589667519610!5m2!1ses!2scl"
              title="Icons iframe"
-             width="275"
+             width="100%"
              height="200"
              frameborder="0"
            >
