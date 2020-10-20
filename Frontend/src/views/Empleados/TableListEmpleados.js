@@ -9,6 +9,7 @@ import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
+import Alert from '@material-ui/lab/Alert';
 
 const styles = {
   cardCategoryWhite: {
@@ -112,6 +113,7 @@ export default class InventarioTableList extends React.Component {
       telefono: null,
       salario: null,
       tabIndex: 0,
+      mensaje: null
     }
     this.handleChange = this.handleChange.bind(this)
     this.MostrarNuevoMenu = this.MostrarNuevoMenu.bind(this)
@@ -168,9 +170,11 @@ export default class InventarioTableList extends React.Component {
     .then( (response) => {
         if(response.status === 201) {
             console.log("Añadido correctamente")
+            this.setState({mensaje: 1});
 
         } else {
             console.log('Hubo un error')
+            this.setState({mensaje: 4});
         }
     })
     .catch((error) => {
@@ -196,8 +200,10 @@ export default class InventarioTableList extends React.Component {
     .then( (response) => {
         if(response.status === 201) {
             console.log("Editado correctamente")
+            this.setState({mensaje: 2});
         } else {
             console.log('Hubo un error')
+            this.setState({mensaje: 4});
             console.log(response.status)
         }
     })
@@ -221,8 +227,10 @@ export default class InventarioTableList extends React.Component {
     .then( (response) => {
         if(response.status === 201) {
             console.log("Eliminado correctamente")
+            this.setState({mensaje: 3});
         } else {
             console.log('Hubo un error')
+            this.setState({mensaje: 4});
         }
     })
     .catch((error) => {
@@ -254,8 +262,10 @@ export default class InventarioTableList extends React.Component {
     .then( (response) => {
         if(response.status === 201) {
             console.log("Editado correctamente")
+            this.setState({mensaje: 2});
         } else {
             console.log('Hubo un error')
+            this.setState({mensaje: 4});
         }
     })
     .catch((error) => {
@@ -277,6 +287,17 @@ export default class InventarioTableList extends React.Component {
   }
 
   render() {
+    let mensajito;
+
+    if(this.state.mensaje === 1) {
+      mensajito = <Alert severity="success">¡Empleado agregado correctamente!</Alert>
+    }else if(this.state.mensaje === 2) {
+      mensajito = <Alert severity="success">¡Empleado editado correctamente!</Alert>
+    }else if(this.state.mensaje === 3) {
+      mensajito = <Alert severity="success">¡Empleado eliminado correctamente!</Alert>
+    }else if(this.state.mensaje === 4) {
+      mensajito = <Alert severity="success">Lo sentimos, hubo un error, vuelva a intentarlo nuevamente</Alert>
+    }
 
     if(this.state.ready === true) {
       if(this.state.priv_emple && this.state.priv_priv) {
@@ -327,6 +348,7 @@ export default class InventarioTableList extends React.Component {
                           }),
                       }}
                     />
+                    {mensajito}
                   </TabPanel>
                   <TabPanel value={this.state.tabIndex} index={1}>
                   <MaterialTable
@@ -348,6 +370,7 @@ export default class InventarioTableList extends React.Component {
                           })
                       }}
                     />
+                    {mensajito}
                   </TabPanel>
                 </CardBody>
               </Card>
