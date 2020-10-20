@@ -113,7 +113,7 @@ export default class UserProfile extends React.Component {
     if(this.state.isReady === true) {
       return (
         <GridContainer>
-          <GridItem xs={12} sm={12} md={12} style={{display: 'flex', margin:'100', justifyContent:'center', height: '50vh'}}>
+          <GridItem xs={12} sm={12} md={12} style={{display: 'flex', margin:'100', justifyContent:'center', height: '65vh'}}>
             <Card profile style = {{width: 580, height: 400}}>
               <CardAvatar profile>
                 <a href="#pablo" onClick={e => e.preventDefault()}>
@@ -160,9 +160,7 @@ export default class UserProfile extends React.Component {
                 </div>
               </CardBody>
             </Card>
-          </GridItem>
-          <GridItem xs={12} sm={12} md={12} style={{display: 'flex',  justifyContent:'center', height: '100vh'}}>
-            <Card profile style = {{width: 400, height:250 ,margin: "0", fontSize: "14px", marginTop: "0",}}>
+            <Card profile style = {{width: 400, height:250 ,margin: "0", fontSize: "14px", marginTop: "",}}>
               <Typography component="h1" variant="h5">
                 Cambio de Contraseña
               </Typography>
