@@ -139,7 +139,6 @@ export default class InventarioTableList extends React.Component {
       isReady: true,
       priv_emple: info.gestion_empleado,
       priv_priv: info.gestion_privilegios,
-      tabIndex: Number(info.sucursal)
     })
   }
 
@@ -181,6 +180,7 @@ export default class InventarioTableList extends React.Component {
       },
       body: JSON.stringify({
         codigo: newData.codigo,
+        cantidad: newData.cantidad,
         material: newData.material,
         tipo: newData.tipo,
         piedra: newData.piedra,
@@ -220,6 +220,7 @@ export default class InventarioTableList extends React.Component {
       body: JSON.stringify({
         id: newData._id,
         codigo: newData.codigo,
+        cantidad: newData.cantidad,
         material: newData.material,
         tipo: newData.tipo,
         piedra: newData.piedra,
@@ -290,18 +291,6 @@ export default class InventarioTableList extends React.Component {
       mensajito = <Alert severity="error">No se permiten números en los campos tipo, material y piedra</Alert>
     }
 
-    let mensajitosucursal;
-
-    if(this.state.estadosucursal === 1) {
-      mensajitosucursal = <Alert severity="success">Producto agregado correctamente</Alert>
-    }else if(this.state.estadosucursal === 2) {
-      mensajitosucursal = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo nuevamente</Alert>
-    }else if(this.state.estadosucursal === 3) {
-      mensajitosucursal = <Alert severity="success">El Producto se editó correctamente</Alert>
-    }else if(this.state.estadosucursal === 4) {
-      mensajitosucursal = <Alert severity="success">El Producto se eliminó correctamente</Alert>
-    }
-
     if(this.state.ready === true) {
       let nombresucursal;
         if(this.state.perfil.sucursal === '0') { nombresucursal = 'Lo Castillo'}
@@ -316,6 +305,7 @@ export default class InventarioTableList extends React.Component {
                 <MaterialTable
                     title= {nombresucursal}
                     columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric'},
+                              { title: 'Cantidad', field: 'cantidad' , type:'numeric'},
                               { title: 'Material', field: 'material' },
                               { title: 'Tipo', field: 'tipo'},
                               { title: 'Piedra', field: 'piedra' },
@@ -374,6 +364,7 @@ export default class InventarioTableList extends React.Component {
                 <MaterialTable
                     title= {nombresucursal}
                     columns={ [{ title: 'Codigo', field: 'codigo' },
+                              { title: 'Cantidad', field: 'cantidad' , type:'numeric'},
                               { title: 'Material', field: 'material' },
                               { title: 'Tipo', field: 'tipo'},
                               { title: 'Piedra', field: 'piedra' },
@@ -392,7 +383,6 @@ export default class InventarioTableList extends React.Component {
               spacing={3}>
                 <Grid item xs={6} text-align= "center">
                 <Box mt={8}>
-                  {mensajitosucursal}
                   <Copyright />
                 </Box>
                 </Grid>
