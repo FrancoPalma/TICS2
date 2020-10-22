@@ -249,7 +249,7 @@ export default class Ventas extends React.Component {
       completado: 0,
       perfil: null,
       priv_dios: true,
-      priv_descuento: 5,
+      priv_descuento: null,
       ListaVentasDia: null,
       total0: 0,
       total1: 0,
@@ -271,7 +271,8 @@ export default class Ventas extends React.Component {
     this.setState({
       perfil: info,
       vendedor: info.nombre,
-      sucursal: info.sucursal
+      sucursal: info.sucursal,
+      priv_descuento: info.descuento_permitido
     })
     console.log(info.sucursal)
   }

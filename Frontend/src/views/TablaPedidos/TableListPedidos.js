@@ -103,7 +103,6 @@ function TabPanel(props) {
   );
 }
 
-
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -284,277 +283,66 @@ export default class InventarioTableList extends React.Component {
     }
 
     if(this.state.ready === true) {
-
       let nombresucursal;
         if(this.state.perfil.sucursal === '0') { nombresucursal = 'Lo Castillo'}
         if(this.state.perfil.sucursal === '1') { nombresucursal = 'Apumanque'}
         if(this.state.perfil.sucursal === '2') { nombresucursal = 'Vitacura'}
+      return (
+        <div style={styles.root}>
+          <Card>
+            <CardBody>
+              <MaterialTable
+                title= {nombresucursal}
+                columns={ [{ title: 'Fecha', field: 'fecha', type: 'date' },
+                          { title: 'Cliente', field: 'cliente' },
+                          { title: 'Descripcion', field: 'descripcion'},
+                          { title: 'Estado', field: 'estado', lookup: { 0: 'EN PROCESO', 1: 'LISTO PARA RETIRO' ,2: 'ENTREGADO'}},
+                          { title: 'Total', field: 'total' ,type: 'numeric'}]}
+                data={this.state.ListaPedidos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
+                editable={{
+                  onRowAdd: newData =>
+                    new Promise((resolve, reject) => {
+                      setTimeout(() => {
+                        resolve();
+                        this.ActualizarPedidos();
+                      }, 2000)
+                      this.AgregarPedido(newData);
 
-      if(this.state.perfil.rol === 'duena') {
-        return (
-          <div style={styles.root}>
-              <Card>
-                <AppBar position="static" color="primary" >
-                  <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="simple tabs example" >
-                    <Tab label="Lo Castillo" {...a11yProps(0)}/>
-                    <Tab label="Apumanque" {...a11yProps(1)}/>
-                    <Tab label="Vitacura" {...a11yProps(2)}/>
-                  </Tabs>
-                </AppBar>
-
-                <CardBody>
-                  <TabPanel value={this.state.tabIndex} index={0}>
-                  <MaterialTable
-                      title='Lo Castillo'
-                      columns={ [{ title: 'Fecha', field: 'fecha', type: 'date' },
-                                { title: 'Cliente', field: 'cliente' },
-                                { title: 'Venta', field: 'venta', type: 'boolean' },
-                                { title: 'Descripcion', field: 'descripcion'},
-                                { title: 'Estado', field: 'estado', lookup: { 0: 'EN PROCESO', 1: 'LISTO PARA RETIRO' ,2: 'ENTREGADO'}},
-                                { title: 'Total', field: 'total' ,type: 'numeric'}]}
-                      data={this.state.ListaPedidos.filter(({sucursal}) => sucursal === '0')}
-                      editable={{
-                        onRowAdd: newData =>
-                          new Promise((resolve, reject) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarPedidos();
-                            }, 2000)
-                            this.AgregarPedido(newData);
-
-                          }),
-                        onRowUpdate: (newData, oldData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarPedidos();
-                            }, 2000)
-                            this.EditarPedido(newData)
-                          }),
-                        onRowDelete: (oldData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarPedidos();
-                            }, 2000)
-                            this.EliminarPedido(oldData)
-                          }),
-                      }}
-                    />
-                  </TabPanel>
-
-                  <TabPanel value={this.state.tabIndex} index={1}>
-                  <MaterialTable
-                      title='Apumanque'
-                      columns={ [{ title: 'Fecha', field: 'fecha', type: 'date' },
-                                { title: 'Cliente', field: 'cliente' },
-                                { title: 'Descripcion', field: 'descripcion'},
-                                { title: 'Estado', field: 'estado', lookup: { 0: 'EN PROCESO', 1: 'LISTO PARA RETIRO' ,2: 'ENTREGADO'}},
-                                { title: 'Total', field: 'total' ,type: 'numeric'}]}
-                      data={this.state.ListaPedidos.filter(({sucursal}) => sucursal === '1')}
-                      editable={{
-                        onRowAdd: (newData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarPedidos();
-                            }, 2000);
-                            this.AgregarPedido(newData);
-                          }),
-                          onRowUpdate: (newData, oldData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarPedidos();
-                            }, 2000)
-                            this.EditarPedido(newData)
-                          }),
-                        onRowDelete: (oldData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarPedidos();
-                            }, 2000)
-                            this.EliminarPedido(oldData)
-                          }),
-                      }}
-                    />
-                  </TabPanel>
-
-                  <TabPanel value={this.state.tabIndex} index={2}>
-                  <MaterialTable
-                      title='Vitacura'
-                      columns={ [{ title: 'Fecha', field: 'fecha', type: 'date' },
-                                { title: 'Cliente', field: 'cliente' },
-                                { title: 'Descripcion', field: 'descripcion'},
-                                { title: 'Estado', field: 'estado', lookup: { 0: 'EN PROCESO', 1: 'LISTO PARA RETIRO' ,2: 'ENTREGADO'}},
-                                { title: 'Total', field: 'total' ,type: 'numeric'}]}
-                      data={this.state.ListaPedidos.filter(({sucursal}) => sucursal === '2')}
-                      editable={{
-                        onRowAdd: (newData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarPedidos();
-                            }, 2000);
-                            this.AgregarPedido(newData);
-                          }),
-                        onRowUpdate: (newData, oldData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarPedidos();
-                            }, 2000)
-                            this.EditarPedido(newData)
-                          }),
-                        onRowDelete: (oldData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarPedidos();
-                            }, 2000)
-                            this.EliminarPedido(oldData)
-                          }),
-                      }}
-                    />
-                  </TabPanel>
-                  <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                  spacing={3}>
-                    <Grid item xs={6} text-align= "center">
-                    <Box mt={8}>
-                      {mensajito}
-                      <Copyright />
-                    </Box>
-                    </Grid>
+                    }),
+                  onRowUpdate: (newData, oldData) =>
+                    new Promise((resolve) => {
+                      setTimeout(() => {
+                        resolve();
+                        this.ActualizarPedidos();
+                      }, 2000)
+                      this.EditarPedido(newData)
+                    }),
+                  onRowDelete: (oldData) =>
+                    new Promise((resolve) => {
+                      setTimeout(() => {
+                        resolve();
+                        this.ActualizarPedidos();
+                      }, 2000)
+                      this.EliminarPedido(oldData)
+                    }),
+                }}  />
+                <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                spacing={3}>
+                  <Grid item xs={6} text-align= "center">
+                  <Box mt={8}>
+                    {mensajito}
+                    <Copyright />
+                  </Box>
                   </Grid>
+                </Grid>
                 </CardBody>
               </Card>
           </div>
         )
-      } else if(this.state.perfil.rol === 'jefe') {
-        return (
-          <div style={styles.root}>
-              <Card>
-                <CardBody>
-                  <MaterialTable
-                      title= {nombresucursal}
-                      columns={ [{ title: 'Fecha', field: 'fecha', type: 'date' },
-                                { title: 'Cliente', field: 'cliente' },
-                                { title: 'Descripcion', field: 'descripcion'},
-                                { title: 'Estado', field: 'estado', lookup: { 0: 'EN PROCESO', 1: 'LISTO PARA RETIRO' ,2: 'ENTREGADO'}},
-                                { title: 'Total', field: 'total' ,type: 'numeric'}]}
-                      data={this.state.ListaPedidos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
-                      editable={{
-                        onRowAdd: newData =>
-                          new Promise((resolve, reject) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarPedidos();
-                            }, 2000)
-                            this.AgregarPedido(newData);
-
-                          }),
-                        onRowUpdate: (newData, oldData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarPedidos();
-                            }, 2000)
-                            this.EditarPedido(newData)
-                          }),
-                        onRowDelete: (oldData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarPedidos();
-                            }, 2000)
-                            this.EliminarPedido(oldData)
-                          }),
-                      }}  />
-                      <Grid
-                      container
-                      direction="row"
-                      justify="center"
-                      alignItems="center"
-                      spacing={3}>
-                        <Grid item xs={6} text-align= "center">
-                        <Box mt={8}>
-                          {mensajito}
-                          <Copyright />
-                        </Box>
-                        </Grid>
-                      </Grid>
-                </CardBody>
-              </Card>
-          </div>
-        )
-      } else if(this.state.perfil.rol === 'vendedor') {
-        return (
-          <div style={styles.root}>
-              <Card>
-                <CardBody>
-                  <MaterialTable
-                      title= {nombresucursal}
-                      columns={ [{ title: 'Fecha', field: 'fecha', type: 'date' },
-                                { title: 'Cliente', field: 'cliente' },
-                                { title: 'Descripcion', field: 'descripcion'},
-                                { title: 'Estado', field: 'estado', lookup: { 0: 'EN PROCESO', 1: 'LISTO PARA RETIRO' ,2: 'ENTREGADO'}},
-                                { title: 'Total', field: 'total' ,type: 'numeric'}]}
-                      data={this.state.ListaPedidos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
-                      editable={{
-                        onRowAdd: newData =>
-                          new Promise((resolve, reject) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarPedidos();
-                            }, 2000)
-                            this.AgregarPedido(newData);
-
-                          }),
-                        onRowUpdate: (newData, oldData) =>
-                          new Promise((resolve) => {
-                            if(newData.fecha === oldData.fecha && newData.cliente === oldData.cliente && newData.total === oldData.total) {
-                              setTimeout(() => {
-                                resolve();
-                                this.ActualizarPedidos();
-                              }, 2000)
-                              this.EditarPedido(newData)
-                            } else {
-                              resolve();
-                              this.setState({mensaje: 5})
-                            }
-                          }),
-                        onRowDelete: (oldData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarPedidos();
-                            }, 2000)
-                            this.EliminarPedido(oldData)
-                          }),
-                      }}  />
-                      <Grid
-                      container
-                      direction="row"
-                      justify="center"
-                      alignItems="center"
-                      spacing={3}>
-                        <Grid item xs={6} text-align= "center">
-                        <Box mt={8}>
-                          {mensajito}
-                          <Copyright />
-                        </Box>
-                        </Grid>
-                      </Grid>
-                </CardBody>
-              </Card>
-          </div>
-        )
-      }
     } else if(this.state.ready === false) {
       return(
         <div style={styles.root}>

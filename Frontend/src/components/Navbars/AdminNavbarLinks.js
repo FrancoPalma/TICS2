@@ -14,6 +14,7 @@ import Divider from "@material-ui/core/Divider";
 import Person from "@material-ui/icons/Person";
 // core components
 import Button from "components/CustomButtons/Button.js";
+import Link from '@material-ui/core/Link';
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 
@@ -78,7 +79,9 @@ export default function AdminNavbarLinks() {
                       onClick={handleCloseProfile}
                       className={classes.dropdownItem}
                     >
+                    <Link href="/login" color="error">
                       Cerrar Sesión
+                    </Link>
                     </MenuItem>
                   </MenuList>
                 </ClickAwayListener>
