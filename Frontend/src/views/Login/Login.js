@@ -156,7 +156,7 @@ export default class Login extends React.Component {
     } else if(this.state.estado === 2) {
       mensajito = <Alert severity="error">Hubo un error con las credenciales/conexión</Alert>
     }else if(this.state.estadorut === 3) {
-      mensajito = <Alert severity="error">Rut invalido</Alert>
+      mensajito = <Alert severity="error">Rut invalido, por favor ingrese su rut sin puntos ni guión.</Alert>
     }
 
 
