@@ -425,7 +425,7 @@ router.post('/editar_empleado/:id', async function(req, res){
 	let telefono= req.body.telefono;
 
 	let sucursal = req.body.sucursal.toUpperCase();
-	await empleado.findByIdAndUpdate(req.parmas.id,{telefono: telefono, rol: rol, sucursal: sucursal}, function (err) {
+	await empleado.findByIdAndUpdate(req.params.id,{telefono: telefono, sucursal: sucursal}, function (err) {
 		if(!err){
 			res.sendStatus(201)
 		}
