@@ -144,8 +144,10 @@ export default class InventarioTableList extends React.Component {
   AgregarEmpleado(newData) {
     let regex = new RegExp("^[a-z A-Z]+$");
     let regex2 = new RegExp("^[0-9 k]+$");
+    let regex3 = new RegExp("^[0-9]+$");
 
-    if(regex.test(newData.nombre) && regex2.test(newData.rut) && newData.telefono.length === 9){
+
+    if(regex.test(newData.nombre) && regex2.test(newData.rut) && newData.telefono.length === 9 && regex3.test(newData.telefono)){
       fetch('/crear_empleado', {
       method: 'POST',
       headers: {
@@ -184,7 +186,8 @@ export default class InventarioTableList extends React.Component {
 
   EditarEmpleado(newData) {
     let regex = new RegExp("^[a-z A-Z]+$");
-    if(regex.test(newData.nombre) && newData.telefono.length === 9){
+    let regex3 = new RegExp("^[0-9]+$");
+    if(regex.test(newData.nombre) && newData.telefono.length === 9 && regex3.test(newData.telefono)){
       console.log(newData._id)
       fetch('/editar_empleado/' + newData._id, {
       method: 'POST',
