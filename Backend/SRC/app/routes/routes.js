@@ -69,10 +69,9 @@ router.get('/inicio', isLoggedIn, (req, res) => {
 				console.log("Usuario recibido")
 
 				req.logIn(user, function(err) {
-				if (err) { return next(err); }
-					return res.json(user) //res.sendStatus(201) para mandar 201 y res.json(user) para mandar usuario
-				});
-
+					if (err) { return next(err); }
+						return res.json(user)
+					});
 			}) (req, res);
 	});
 
