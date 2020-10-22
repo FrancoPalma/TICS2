@@ -9,6 +9,7 @@ import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
+import Alert from '@material-ui/lab/Alert';
 
 const styles = {
   cardCategoryWhite: {
@@ -112,6 +113,7 @@ export default class InventarioTableList extends React.Component {
       telefono: null,
       salario: null,
       tabIndex: 0,
+      mensaje: null
     }
     this.handleChange = this.handleChange.bind(this)
     this.MostrarNuevoMenu = this.MostrarNuevoMenu.bind(this)
@@ -140,70 +142,82 @@ export default class InventarioTableList extends React.Component {
     }
 
   AgregarEmpleado(newData) {
-    let estados = null;
-    if(newData.estado === true) {
-      estados = 1;
-    } else {
-      estados = 0;
+    let regex = new RegExp("^[a-z A-Z]+$");
+    let regex2 = new RegExp("^[0-9 k]+$");
+    let regex3 = new RegExp("^[0-9]+$");
+
+
+    if(regex.test(newData.nombre) && regex2.test(newData.rut) && newData.telefono.length === 9 && regex3.test(newData.telefono)){
+      fetch('/crear_empleado', {
+      method: 'POST',
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        nombre: newData.nombre,
+        password: "Joyeria",
+        rut: newData.rut,
+        telefono: newData.telefono,
+        sucursal: newData.sucursal,
+        gestion_empleado: false,
+        gestion_inventario: false,
+        gestion_privilegios: false,
+        descuento_permitido: 0
+      })
+      })
+      .then( (response) => {
+          if(response.status === 201) {
+              console.log("Añadido correctamente")
+              this.setState({mensaje: 1});
+
+          } else {
+              console.log('Hubo un error')
+              this.setState({mensaje: 4});
+          }
+      })
+      .catch((error) => {
+          console.log(error)
+      });
+    }else{
+      this.setState({mensaje: 5})
     }
-
-    fetch('/crear_empleado', {
-    method: 'POST',
-    headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      nombre: newData.nombre,
-      password: "Joyeria",
-      rut: newData.rut,
-      telefono: newData.telefono,
-      sucursal: newData.sucursal,
-      gestion_empleado: false,
-      gestion_inventario: false,
-      gestion_privilegios: false,
-      descuento_permitido: 0
-    })
-    })
-    .then( (response) => {
-        if(response.status === 201) {
-            console.log("Añadido correctamente")
-
-        } else {
-            console.log('Hubo un error')
-        }
-    })
-    .catch((error) => {
-        console.log(error)
-    });
   }
 
   EditarEmpleado(newData) {
-    console.log(newData._id)
-    fetch('/editar_empleado/' + newData._id, {
-    method: 'POST',
-    headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      id: newData._id,
-      nombre: newData.nombre,
-      telefono: newData.telefono,
-      sucursal: newData.sucursal
-    })
-    })
-    .then( (response) => {
-        if(response.status === 201) {
-            console.log("Editado correctamente")
-        } else {
-            console.log('Hubo un error')
-            console.log(response.status)
-        }
-    })
-    .catch((error) => {
-        console.log(error)
-    });
+    let regex = new RegExp("^[a-z A-Z]+$");
+    let regex3 = new RegExp("^[0-9]+$");
+    if(regex.test(newData.nombre) && newData.telefono.length === 9 && regex3.test(newData.telefono)){
+      console.log(newData._id)
+      fetch('/editar_empleado/' + newData._id, {
+      method: 'POST',
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: newData._id,
+        nombre: newData.nombre,
+        telefono: newData.telefono,
+        sucursal: newData.sucursal
+      })
+      })
+      .then( (response) => {
+          if(response.status === 201) {
+              console.log("Editado correctamente")
+              this.setState({mensaje: 2});
+          } else {
+              console.log('Hubo un error')
+              this.setState({mensaje: 4});
+              console.log(response.status)
+          }
+      })
+      .catch((error) => {
+          console.log(error)
+      });
+    }else{
+      this.setState({mensaje: 5})
+    }
   }
 
   EliminarEmpleado(oldData) {
@@ -221,8 +235,10 @@ export default class InventarioTableList extends React.Component {
     .then( (response) => {
         if(response.status === 201) {
             console.log("Eliminado correctamente")
+            this.setState({mensaje: 3});
         } else {
             console.log('Hubo un error')
+            this.setState({mensaje: 4});
         }
     })
     .catch((error) => {
@@ -236,31 +252,37 @@ export default class InventarioTableList extends React.Component {
   }
 
   EditarPrivilegios(newData) {
-    console.log(newData._id)
-    fetch('/editar_privilegios/' + newData._id, {
-    method: 'POST',
-    headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      id: newData._id,
-      gestion_empleado: newData.gestion_empleado,
-      gestion_inventario: newData.gestion_inventario,
-      gestion_privilegios: newData.gestion_privilegios,
-      descuento_permitido: newData.descuento_permitido
-    })
-    })
-    .then( (response) => {
-        if(response.status === 201) {
-            console.log("Editado correctamente")
-        } else {
-            console.log('Hubo un error')
-        }
-    })
-    .catch((error) => {
-        console.log(error)
-    });
+    if(newData.descuento_permitido <= 100 && newData.descuento_permitido >= 0){
+      console.log(newData._id)
+      fetch('/editar_privilegios/' + newData._id, {
+      method: 'POST',
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: newData._id,
+        gestion_empleado: newData.gestion_empleado,
+        gestion_inventario: newData.gestion_inventario,
+        gestion_privilegios: newData.gestion_privilegios,
+        descuento_permitido: newData.descuento_permitido
+      })
+      })
+      .then( (response) => {
+          if(response.status === 201) {
+              console.log("Editado correctamente")
+              this.setState({mensaje: 2});
+          } else {
+              console.log('Hubo un error')
+              this.setState({mensaje: 4});
+          }
+      })
+      .catch((error) => {
+          console.log(error)
+      });
+    }else{
+      this.setState({mensaje: 6})
+    }
   }
 
   handleChange(event, newValue) {
@@ -277,6 +299,21 @@ export default class InventarioTableList extends React.Component {
   }
 
   render() {
+    let mensajito;
+
+    if(this.state.mensaje === 1) {
+      mensajito = <Alert severity="success">¡Empleado agregado correctamente!</Alert>
+    }else if(this.state.mensaje === 2) {
+      mensajito = <Alert severity="success">¡Empleado editado correctamente!</Alert>
+    }else if(this.state.mensaje === 3) {
+      mensajito = <Alert severity="success">¡Empleado eliminado correctamente!</Alert>
+    }else if(this.state.mensaje === 4) {
+      mensajito = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo nuevamente</Alert>
+    }else if(this.state.mensaje === 5) {
+      mensajito = <Alert severity="error">Los datos ingresados son erroneso, por favor reviselos.</Alert>
+    }else if(this.state.mensaje === 6) {
+      mensajito = <Alert severity="error">El descuento permitido solo puede estan en el rango de 0 a 100.</Alert>
+    }
 
     if(this.state.ready === true) {
       if(this.state.priv_emple && this.state.priv_priv) {
@@ -327,6 +364,7 @@ export default class InventarioTableList extends React.Component {
                           }),
                       }}
                     />
+                    {mensajito}
                   </TabPanel>
                   <TabPanel value={this.state.tabIndex} index={1}>
                   <MaterialTable
@@ -348,6 +386,7 @@ export default class InventarioTableList extends React.Component {
                           })
                       }}
                     />
+                    {mensajito}
                   </TabPanel>
                 </CardBody>
               </Card>
