@@ -30,7 +30,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" target="_blank" href="https://cadisjoyas.cl/">
-        Joyeía Cadis
+        Joyería Cadis
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
