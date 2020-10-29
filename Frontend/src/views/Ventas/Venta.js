@@ -567,7 +567,7 @@ export default class Ventas extends React.Component {
           sucursal: this.state.sucursal,
           vendedor: this.state.vendedor,
           total: this.state.total,
-          empleadolog: this.perfil.rut
+          empleadolog: this.state.perfil.rut
         })
         })
         .then( (response) => {
@@ -578,7 +578,7 @@ export default class Ventas extends React.Component {
                   this.EliminarProducto(this.state.targetKeys[i])
                   this.ActualizarInventario()
                 }
-            } else if(response.status === 404){
+            } else if(response.status === 405){
               this.setState({completado: 8})
             }else {
                 console.log('Hubo un error')
