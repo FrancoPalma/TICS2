@@ -230,7 +230,7 @@ export default class Ventas extends React.Component {
       //Periodo
       ListaVentasPeriodo: null,
       desde : "2019-10-01",
-      hasta : "2020-10-15",
+      hasta : "2150-10-15",
       totalp0: 0,
       totalp1: 0,
       totalp2: 0,
@@ -595,7 +595,7 @@ export default class Ventas extends React.Component {
     if(this.state.completado === 1) {
       mensajito = <Alert severity="success">Venta completada</Alert>
     } else if(this.state.completado === 2) {
-      mensajito = <Alert severity="error">Hubo un error con la venta</Alert>
+      mensajito = <Alert severity="error">Hubo un error con la venta.</Alert>
     }
     if(this.state.priv_descuento < this.state.descuento) {
       mensajito = <Alert severity="error">Excede el descuento maximo permitido.</Alert>
