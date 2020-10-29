@@ -120,9 +120,7 @@ router.get('/productos', isLoggedIn,async function(req, res){  //lista de produc
 	      if(err){
 	         res.sendStatus(404);
 	      } else {
-					res.json({
-						producto
-					});
+					res.json(producto);
 				}
 		});
 });
