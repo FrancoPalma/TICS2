@@ -133,7 +133,8 @@ router.post('/agregar_prod', isLoggedIn, async function(req,res){
 	let precio = req.body.precio;
 	let descripcion = req.body.descripcion.toUpperCase();
 	let sucursal = req.body.sucursal;
-  await producto.create({codigo: codigo, material: material, tipo: tipo, piedra: piedra, precio: precio, descripcion: descripcion, sucursal: sucursal}, (err) =>{
+	let cantidad = req.body.cantidad;
+  await producto.create({codigo: codigo, material: material, tipo: tipo, piedra: piedra, precio: precio, descripcion: descripcion, sucursal: sucursal, cantidad: cantidad}, (err) =>{
 		if(!err){
      	res.sendStatus(201);
 	}else{
