@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 var Producto = mongoose.model('Producto');
+var Pedido = mongoose.model('Pedido');
 
 var venta = new Schema   ({
       numero_venta: {type: Number, require: true},
@@ -12,9 +13,9 @@ var venta = new Schema   ({
       vendedor: {type: String, require: true},
       sucursal: {type: String, require: true},
       cliente: {type: String, require: true},
-      productos: [{
-        type: Schema.ObjectId, ref: "Producto"}]
-    },
+      productos: [{ type: Schema.ObjectId, ref: "Producto" }],
+      pedido: { type: Schema.ObjectId, ref: "Pedido" }
+      },
       {collection: 'venta'}
     );
 module.exports = mongoose.model('Venta', venta);
