@@ -696,7 +696,7 @@ export default class Ventas extends React.Component {
                       alignItems="center"
                       spacing={1}>
                         <Grid item xs={6}>
-                          <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.nombre} label="Vendedor" onChange={this.handleInputChange('vendedor')}/>
+                          <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Vendedor" onChange={this.handleInputChange('vendedor')}/>
                         </Grid>
                         <Grid item xs={6}>
 
