@@ -8,7 +8,9 @@ const pedido = new Schema({
   descripcion: {type: String, required: true},
   estado : {type: String, required: true},
   es_venta: {type: Boolean, required: true},
+  abono: {type: Number, required: true},
   total: {type: Number, required: true},
+  pagos: [{type: Number, required: true}]
   },
   {collection: 'pedido'}
 )

@@ -116,18 +116,15 @@ function isLoggedIn (req, res, next) {
 
 //Administrar productos
 router.get('/productos', isLoggedIn,async function(req, res){  //lista de productos, tiene buscador
-	await empleado.find( async function(err, empleado){
 		await producto.find(function(err, producto){
 	      if(err){
 	         res.sendStatus(404);
 	      } else {
 					res.json({
-						producto: producto,
-						empleado: empleado
+						producto
 					});
 				}
 		});
-	});
 });
 
 router.post('/agregar_prod', isLoggedIn, async function(req,res){
@@ -342,23 +339,29 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 	let id = prods[0].id
 	let empleadoLog = req.body.empleadoLog;
 
-	await venta.find({} , async (err, venta) => {
-		if( venta.length == null || venta.length == 0 ){
-			crearVenta.create({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, empleadoLog: empleadoLog, total: total, productos: prods}, (err) =>{
-				if(!err){
-					res.sendStatus(201);
+	await empleado.findOne({'rut': vendedor}, async function(err, empleado){
+		if(!usuario){
+			res.sendStatus(404);
+		}else{
+			await venta.find({} , async (err, venta) => {
+				if( venta.length == null || venta.length == 0 ){
+					crearVenta.create({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, empleadoLog: empleadoLog, total: total, productos: prods}, (err) =>{
+						if(!err){
+							res.sendStatus(201);
+						}else{
+							res.sendStatus(404);
+						};
+					});
 				}else{
-					res.sendStatus(404);
+					crearVenta.create({numero_venta: venta.length + 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods}, (err) =>{
+						if(!err){
+							res.sendStatus(201);
+						}else{
+							res.sendStatus(404);
+						};
+				 });
 				};
 			});
-		}else{
-			crearVenta.create({numero_venta: venta.length + 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods}, (err) =>{
-				if(!err){
-					res.sendStatus(201);
-				}else{
-					res.sendStatus(404);
-				};
-		 });
 		};
 	});
 });
