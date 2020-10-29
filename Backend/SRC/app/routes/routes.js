@@ -339,7 +339,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 
 	await empleado.findOne({'rut': vendedor}, async function(err, empleado){
 		if(!empleado){
-			res.sendStatus(404);
+			res.sendStatus(405);
 		}else{
 			await venta.find({} , async (err, venta) => {
 				if( venta.length == null || venta.length == 0 ){
