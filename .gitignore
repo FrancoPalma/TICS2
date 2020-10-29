@@ -1,3 +1,5 @@
 
 *.bat
 Frontend/debug.log
+Frontend/debug.log
+*.log

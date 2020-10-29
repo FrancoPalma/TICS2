@@ -566,7 +566,8 @@ export default class Ventas extends React.Component {
           descuento: this.state.descuento,
           sucursal: this.state.sucursal,
           vendedor: this.state.vendedor,
-          total: this.state.total
+          total: this.state.total,
+          empleadolog: this.perfil.rut
         })
         })
         .then( (response) => {
@@ -695,7 +696,7 @@ export default class Ventas extends React.Component {
                       alignItems="center"
                       spacing={1}>
                         <Grid item xs={6}>
-                          <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.nombre} label="Vendedor" onChange={this.handleInputChange('vendedor')}/>
+                          <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Vendedor" onChange={this.handleInputChange('vendedor')}/>
                         </Grid>
                         <Grid item xs={6}>
 
