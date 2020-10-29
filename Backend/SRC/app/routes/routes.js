@@ -340,7 +340,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 	let empleadoLog = req.body.empleadoLog;
 
 	await empleado.findOne({'rut': vendedor}, async function(err, empleado){
-		if(!usuario){
+		if(!empleado){
 			res.sendStatus(404);
 		}else{
 			await venta.find({} , async (err, venta) => {
