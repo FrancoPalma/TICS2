@@ -567,7 +567,7 @@ export default class Ventas extends React.Component {
           sucursal: this.state.sucursal,
           vendedor: this.state.vendedor,
           total: this.state.total,
-          empleadolog: this.perfil.rut
+          empleadolog: this.state.perfil.rut
         })
         })
         .then( (response) => {
