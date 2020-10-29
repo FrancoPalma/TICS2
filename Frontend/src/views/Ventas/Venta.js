@@ -270,7 +270,7 @@ export default class Ventas extends React.Component {
     let info = JSON.parse(localStorage.getItem('usuario'));
     this.setState({
       perfil: info,
-      vendedor: info.nombre,
+      vendedor: info.rut,
       sucursal: info.sucursal,
       priv_descuento: info.descuento_permitido
     })
@@ -578,7 +578,9 @@ export default class Ventas extends React.Component {
                   this.EliminarProducto(this.state.targetKeys[i])
                   this.ActualizarInventario()
                 }
-            } else {
+            } else if(response.status === 404){
+              this.setState({completado: 8})
+            }else {
                 console.log('Hubo un error')
                 this.setState({completado: 2})
             }
@@ -592,37 +594,40 @@ export default class Ventas extends React.Component {
   }
   render() {
 
-    let mensajito;
+    let mensajeventa;
+    let mensajeventadia;
     if(this.state.completado === 1) {
-      mensajito = <Alert severity="success">Venta completada</Alert>
+      mensajeventa = <Alert severity="success">Venta completada</Alert>
     } else if(this.state.completado === 2) {
-      mensajito = <Alert severity="error">Hubo un error con la venta.</Alert>
+      mensajeventa = <Alert severity="error">Hubo un error con la venta.</Alert>
+    }else if(this.state.completado === 8) {
+      mensajeventa = <Alert severity="error">Rut de vendedor invalido.</Alert>
     }
     if(this.state.priv_descuento < this.state.descuento) {
-      mensajito = <Alert severity="error">Excede el descuento maximo permitido.</Alert>
+      mensajeventa = <Alert severity="error">Excede el descuento maximo permitido.</Alert>
     }else if(this.state.descuento < 0){
-      mensajito = <Alert severity="error">Valor invalido.</Alert>
+      mensajeventa = <Alert severity="error">Valor invalido.</Alert>
     }
 
     if(this.state.estado === 1) {
-      mensajito = <Alert severity="success">Hay ventas!</Alert>
+      mensajeventadia = <Alert severity="success">Hay ventas!</Alert>
     } else if(this.state.estado === 2) {
-      mensajito = <Alert severity="error">No se encontraron ventas :(</Alert>
+      mensajeventadia = <Alert severity="error">No se encontraron ventas :(</Alert>
     }else if(this.state.estado === 3) {
-      mensajito = <Alert severity="success">La venta se eliminó correctamente</Alert>
+      mensajeventadia = <Alert severity="success">La venta se eliminó correctamente</Alert>
     }else if(this.state.estado === 4) {
-      mensajito = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
+      mensajeventadia = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
     }
 
-    let mensajitosucursal;
+    let mensajeventaperiodo;
     if(this.state.estadosucursal === 1) {
-      mensajitosucursal = <Alert severity="success">Hay ventas!</Alert>
+      mensajeventaperiodo = <Alert severity="success">Hay ventas!</Alert>
     } else if(this.state.estadosucursal === 2) {
-      mensajitosucursal = <Alert severity="error">No se encontraron ventas :(</Alert>
+      mensajeventaperiodo = <Alert severity="error">No se encontraron ventas :(</Alert>
     }else if(this.state.estadosucursal === 3) {
-      mensajito = <Alert severity="success">La venta se eliminó correctamente</Alert>
+      mensajeventaperiodo = <Alert severity="success">La venta se eliminó correctamente</Alert>
     }else if(this.state.estadosucursal === 4) {
-      mensajito = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
+      mensajeventaperiodo = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
     }
 
     if(this.state.ready === true){
@@ -696,7 +701,7 @@ export default class Ventas extends React.Component {
                       alignItems="center"
                       spacing={1}>
                         <Grid item xs={6}>
-                          <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Vendedor" onChange={this.handleInputChange('vendedor')}/>
+                          <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
                         </Grid>
                         <Grid item xs={6}>
 
@@ -705,7 +710,7 @@ export default class Ventas extends React.Component {
                       <Button style={{ float: 'right', margin: 5 }} onClick={this.imprimir}>
                         Finalizar venta
                       </Button>
-                      {mensajito}
+                      {mensajeventa}
                     </Grid>
                   </Grid>
                 </TabPanel>
@@ -757,6 +762,7 @@ export default class Ventas extends React.Component {
                       -Total en Ventas: ${this.state.total2}
                       </h4>
                       }
+                      {mensajeventadia}
                       </Grid>
                     </Grid>
                   </div>
@@ -789,6 +795,7 @@ export default class Ventas extends React.Component {
                           }),
                         }}
                     />
+                    {mensajeventaperiodo}
                 </TabPanel>
               </CardBody>
             </Card>
