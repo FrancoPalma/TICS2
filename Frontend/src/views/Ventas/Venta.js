@@ -566,7 +566,8 @@ export default class Ventas extends React.Component {
           descuento: this.state.descuento,
           sucursal: this.state.sucursal,
           vendedor: this.state.vendedor,
-          total: this.state.total
+          total: this.state.total,
+          empleadolog: this.perfil.rut
         })
         })
         .then( (response) => {

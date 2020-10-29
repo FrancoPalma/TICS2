@@ -5,12 +5,10 @@ import Inicio from "views/Inicio/Inicio.js";
 import UserProfile from "views/Perfil/Perfil.js";
 import InventarioTableList from "views/Inventario/InventarioTableList.js";
 import TableListEmpleados from "views/Empleados/TableListEmpleados.js";
+import TableListClientes from "views/Clientes/TableListClientes.js";
 import TableListPedidos from "views/TablaPedidos/TableListPedidos.js";
 import Maps from "views/Maps/Maps.js";
-import ListaDeVentas from "views/TablaVentas/TablaVentas.js";
 import Venta from "views/Ventas/Venta.js";
-import ListaDeVentasPeriodo from "views/TablaVentasPeriodo/TablaVentasPeriodoCalendario.js"
-
 const dashboardRoutes = [
   {
     path: "/inicio",
@@ -50,6 +48,14 @@ const dashboardRoutes = [
     rtlName: "لوحة القيادة",
     icon: "list_alt",
     component: TableListEmpleados,
+    layout: "/admin"
+  },
+  {
+    path: "/clientes",
+    name: "Clientes",
+    rtlName: "لوحة القيادة",
+    icon: "list_alt",
+    component: TableListClientes,
     layout: "/admin"
   },
   {
