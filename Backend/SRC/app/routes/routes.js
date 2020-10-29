@@ -116,12 +116,17 @@ function isLoggedIn (req, res, next) {
 
 //Administrar productos
 router.get('/productos', isLoggedIn,async function(req, res){  //lista de productos, tiene buscador
-	await producto.find(function(err, producto){
-      if(err){
-         res.sendStatus(404);
-      } else {
-				res.json(producto);
-			}
+	await empleado.find( async function(err, empleado){
+		await producto.find(function(err, producto){
+	      if(err){
+	         res.sendStatus(404);
+	      } else {
+					res.json({
+						producto: producto,
+						empleado: empleado
+					});
+				}
+		});
 	});
 });
 
@@ -335,10 +340,11 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 	let total = req.body.total;
 	let largo = prods.length;
 	let id = prods[0].id
+	let empleadoLog = req.body.empleadoLog;
 
 	await venta.find({} , async (err, venta) => {
 		if( venta.length == null || venta.length == 0 ){
-			crearVenta.create({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods}, (err) =>{
+			crearVenta.create({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, empleadoLog: empleadoLog, total: total, productos: prods}, (err) =>{
 				if(!err){
 					res.sendStatus(201);
 				}else{
