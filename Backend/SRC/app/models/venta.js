@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const {Schema} = mongoose;
-const Producto = mongoose.model('Producto');
-const Usuario = mongoose.model('Usuario');
+const Schema = mongoose.Schema;
+var Producto = mongoose.model('Producto');
 
 var venta = new Schema   ({
       numero_venta: {type: Number, require: true},
@@ -9,7 +8,8 @@ var venta = new Schema   ({
       metodo_pago: {type: String, require: true},
       descuento: {type: Number, require: true},
       total: {type: Number, require: true},
-      vendedor: {type: Schema.ObjectId, ref: "getUsuario"},
+      empleadoLog: {type: String, require: true},
+      vendedor: {type: String, require: true},
       sucursal: {type: String, require: true},
       cliente: {type: String, require: true},
       productos: [{
