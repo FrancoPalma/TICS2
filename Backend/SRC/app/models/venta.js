@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 var Producto = mongoose.model('Producto');
-var Boleta = mongoose.model('Boleta');
 
 var venta = new Schema   ({
       numero_venta: {type: Number, require: true},

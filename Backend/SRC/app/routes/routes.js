@@ -4,6 +4,7 @@ const router = express.Router();
 const producto = require('../models/producto');
 const inventario = require('../models/inventario');
 const pedido = require('../models/pedido');
+const crearPedido = require('../models/pedido')
 const Venta = require('../models/venta');
 const venta = require('../models/venta');
 const crearVenta = require('../models/venta');
@@ -89,8 +90,6 @@ router.get('/inicio', isLoggedIn, (req, res) => {
 		failureRedirect: '/signup',
 		failureFlash: true // allow flash messages
 	}));
-
-
 
 
 	//profile view
@@ -190,20 +189,40 @@ router.get('/pedidos', isLoggedIn, async function(req, res){  //lista de product
 
 router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 	let fecha = req.body.fecha;
-	let cliente = req.body.cliente.toUpperCase();
+	let cliente_nombre = req.body.cliente_nombre.toUpperCase();
+	let cliente_telefono = req.body.cliente_telefono.toUpperCase()
 	let descripcion = req.body.descripcion.toUpperCase();
 	let sucursal = req.body.sucursal;
 	let estado = req.body.estado;
 	let total = req.body.total;
-  await pedido.create({fecha: fecha, cliente: cliente, sucursal: sucursal, descripcion: descripcion, estado: estado, total: total}, (err) =>{
-			if(!err){
-	     res.sendStatus(201)
+	await pedido.find({}, async function(err, pedido){
+		if( pedido.length == null || pedido.length == 0 ){
+	  	await crearPedido.create({fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:abono}, (err) =>{
+				boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: 1}, (err) =>{
+					if(!err){
+						res.sendStatus(201)
+					}else{
+						res.sendStatus(404)
+					}
+				});
+			});
+		}else{
+			await crearPedido.create({fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:abono}, (err) =>{
+				if(!err){
+					boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: venta.length + 1}, (err) =>{
+						if(!err){
+							res.sendStatus(201)
+						}else{
+							res.sendStatus(404)
+						}
+					});
+				}else{
+					res.sendStatus(404)
+				}
 			}
-			else{
-				res.sendStatus(404)
-			}
-    });
-});
+	});
+}
+
 
 router.get('/delete_pedido/:id', isLoggedIn, async function(req,res){
     let id = req.params.id;
@@ -346,7 +365,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 				if( venta.length == null || venta.length == 0 ){
 					crearVenta.create({numero_venta: 1, fecha: fecha, sucursal: sucursal, productos: prods}, (err) =>{
 						if(!err){
-							boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: numero}, (err) =>{
+							boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: 1}, (err) =>{
 								if(!err){
 									res.sendStatus(201);
 								}else{
@@ -358,9 +377,15 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 						};
 					});
 				}else{
-					crearVenta.create({numero_venta: venta.length + 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, total: total, productos: prods}, (err) =>{
+					crearVenta.create({numero_venta: venta.length + 1, fecha: fecha, sucursal: sucursal, productos: prods}, (err) =>{
 						if(!err){
-							res.sendStatus(201);
+							boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: venta.length + 1}, (err) =>{
+								if(!err){
+									res.sendStatus(201);
+								}else{
+									res.sendStatus(404);
+								}
+							})
 						}else{
 							res.sendStatus(404);
 						};
