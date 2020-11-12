@@ -308,7 +308,7 @@ export default class Ventas extends React.Component {
     for(let i = 0; i<this.state.ListaVentasDia.length;i++){
       let aux =""
       for(let e=0;e<this.state.ListaVentasDia[i].productos.length;e++){
-        aux = this.state.ListaVentasDia[i].productos[e].codigo + this.state.ListaVentasDia[i].productos[e].precio.toString() + ".<br>"
+        aux = this.state.ListaVentasDia[i].productos[e].codigo + this.state.ListaVentasDia[i].productos[e].precio.toString() + ".<br>" //o \n
       }
       this.state.ListaVentasDia[i].productos = aux
     }
