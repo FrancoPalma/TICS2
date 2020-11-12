@@ -46,8 +46,8 @@ export default class UserProfile extends React.Component {
       perfil: null,
       isReady: false,
       pass: null,
-      new_pass:null,
-      conf_pass:null
+      new_pass:"franco",
+      conf_pass:"franco"
 
     }
   }
@@ -80,8 +80,16 @@ export default class UserProfile extends React.Component {
      this.setState({usuario: value});
    }
  }
+ handleInputChange(property) {
+   return e => {
+     new Promise((resolve) => {
+       this.setState({[property]: e.target.value});
+     })
+   };
+ }
 
  CambioPassword() {
+   console.log(this.state.new_pass)
    if(this.state.new_pass === this.state.conf_pass){
      fetch('/editar_password/', {
      method: 'POST',
@@ -164,40 +172,9 @@ export default class UserProfile extends React.Component {
               <Typography component="h1" variant="h5">
                 Cambio de Contraseña
               </Typography>
-              <form className={styles.form} noValidate>
-                <TextField
-                  variant="outlined"
-                  required
-                  id="pass"
-                  label="Contraseña Actual"
-                  type="password"
-                  name="pass"
-                  autoComplete="current-password"
-                  value={this.state.pass}
-                  onChange={(event) => this.setState({pass:event.target.value})}
-                />
-              </form>
-              <form className={styles.form} noValidate>
-                <TextField
-                  variant="outlined"
-                  required
-                  name="new_pass"
-                  label="Nueva Contraseña"
-                  type="password"
-                  id="new_pass"
-                  onChange={(event) => this.setState({new_pass:event.target.value})}
-                />
-              </form>
-              <form className={styles.form} noValidate>
-                <TextField
-                  variant="outlined"
-                  required
-                  type="password"
-                  name="conf_pass"
-                  label="Confirmar Contraseña"
-                  id="conf_pass"
-                  onChange={(event) => this.setState({conf_pass:event.target.value})}
-                />
+              <TextField id="standard-basic" value={this.state.pass} type ="password" label="Contraseña actual" onChange={this.handleInputChange('pass')}/>
+              <TextField id="standard-basic" value={this.state.new_pass} type ="password" label="Contraseña nueva" onChange={this.handleInputChange('new_pass')}/>
+              <TextField id="standard-basic" value={this.state.conf_pass} type ="password" label="confirmar contraseña" onChange={this.handleInputChange('conf_pass')}/>
                 <Button
                   fullWidth
                   variant="contained"
@@ -206,7 +183,6 @@ export default class UserProfile extends React.Component {
                 >
                   Cambiar Contraseña
                 </Button>
-              </form>
             </Card>
           </GridItem>
         </GridContainer>
