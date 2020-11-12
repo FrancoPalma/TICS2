@@ -224,9 +224,11 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 				}else{
 					res.sendStatus(404)
 				}
-			}
+			});
+	}
 	});
-}
+});
+
 
 
 router.get('/delete_pedido/:id', isLoggedIn, async function(req,res){
