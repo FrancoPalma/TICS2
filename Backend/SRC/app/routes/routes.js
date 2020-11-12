@@ -4,7 +4,7 @@ const router = express.Router();
 const producto = require('../models/producto');
 const inventario = require('../models/inventario');
 const pedido = require('../models/pedido');
-const crearPedido = require('../models/pedido')
+const crearPedido = require('../models/pedido');
 const Venta = require('../models/venta');
 const venta = require('../models/venta');
 const crearVenta = require('../models/venta');
@@ -194,7 +194,12 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 	let descripcion = req.body.descripcion.toUpperCase();
 	let sucursal = req.body.sucursal;
 	let estado = req.body.estado;
+	let abono = req.body.abono;
 	let total = req.body.total;
+	let empleadoLog = req.body.empleadoLog;
+	let vendedor = req.body.vendedor;
+	let metodo_pago = req.body.metodo_pago;
+	let descuento = req.body.descuento;
 	await pedido.find({}, async function(err, pedido){
 		if( pedido.length == null || pedido.length == 0 ){
 	  	await crearPedido.create({fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:abono}, (err) =>{
@@ -252,11 +257,11 @@ router.post('/eliminar_pedido/:id', isLoggedIn, async function(req,res){
 router.post('/editar_pedido/:id', isLoggedIn, async function(req, res){
 	let id = req.body.id
 	let fecha = req.body.fecha;
-	let cliente = req.body.cliente.toUpperCase();
+	let cliente_nombre = req.body.cliente_nombre.toUpperCase();
+	let cliente_telefono = req.body.cliente_telefono;
 	let sucursal = req.body.sucursal;
 	let descripcion = req.body.descripcion.toUpperCase();
 	let estado = req.body.estado.toUpperCase();
-	let total = req.body.total;
 	await pedido.findByIdAndUpdate(id,{fecha: fecha, cliente: cliente, sucursal: sucursal, descripcion: descripcion, estado: estado, total: total}, function (err) {
 		if(!err){
 			res.sendStatus(201)
