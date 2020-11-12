@@ -294,7 +294,6 @@ export default class Ventas extends React.Component {
     })
     .then(users => {
         this.setState({ListaVentasPeriodo: users})
-        this.CalcularTotal3()
     });
   }
 
@@ -305,9 +304,14 @@ export default class Ventas extends React.Component {
     })
     .then(users => {
         this.setState({ListaVentasDia: users, ready: true})
-        console.log(this.state.ready);
-        this.CalcularTotal2()
     });
+    for(let i = 0; i<this.state.ListaVentasDia.length;i++){
+      let aux =""
+      for(let e=0;e<this.state.ListaVentasDia[i].productos.length;e++){
+        aux = this.state.ListaVentasDia[i].productos[e].codigo + this.state.ListaVentasDia[i].productos[e].precio.toString() + ".<br>" //o \n
+      }
+      this.state.ListaVentasDia[i].productos = aux
+    }
   }
 
   EliminarVenta(oldData) {
@@ -656,7 +660,6 @@ export default class Ventas extends React.Component {
                     }
                     leftColumns={leftTableColumns}
                     rightColumns={rightTableColumns}
-
                   />
                   <Grid
                   container
@@ -721,11 +724,10 @@ export default class Ventas extends React.Component {
                           <MaterialTable
                               title='Tu sucursal'
                               columns={ [{ title: 'Numero', field: 'numero_venta', type: 'numeric' },
-                                        { title: 'Descuento', field: 'descuento',type: 'numeric' },
                                         { title: 'Fecha', field: 'fecha', type: 'date'},
-                                        { title: 'Pago', field: 'metodo_pago' },
-                                        { title: 'Total', field: 'total' ,type: 'numeric'},
-                                        { title: 'Vendedor', field: 'vendedor'} ]}
+                                        { title: 'Cliente', field: 'cliente_nombre'},
+                                        { title: 'Telefono', field: 'cliente_telefono'},
+                                        { title: 'Productos', field: 'productos'}]}
                               data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                               editable={{
                                   onRowDelete: (oldData) =>
@@ -740,31 +742,6 @@ export default class Ventas extends React.Component {
                             />
                         </CardBody>
                     </Card>
-                    <Grid
-                    container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
-                    spacing={3}>
-                      <Grid item xs={6} text-align= "center">
-                      {this.state.perfil.sucursal === '0' &&
-                      <h4>
-                      -Total en Ventas: ${this.state.total0}
-                      </h4>
-                      }
-                      {this.state.perfil.sucursal === '1' &&
-                      <h4>
-                      -Total en Ventas: ${this.state.total1}
-                      </h4>
-                      }
-                      {this.state.perfil.sucursal === '2' &&
-                      <h4>
-                      -Total en Ventas: ${this.state.total2}
-                      </h4>
-                      }
-                      {mensajeventadia}
-                      </Grid>
-                    </Grid>
                   </div>
                 </TabPanel>
                 <TabPanel value={this.state.tabIndex} index={2}>
@@ -778,11 +755,10 @@ export default class Ventas extends React.Component {
                   <MaterialTable
                       title='Tienda'
                       columns={ [{ title: 'Numero', field: 'numero_venta', type: 'numeric' },
-                                { title: 'Descuento', field: 'descuento',type: 'numeric' },
                                 { title: 'Fecha', field: 'fecha', type: 'date'},
-                                { title: 'Pago', field: 'metodo_pago' ,type: 'numeric'},
-                                { title: 'Total', field: 'total' ,type: 'numeric'},
-                                { title: 'Vendedor', field: 'vendedor'} ]}
+                                { title: 'Cliente', field: 'cliente_nombre'},
+                                { title: 'Telefono', field: 'cliente_telefono'},
+                                { title: 'Productos', field: 'productos'}]}
                       data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.sucursal)}
                       editable={{
                           onRowDelete: (oldData) =>
@@ -795,7 +771,6 @@ export default class Ventas extends React.Component {
                           }),
                         }}
                     />
-                    {mensajeventaperiodo}
                 </TabPanel>
               </CardBody>
             </Card>
