@@ -9,6 +9,7 @@ const venta = require('../models/venta');
 const crearVenta = require('../models/venta');
 const empleado = require('../models/usuario');
 const passport = require('../../config/passport');
+const boleta = require('../models/boleta');
 
 router.use(passport.initialize());
 router.use(passport.session());
@@ -345,7 +346,13 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 				if( venta.length == null || venta.length == 0 ){
 					crearVenta.create({numero_venta: 1, fecha: fecha, sucursal: sucursal, productos: prods}, (err) =>{
 						if(!err){
-							res.sendStatus(201);
+							boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: numero}, (err) =>{
+								if(!err){
+									res.sendStatus(201);
+								}else{
+									res.sendStatus(404);
+								}
+							})
 						}else{
 							res.sendStatus(404);
 						};

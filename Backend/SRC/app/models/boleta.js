@@ -10,8 +10,8 @@ var boleta = new Schema({
       cliente_nombre: {type: String},
       cliente_telefono: {type: String},
       metodo_pago: {type: String, require: true},
-      tipo: {type: Boolean, require: true},
-      numero_pedido: {type: Number, required: true},
+      tipo: {type: String, require: true},
+      numero: {type: Number, required: true},
       sucursal: {type: String, require: true}
       },
       {collection: 'boleta'}
