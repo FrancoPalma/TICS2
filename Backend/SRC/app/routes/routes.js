@@ -343,7 +343,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 		}else{
 			await venta.find({} , async (err, venta) => {
 				if( venta.length == null || venta.length == 0 ){
-					crearVenta.create({numero_venta: 1, fecha: fecha, metodo_pago: metodo_pago, descuento: descuento, sucursal: sucursal, vendedor: vendedor, empleadoLog: empleadoLog, total: total, productos: prods}, (err) =>{
+					crearVenta.create({numero_venta: 1, fecha: fecha, sucursal: sucursal, productos: prods}, (err) =>{
 						if(!err){
 							res.sendStatus(201);
 						}else{
