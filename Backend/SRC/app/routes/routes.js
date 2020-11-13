@@ -32,12 +32,12 @@ router.get('/inicio', isLoggedIn, (req, res) => {
 		let aux = dia_actual*(24*60*60*1000);
 		dias = dias*(24*60*60*1000);// paso a milisegundos
 		let dia_inicio = dias - aux;
-		venta.find({$and: [{fecha: {$gte: new Date(dia_inicio)}},{fecha: {$lt: new Date(dias)}}]}, (err, venta) => {
+		boleta.find({$and: [{fecha: {$gte: new Date(dia_inicio)}},{fecha: {$lt: new Date(dias)}}]}, (err, boleta) => {
 			if(err) {
 				return 0;
 			}
 			else{
-				return venta.length;
+				return boleta.length;
 			}
 		});
 	}
@@ -46,17 +46,17 @@ router.get('/inicio', isLoggedIn, (req, res) => {
 		let fecha = Date.now();
 		let semana = 7*(24*60*60*1000);
 		let dia_inicio = dias - semana;
-		venta.find({$and: [{fecha: {$gte: new Date(dia_inicio)}},{fecha: {$lt: new Date(fecha)}}]}, (err, venta) => {
+		boleta.find({$and: [{fecha: {$gte: new Date(dia_inicio)}},{fecha: {$lt: new Date(fecha)}}]}, (err, boleta) => {
 			if(err) {
 				return 0;
 			}
 			else{
-				return venta.length;
+				return boleta.length;
 			}
 		});
 	}
 
-	//login view
+	////----------------------------------------------LOG IN----------------------------------------------
 	router.get('/login', (req, res) => {
 		res.render('login.ejs', {
 			message: req.flash('loginMessage')
@@ -78,21 +78,7 @@ router.get('/inicio', isLoggedIn, (req, res) => {
 	});
 
 
-	// signup view
-	router.get('/signup', (req, res) => {
-		res.render('signup', {
-			message: req.flash('signupMessage')
-		});
-	});
-
-	router.post('/signup', passport.authenticate('local-signup', {
-		successRedirect: '/inicio',
-		failureRedirect: '/signup',
-		failureFlash: true // allow flash messages
-	}));
-
-
-	//profile view
+//----------------------------------------------GESTIONAR PERFIL----------------------------------------------
 	router.get('/profile', isLoggedIn, (req, res) => {
 		res.render('profile', {
 			user: req.user
@@ -114,7 +100,7 @@ function isLoggedIn (req, res, next) {
 	res.redirect('/');
 }
 
-//Administrar productos
+////----------------------------------------------GESTIONAR PRODUCTOS----------------------------------------------
 router.get('/productos', isLoggedIn,async function(req, res){  //lista de productos, tiene buscador
 		await producto.find(function(err, producto){
 	      if(err){
@@ -176,7 +162,7 @@ router.post('/editar_prod/:id', isLoggedIn, async function(req, res){
 });
 
 
-//Gestionar pedidos
+//----------------------------------------------GESTIONAR PEDIDOS----------------------------------------------
 router.get('/pedidos', isLoggedIn, async function(req, res){  //lista de productos, tiene buscador
 	 await pedido.find(function(err, pedido){
      if(err){
@@ -308,7 +294,7 @@ router.post('/editar_estado_pedido/:id', isLoggedIn, async function(req, res){
   });
 });
 
-//Realizar venta, se usa una lista para guardar los productos que desea el usuario
+//----------------------------------------------GESTIONAR VENTAS----------------------------------------------
 router.get('/lista_venta', isLoggedIn, isLoggedIn, async function(req,res){
   	await lista.find(function (err,lista) {
 			if (!err){
@@ -319,34 +305,34 @@ router.get('/lista_venta', isLoggedIn, isLoggedIn, async function(req,res){
 	});
 });
 
-router.get('/ventasdia', isLoggedIn, async function(req,res) {
+router.get('/boletasdia', isLoggedIn, async function(req,res) {
 	let fecha = Date.now();
 	let dias = fecha/ (24*60*60*1000); //paso a dias
 	let dia_actual = dias%1;
 	let aux = dia_actual*(24*60*60*1000);
 	dias = dias*(24*60*60*1000);// paso a milisegundos
 	let dia_inicio = dias - aux;
-	await venta.find({$and: [{fecha: {$gte: new Date(dia_inicio)}},{fecha: {$lt: new Date(dias)}}]}, (err, venta) => {
+	await boleta.find({$and: [{fecha: {$gte: new Date(dia_inicio)}},{fecha: {$lt: new Date(dias)}}]}, (err, boleta) => {
 		if(err) {
 			res.sendStatus(404);
 		}
 		else{
-			res.json(venta);
+			res.json(boleta);
 		}
 	});
 });
 
-router.post('/ventasperiodo', isLoggedIn, async function(req,res){
+router.post('/boletasperiodo', isLoggedIn, async function(req,res){
 		const fecha1 = req.body.desde;
 		const fecha2 = req.body.hasta;
 		const fi = fecha1.concat("T00:00:00-04:00");
 		const ff = fecha2.concat("T23:59:00-04:00");
-		await venta.find({$and: [{fecha: {$gte: new Date(fi)}},{fecha: {$lt: new Date(ff)}}]}, (err, venta) => {
+		await boleta.find({$and: [{fecha: {$gte: new Date(fi)}},{fecha: {$lt: new Date(ff)}}]}, (err, boleta) => {
 			if(err) {
 				res.sendStatus(404);
 			}
 			else{
-				res.json(venta);
+				res.json(boleta);
 			}
 		});
 
@@ -415,7 +401,7 @@ router.post('/eliminar_venta/:id', isLoggedIn, async function(req,res){
     });
 });
 
-router.get('/agregar_venta/:numVenta', isLoggedIn, async function(req,res){
+/*router.get('/agregar_venta/:numVenta', isLoggedIn, async function(req,res){
 		await venta.findOne({numero_venta: req.params.numVenta}, (err, venta) =>{
 			res.render('agregar_venta', {
 				user: req.user,
@@ -432,10 +418,10 @@ router.post('/agregar_venta/:id', isLoggedIn, async function(req, res){
       res.redirect('../venta');
     }
     });
-  });
+  });*/
 
 
-//Gestionar empleados
+//----------------------------------------------GESTIONAR EMPLEADOS----------------------------------------------
 router.get('/empleados', isLoggedIn, async function(req,res){
     await empleado.find(function (err, empleado) {
 			if (!err){
