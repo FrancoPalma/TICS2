@@ -223,14 +223,13 @@ function Copyright() {
 
 export default class Ventas extends React.Component {
 
-
   constructor(props) {
     super(props);
     this.state = {
       //Periodo
       ListaVentasPeriodo: null,
-      desde : "2019-10-01",
-      hasta : "2150-10-15",
+      desde : "",
+      hasta : "",
       totalp0: 0,
       totalp1: 0,
       totalp2: 0,
@@ -239,6 +238,8 @@ export default class Ventas extends React.Component {
       ready: false,
       ListaProductos: "",
       descuento: 0,
+      cliente_nombre: "",
+      cliente_telefono: 0,
       metodo_pago: 'efectivo',
       vendedor: '',
       sucursal: '0',
@@ -248,7 +249,7 @@ export default class Ventas extends React.Component {
       indexSucursal: 0,
       completado: 0,
       perfil: null,
-      priv_dios: true,
+      priv_dios: false,
       priv_descuento: null,
       ListaVentasDia: null,
       total0: 0,
@@ -262,6 +263,8 @@ export default class Ventas extends React.Component {
     this.ActualizarVentasDia = this.ActualizarVentasDia.bind(this)
     this.CalcularTotal = this.CalcularTotal.bind(this)
     this.CalcularTotal2 = this.CalcularTotal2.bind(this)
+    this.onChange = this.onChange.bind(this)
+    this.onChange2 = this.onChange2.bind(this)
     this.handleChange2 = this.handleChange2.bind(this)
     this.ActualizarVentasPeriodo = this.ActualizarVentasPeriodo.bind(this)
     this.CalcularTotal3 = this.CalcularTotal3.bind(this)
@@ -278,7 +281,7 @@ export default class Ventas extends React.Component {
   }
 
   ActualizarVentasPeriodo() {
-    fetch('/ventasperiodo', {
+    fetch('/boletasperiodo', {
     method: 'POST',
     headers: {
         Accept: 'application/json',
@@ -294,24 +297,20 @@ export default class Ventas extends React.Component {
     })
     .then(users => {
         this.setState({ListaVentasPeriodo: users})
+        this.setState({priv_dios: true})
     });
   }
 
   ActualizarVentasDia() {
-  fetch('/ventasdia')
+    console.log("Diego puto")
+  fetch('/boletasdia')
     .then(res => {
         return res.json()
     })
     .then(users => {
         this.setState({ListaVentasDia: users, ready: true})
+        console.log(this.state.ready)
     });
-    for(let i = 0; i<this.state.ListaVentasDia.length;i++){
-      let aux =""
-      for(let e=0;e<this.state.ListaVentasDia[i].productos.length;e++){
-        aux = this.state.ListaVentasDia[i].productos[e].codigo + this.state.ListaVentasDia[i].productos[e].precio.toString() + ".<br>" //o \n
-      }
-      this.state.ListaVentasDia[i].productos = aux
-    }
   }
 
   EliminarVenta(oldData) {
@@ -375,7 +374,6 @@ export default class Ventas extends React.Component {
   componentDidMount() {
     this.getUsuario();
     this.ActualizarInventario();
-    this.ActualizarVentasPeriodo();
     this.ActualizarVentasDia();
   }
 
@@ -501,7 +499,6 @@ export default class Ventas extends React.Component {
     this.setState({hasta: dateString});
     console.log(dateString)
   }
-
   handleChange2(event, newValue) {
     this.setState({tabIndex: newValue, estado:null, estadosucursal:null, completado:null, descuento:null});
   }
@@ -555,7 +552,6 @@ export default class Ventas extends React.Component {
     </TextField>
   );
 
-
   imprimir = () => {
     if(this.state.priv_descuento >= this.state.descuento && this.state.descuento >= 0){
       fetch('/crear_venta', {
@@ -571,7 +567,9 @@ export default class Ventas extends React.Component {
           sucursal: this.state.sucursal,
           vendedor: this.state.vendedor,
           total: this.state.total,
-          empleadolog: this.state.perfil.rut
+          empleadolog: this.state.perfil.rut,
+          cliente_nombre: this.state.cliente_nombre,
+          cliente_telefono: this.state.cliente_telefono
         })
         })
         .then( (response) => {
@@ -635,7 +633,7 @@ export default class Ventas extends React.Component {
     }
 
     if(this.state.ready === true){
-      if(this.state.priv_dios === true){
+      if(this.state.priv_dios === false){
         return (
           <div>
             <Card>
@@ -682,6 +680,12 @@ export default class Ventas extends React.Component {
                       spacing={1}>
                         <Grid item xs={6}>
                           <TextField id="standard-basic" value={this.state.descuento} label="Descuento %" onChange={this.handleInputChange('descuento')}/>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField id="standard-basic" value={this.state.cliente_telefono} label="Telefono" onChange={this.handleInputChange('cliente_telefono')}/>
                         </Grid>
                         <Grid item xs={6}>
                           <TextField
@@ -752,41 +756,169 @@ export default class Ventas extends React.Component {
                   <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
                     Listo
                   </Button>
-                  <MaterialTable
-                      title='Tienda'
-                      columns={ [{ title: 'Numero', field: 'numero_venta', type: 'numeric' },
-                                { title: 'Fecha', field: 'fecha', type: 'date'},
-                                { title: 'Cliente', field: 'cliente_nombre'},
-                                { title: 'Telefono', field: 'cliente_telefono'},
-                                { title: 'Productos', field: 'productos'}]}
-                      data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.sucursal)}
-                      editable={{
-                          onRowDelete: (oldData) =>
-                          new Promise((resolve) => {
-                            setTimeout(() => {
-                              resolve();
-                              this.ActualizarVentasPeriodo();
-                            }, 2000)
-                            this.EliminarVenta(oldData)
-                          }),
-                        }}
-                    />
                 </TabPanel>
               </CardBody>
             </Card>
           </div>
         );
-      }
-    }else if(this.state.ready === false) {
+      }else{
       return (
         <div>
           <Card>
+            <AppBar position="static" color="primary" style={styles.Barrita}>
+              <Tabs value={this.state.tabIndex} onChange={this.handleChange2} aria-label="simple tabs example">
+                <Tab label="Realizar Venta" {...a11yProps(0)} />
+                <Tab label="Ventas Día" {...a11yProps(1)} />
+                <Tab label="Ventas por Periodo" {...a11yProps(2)} />
+              </Tabs>
+            </AppBar>
             <CardBody>
-              <p> Espera por favor.</p>
+              <TabPanel value={this.state.tabIndex} index={0}>
+                <TableTransfer
+                  dataSource={this.state.filterMock}
+                  showSearch
+
+                  operations={['Incluir', 'Descartar']}
+                  targetKeys={this.state.targetKeys}
+                  onChange={this.handleChange} // codigo tipo, material, piedra, precio
+                  filterOption={(inputValue, item) =>
+                    item.codigo.indexOf(inputValue) !== -1 || item.tipo.indexOf(inputValue.toUpperCase()) !== -1 || item.material.indexOf(inputValue.toUpperCase()) !== -1 || item.piedra.indexOf(inputValue.toUpperCase()) !== -1 || item.precio.indexOf(inputValue) !== -1
+                  }
+                  leftColumns={leftTableColumns}
+                  rightColumns={rightTableColumns}
+                />
+                <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                spacing={3}>
+                  <Grid item xs={6}>
+                    <h4>
+                    Precio (sin dcto): ${this.state.suma}{"\n"} <br />
+                    Precio final: ${this.state.total}
+                    </h4>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                    spacing={1}>
+                      <Grid item xs={6}>
+                        <TextField id="standard-basic" value={this.state.descuento} label="Descuento %" onChange={this.handleInputChange('descuento')}/>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <TextField id="standard-basic" value={this.state.cliente_telefono} label="Telefono" onChange={this.handleInputChange('cliente_telefono')}/>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <TextField
+                          select
+                          label="Metodo de pago"
+                          value={this.state.metodo_pago}
+                          onChange={this.handleInputChange('metodo_pago')}
+                          helperText="Selecciona la forma de pagar"
+                        >
+                          <MenuItem key={'efectivo'} value={'efectivo'}>{'Efectivo'}</MenuItem>
+                          <MenuItem key={'credito'} value={'credito'}>{'Credito'}</MenuItem>
+                          <MenuItem key={'debito'} value={'debito'}>{'Debito'}</MenuItem>
+                        </TextField>
+                      </Grid>
+                    </Grid>
+                    <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                    spacing={1}>
+                      <Grid item xs={6}>
+                        <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
+                      </Grid>
+                      <Grid item xs={6}>
+
+                      </Grid>
+                    </Grid>
+                    <Button style={{ float: 'right', margin: 5 }} onClick={this.imprimir}>
+                      Finalizar venta
+                    </Button>
+                    {mensajeventa}
+                  </Grid>
+                </Grid>
+              </TabPanel>
+              <TabPanel value={this.state.tabIndex} index={1}>
+                <div style={styles.root}>
+                  <Card>
+                      <CardBody>
+                        <MaterialTable
+                            title='Tu sucursal'
+                            columns={ [{ title: 'Numero', field: 'numero_venta', type: 'numeric' },
+                                      { title: 'Fecha', field: 'fecha', type: 'date'},
+                                      { title: 'Cliente', field: 'cliente_nombre'},
+                                      { title: 'Telefono', field: 'cliente_telefono'},
+                                      { title: 'Productos', field: 'productos'}]}
+                            data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
+                            editable={{
+                                onRowDelete: (oldData) =>
+                                  new Promise((resolve) => {
+                                    setTimeout(() => {
+                                      resolve();
+                                      this.ActualizarVentasDia();
+                                    }, 2000)
+                                    this.EliminarVenta(oldData)
+                                  }),
+                            }}
+                          />
+                      </CardBody>
+                  </Card>
+                </div>
+              </TabPanel>
+              <TabPanel value={this.state.tabIndex} index={2}>
+                <h4>Desde</h4>
+                <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
+                <h4>Hasta</h4>
+                <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
+                <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
+                  Listo
+                </Button>
+                <MaterialTable
+                    title='Tienda'
+                    columns={ [{ title: 'Numero', field: 'numero_venta', type: 'numeric' },
+                              { title: 'Fecha', field: 'fecha', type: 'date'},
+                              { title: 'Cliente', field: 'cliente_nombre'},
+                              { title: 'Telefono', field: 'cliente_telefono'},
+                              { title: 'Productos', field: 'productos'}]}
+                    data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.sucursal)}
+                    editable={{
+                        onRowDelete: (oldData) =>
+                        new Promise((resolve) => {
+                          setTimeout(() => {
+                            resolve();
+                            this.ActualizarVentasPeriodo();
+                          }, 2000)
+                          this.EliminarVenta(oldData)
+                        }),
+                      }}
+                  />
+              </TabPanel>
             </CardBody>
           </Card>
         </div>
-      )
+      );
+    }
+  }else if(this.state.ready === false) {
+    return (
+      <div>
+        <Card>
+          <CardBody>
+            <p> Espera por favor.</p>
+          </CardBody>
+        </Card>
+      </div>
+    )
     }
   }
 }
