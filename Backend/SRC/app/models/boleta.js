@@ -11,6 +11,7 @@ var boleta = new Schema({
       cliente_telefono: {type: String},
       metodo_pago: {type: String, require: true},
       tipo: {type: String, require: true},
+      cod_prod: {type: String},
       numero: {type: Number, required: true},
       sucursal: {type: String, require: true}
       },
