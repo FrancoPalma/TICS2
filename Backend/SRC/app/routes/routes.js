@@ -56,13 +56,6 @@ router.get('/inicio', isLoggedIn, (req, res) => {
 		});
 	}
 
-function crear_boleta(fecha ,
-      empleadoLog,
-      vendedor,
-      descuento,
-      total,
-      cliente_nombre, cliente_telefono, metodo_pago, tipo, numero, sucursal})
-
 	////----------------------------------------------LOG IN----------------------------------------------
 	router.get('/login', (req, res) => {
 		res.render('login.ejs', {
@@ -356,8 +349,6 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 	let largo = prods.length;
 	let id = prods[0].id
 	let empleadoLog = req.body.empleadoLog;
-	let cliente_nombre = req.body.cliente_nombre.toUpperCase();
-	let cliente_telefono = req.body.cliente_telefono;
 
 	await empleado.findOne({'rut': vendedor}, async function(err, empleado){
 		if(!empleado){
@@ -367,22 +358,9 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 				if( venta.length == null || venta.length == 0 ){
 					let nuevo_numero_venta = 1
 					crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, productos: prods}, (err, crearVenta) =>{
-				if(!err){
-					for(i = 0; i < prods.length; i++){
-						boleta.create({numero_venta: nuevo_numero_venta, cod_prod: prods[i]}, (err) => {
-							if(err){
-								res.sendStatus(404)
-							}else{
-								res.sendStatus(201)
-							}
-						});
-					}
-				}else{
-					let nuevo_numero_venta = venta.length + 1
-					crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, productos: prods}, (err) =>{
 						if(!err){
 							for(i = 0; i < prods.length; i++){
-								boleta.create({numero_venta: nuevo_numero_venta, cod_prod: prods[i]}, (err) => {
+								boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', cod_prod: prods[i], numero: nuevo_numero_venta}, (err) => {
 									if(err){
 										res.sendStatus(404)
 									}else{
@@ -391,13 +369,24 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 								});
 							}
 						}else{
-							res.sendStatus(404);
+							let nuevo_numero_venta = venta.length + 1
+							crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, productos: prods}, (err) =>{
+								for(i = 0; i < prods.length; i++){
+									boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', cod_prod: prods[i], numero: nuevo_numero_venta}, (err) => {
+										if(err){
+											res.sendStatus(404)
+										}else{
+											res.sendStatus(201)
+										}
+									});
+								}
+							});
 						};
-				 });
-				};
-			});
-		};
-	});
+				});
+			};
+		});
+	}
+});
 });
 
 
