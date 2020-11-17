@@ -8,8 +8,7 @@ var producto = new Schema   ({
         piedra: {type: String, require: true},
         precio: {type: Number, require: true},
         descripcion:{type:String,require:true},
-        sucursal: {type: String, require: true},
-        cantidad: {type: Number, require:true}},
+        sucursal: {type: String, require: true}},
         {collection: 'producto'}
       );
 

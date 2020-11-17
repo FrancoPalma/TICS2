@@ -4,6 +4,7 @@ const router = express.Router();
 const producto = require('../models/producto');
 const inventario = require('../models/inventario');
 const pedido = require('../models/pedido');
+const validarPedido = require('../models/pedido');
 const crearPedido = require('../models/pedido');
 const Venta = require('../models/venta');
 const venta = require('../models/venta');
@@ -15,7 +16,6 @@ const boleta = require('../models/boleta');
 router.use(passport.initialize());
 router.use(passport.session());
 
-	// index routes
 router.get('/inicio', isLoggedIn, (req, res) => {
 	let dia = dia()
 	let semana = semama();
@@ -131,34 +131,51 @@ router.post('/agregar_prod', isLoggedIn, async function(req,res){
 
 router.post('/editar_prod/:id', isLoggedIn, async function(req, res){
 	let id = req.params.id;
-	let codigo = req.body.codigo.toUpperCase();
 	let material = req.body.material.toUpperCase();
 	let tipo = req.body.tipo.toUpperCase();
 	let piedra = req.body.piedra.toUpperCase();
 	let precio = req.body.precio;
 	let descripcion = req.body.descripcion.toUpperCase();
 	let sucursal = req.body.sucursal;
-  await producto.findByIdAndUpdate(id, {codigo: codigo, material: material, tipo: tipo, piedra: piedra, precio: precio, descripcion: descripcion, sucursal: sucursal}, function (err) {
-		if(!err){
-   		res.sendStatus(201);
-		}
-		else{
-		   res.sendStatus(404);
-		   console.log(err)
-		}
-  });
+	await producto.findById(id, async function(err, producto){
+		let codigo = producto.codigo
+	  await producto.findByIdAndUpdate(id, {material: material, tipo: tipo, piedra: piedra, precio: precio, descripcion: descripcion, sucursal: sucursal}, async function (err) {
+			await registro.create({tipo: 'Producto', numero: codigo, detalle: 'Se editó un producto', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
+				if(!err){
+					res.sendStatus(201);
+				}
+				else{
+					 res.sendStatus(404);
+				}
+			})
+	  });
+	});
  });
+
+/*await registro.create({tipo: 'Producto', numero: codigo, detalle: 'Se editó un producto', empleadoLog: req.user.rut, , sucursal: req.user.sucursal}, function (err){
+	if(!err){
+		res.sendStatus(201);
+	}
+	else{
+		 res.sendStatus(404);
+	}
+})*/
 
  router.post('/delete_producto/:id', isLoggedIn, async function(req,res){
     let id = req.params.id;
-    await producto.remove({_id: id}, (err, task) =>{
-			if(!err){
-     		res.sendStatus(201);
-			}
-			else{
-     		res.sendStatus(404);
-			}
-    });
+		await producto.findById(id, async function(err, producto){
+			let codigo = producto.codigo
+			await producto.remove({_id: id}, async function(err, task){
+				await registro.create({tipo: 'Producto', numero: codigo, detalle: 'Se eliminó un producto', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
+					if(!err){
+						res.sendStatus(201);
+					}
+					else{
+						 res.sendStatus(404);
+					}
+				})
+			});
+		});
 });
 
 
@@ -187,8 +204,9 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 	let metodo_pago = req.body.metodo_pago;
 	let descuento = req.body.descuento;
 	await pedido.find({}, async function(err, pedido){
+		let nuevo_numero_pedido = 1
 		if( pedido.length == null || pedido.length == 0 ){
-	  	await crearPedido.create({fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:abono}, (err) =>{
+	  	await crearPedido.create({numero_pedido: nuevo_numero_pedido,fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:abono}, (err) =>{
 				boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: 1}, (err) =>{
 					if(!err){
 						res.sendStatus(201)
@@ -198,9 +216,10 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 				});
 			});
 		}else{
+			let nuevo_numero_pedido = pedido.length + 1
 			await crearPedido.create({fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:abono}, (err) =>{
 				if(!err){
-					boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: venta.length + 1}, (err) =>{
+					boleta.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: venta.length + 1}, (err) =>{
 						if(!err){
 							res.sendStatus(201)
 						}else{
@@ -218,6 +237,7 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 
 
 router.get('/delete_pedido/:id', isLoggedIn, async function(req,res){
+
     let id = req.params.id;
     await pedido.remove({_id: id}, (err, task) =>{
 			if(!err){
@@ -232,14 +252,19 @@ router.get('/delete_pedido/:id', isLoggedIn, async function(req,res){
 
 router.post('/eliminar_pedido/:id', isLoggedIn, async function(req,res){
     let id = req.params.id;
-    await pedido.remove({_id: id}, (err, task) =>{
-			if(!err){
-     		res.sendStatus(201);
-			}
-			else{
-     		res.sendStatus(404);
-			}
-    });
+		await pedido.findById(id, async function(err, pedido){
+			let numero_pedido = pedido.numero_pedido;
+	    await pedido.remove({_id: id}, (err, task) =>{
+				await registro.create({tipo: 'Pedido', numero: numero_pedido, detalle: 'Se eliminó un pedido', empleadoLog: req.user.rut, , sucursal: req.user.sucursal}, function (err){
+					if(!err){
+						res.sendStatus(201);
+					}
+					else{
+						 res.sendStatus(404);
+					}
+				});
+	    });
+	});
 });
 
 router.post('/editar_pedido/:id', isLoggedIn, async function(req, res){
@@ -250,14 +275,17 @@ router.post('/editar_pedido/:id', isLoggedIn, async function(req, res){
 	let sucursal = req.body.sucursal;
 	let descripcion = req.body.descripcion.toUpperCase();
 	let estado = req.body.estado.toUpperCase();
-	await pedido.findByIdAndUpdate(id,{fecha: fecha, cliente: cliente, sucursal: sucursal, descripcion: descripcion, estado: estado, total: total}, function (err) {
-		if(!err){
-			res.sendStatus(201)
-		}
-		else{
-			res.sendStatus(404)
-	}
-});
+	await pedido.findById(id, async function(err, pedido){
+		let numero_pedido = pedido.numero_pedido;
+			await registro.create({tipo: 'Pedido', numero: numero_pedido, detalle: 'Se editó un pedido', empleadoLog: req.user.rut, , sucursal: req.user.sucursal}, function (err){
+				if(!err){
+					res.sendStatus(201);
+				}
+				else{
+					 res.sendStatus(404);
+				}
+			});
+	});
 });
 
 router.post('/editar_descripcion_pedido/:id', isLoggedIn, async function(req, res){
@@ -360,7 +388,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 					crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, productos: prods}, (err, crearVenta) =>{
 						if(!err){
 							for(i = 0; i < prods.length; i++){
-								boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: prods[i].precio, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', cod_prod: prods[i], numero: nuevo_numero_venta}, (err) => {
+								boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total_venta: total, valor_prod: prods[i].precio, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', cod_prod: prods[i], numero: nuevo_numero_venta}, (err) => {
 									if(err){
 										res.sendStatus(404)
 									}
