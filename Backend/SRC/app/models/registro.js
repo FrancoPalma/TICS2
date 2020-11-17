@@ -11,4 +11,4 @@ var registro = new Schema   ({
         {collection: 'registro'}
       );
 
-module.exports = mongoose.model('Registro', producto);
+module.exports = mongoose.model('Registro', registro);

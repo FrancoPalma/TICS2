@@ -4,7 +4,7 @@ const router = express.Router();
 const producto = require('../models/producto');
 const inventario = require('../models/inventario');
 const pedido = require('../models/pedido');
-const validarPedido = require('../models/pedido');
+const registro = require('../models/registro')
 const crearPedido = require('../models/pedido');
 const Venta = require('../models/venta');
 const venta = require('../models/venta');
@@ -277,8 +277,10 @@ router.post('/editar_pedido/:id', isLoggedIn, async function(req, res){
 	let sucursal = req.body.sucursal;
 	let descripcion = req.body.descripcion.toUpperCase();
 	let estado = req.body.estado.toUpperCase();
+	let total = req.body.total;
 	await pedido.findById(id, async function(err, pedido){
 		let numero_pedido = pedido.numero_pedido;
+		await pedido.findByIdAndUpdate(req.parmas.id,{cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, sucursal: sucursal, descripción: descripcion, estado: estado, total: total}, async function (err) {
 			await registro.create({tipo: 'Pedido', numero: numero_pedido, detalle: 'Se editó un pedido', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
 				if(!err){
 					res.sendStatus(201);
@@ -287,6 +289,7 @@ router.post('/editar_pedido/:id', isLoggedIn, async function(req, res){
 					 res.sendStatus(404);
 				}
 			});
+		})
 	});
 });
 
