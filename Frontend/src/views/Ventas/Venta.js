@@ -732,7 +732,8 @@ export default class Ventas extends React.Component {
                           <MaterialTable
                               title={nombresucursal}
                               columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
-                                        {title: 'Tipo', field: 'Tipo'},
+                                        {title: 'Tipo', field: 'tipo'},
+                                        {title: 'Producto', field: 'cod_prod'},
                                         { title: 'Fecha', field: 'fecha', type: 'date'},
                                         {title: 'Vendedor', field: 'vendedor'},
                                         { title: 'Cliente', field: 'cliente_nombre'},
@@ -862,7 +863,8 @@ export default class Ventas extends React.Component {
                         <MaterialTable
                             title={nombresucursal}
                             columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
-                                      {title: 'Tipo', field: 'Tipo'},
+                                      {title: 'Tipo', field: 'tipo'},
+                                      {title: 'Producto', field: 'cod_prod'},
                                       { title: 'Fecha', field: 'fecha', type: 'date'},
                                       {title: 'Vendedor', field: 'vendedor'},
                                       { title: 'Cliente', field: 'cliente_nombre'},
@@ -895,7 +897,8 @@ export default class Ventas extends React.Component {
                 <MaterialTable
                     title={nombresucursal}
                     columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
-                              {title: 'Tipo', field: 'Tipo'},
+                              {title: 'Tipo', field: 'tipo'},
+                              {title: 'Producto', field: 'cod_prod'},
                               { title: 'Fecha', field: 'fecha', type: 'date'},
                               {title: 'Vendedor', field: 'vendedor'},
                               { title: 'Cliente', field: 'cliente_nombre'},
