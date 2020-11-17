@@ -360,7 +360,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 					crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, productos: prods}, (err, crearVenta) =>{
 						if(!err){
 							for(i = 0; i < prods.length; i++){
-								boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', cod_prod: prods[i], numero: nuevo_numero_venta}, (err) => {
+								boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: prods[i].precio, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', cod_prod: prods[i], numero: nuevo_numero_venta}, (err) => {
 									if(err){
 										res.sendStatus(404)
 									}
