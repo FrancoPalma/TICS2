@@ -611,14 +611,14 @@ export default class Ventas extends React.Component {
                         <CardBody>
                           <MaterialTable
                               title={nombresucursal}
+                              options={{filtering: true}}
                               columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                                         {title: 'Tipo', field: 'tipo'},
-                                        {title: 'Producto', field: 'cod_prod'},
                                         { title: 'Fecha', field: 'fecha', type: 'date'},
                                         {title: 'Vendedor', field: 'vendedor'},
                                         { title: 'Cliente', field: 'cliente_nombre'},
                                         { title: 'Telefono', field: 'cliente_telefono'},
-                                        {title: 'Total', field:'total'}]}
+                                        {title: 'Total', field:'total_venta'}]}
                               data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                               editable={{
                                   onRowDelete: (oldData) =>
@@ -667,12 +667,11 @@ export default class Ventas extends React.Component {
                             title={nombresucursal}
                             columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                                       {title: 'Tipo', field: 'tipo'},
-                                      {title: 'Producto', field: 'cod_prod'},
                                       { title: 'Fecha', field: 'fecha', type: 'date'},
                                       {title: 'Vendedor', field: 'vendedor'},
                                       { title: 'Cliente', field: 'cliente_nombre'},
                                       { title: 'Telefono', field: 'cliente_telefono'},
-                                      {title: 'Total', field:'total'}]}
+                                      {title: 'Total', field:'total_venta'}]}
                             data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                             editable={{
                                 onRowDelete: (oldData) =>
@@ -701,12 +700,11 @@ export default class Ventas extends React.Component {
                     title={nombresucursal}
                     columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                               {title: 'Tipo', field: 'tipo'},
-                              {title: 'Producto', field: 'cod_prod'},
                               { title: 'Fecha', field: 'fecha', type: 'date'},
                               {title: 'Vendedor', field: 'vendedor'},
                               { title: 'Cliente', field: 'cliente_nombre'},
                               { title: 'Telefono', field: 'cliente_telefono'},
-                              {title: 'Total', field:'total'}]}
+                              {title: 'Total', field:'total_venta'}]}
                     data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.sucursal)}
                     editable={{
                         onRowDelete: (oldData) =>
