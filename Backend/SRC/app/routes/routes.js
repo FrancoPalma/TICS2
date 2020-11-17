@@ -346,8 +346,6 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 	let sucursal = req.body.sucursal.toString();
 	let vendedor = req.body.vendedor.toUpperCase();
 	let total = req.body.total;
-	let largo = prods.length;
-	let id = prods[0].id
 	let empleadoLog = req.body.empleadoLog;
 	let cliente_nombre = req.body.cliente_nombre.toUpperCase();
 	let cliente_telefono = req.body.cliente_telefono.toUpperCase();
