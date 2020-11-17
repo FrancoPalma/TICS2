@@ -348,7 +348,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 	let total = req.body.total;
 	let empleadoLog = req.body.empleadoLog;
 	let cliente_nombre = req.body.cliente_nombre.toUpperCase();
-	let cliente_telefono = req.body.cliente_telefono.toUpperCase();
+	let cliente_telefono = req.body.cliente_telefono;
 
 	await empleado.findOne({'rut': vendedor}, async function(err, empleado){
 		if(!empleado){
