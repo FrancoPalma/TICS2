@@ -275,7 +275,7 @@ router.post('/eliminar_pedido/:id', isLoggedIn, async function(req,res){
 });
 
 router.post('/editar_pedido/:id', isLoggedIn, async function(req, res){
-	let id = req.body.id
+	let id = req.body.id;
 	let fecha = req.body.fecha;
 	let cliente_nombre = req.body.cliente_nombre.toUpperCase();
 	let cliente_telefono = req.body.cliente_telefono;
@@ -286,14 +286,16 @@ router.post('/editar_pedido/:id', isLoggedIn, async function(req, res){
 	await pedido.findById(id, async function(err, pedido){
 		let numero_pedido = pedido.numero_pedido;
 		await crearPedido.findByIdAndUpdate(id,{cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, sucursal: sucursal, descripcion: descripcion, estado: estado, total: total}, async function (err) {
-			await registro.create({fecha: new Date(), tipo: 'Pedido', numero: numero_pedido, detalle: 'Se editó un pedido', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
-				if(!err){
-					res.sendStatus(201);
-				}
-				else{
-					 res.sendStatus(404);
-				}
-			});
+			if(err){
+				sendStatus(404)
+			}else{
+				await registro.create({fecha: new Date(), tipo: 'Pedido', numero: numero_pedido, detalle: 'Se editó un pedido', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
+					if(err){
+						 res.sendStatus(404);
+					}
+				});
+				res.sendStatus(201);
+			}
 		})
 	});
 });
