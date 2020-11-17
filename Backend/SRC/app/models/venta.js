@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-var Producto = mongoose.model('Producto');
 
 var venta = new Schema   ({
       numero_venta: {type: Number, require: true},
@@ -8,7 +7,7 @@ var venta = new Schema   ({
       sucursal: {type: String, require: true},
       cliente_nombre: {type: String, require: true},
       cliente_telefono: {type: String, require: true},
-      productos: [{ type: Schema.ObjectId, ref: "Producto" }]
+      productos: [{ type: String, require: true }]
       },
       {collection: 'venta'}
     );
