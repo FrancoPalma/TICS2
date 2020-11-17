@@ -193,7 +193,8 @@ export default class InventarioTableList extends React.Component {
       body: JSON.stringify({
         id: newData._id,
         fecha: newData.fecha,
-        cliente: newData.cliente,
+        cliente_nombre: newData.cliente,
+        cliente_telefono: 1234,
         descripcion: newData.descripcion,
         estado: newData.estado,
         total: newData.total,
