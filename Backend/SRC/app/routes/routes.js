@@ -25,6 +25,8 @@ router.get('/inicio', isLoggedIn, (req, res) => {
 	})
 });
 
+
+
 	function dia(){
 		let fecha = Date.now();
 		let dias = fecha/ (24*60*60*1000); //paso a dias
@@ -254,8 +256,8 @@ router.post('/eliminar_pedido/:id', isLoggedIn, async function(req,res){
     let id = req.params.id;
 		await pedido.findById(id, async function(err, pedido){
 			let numero_pedido = pedido.numero_pedido;
-	    await pedido.remove({_id: id}, (err, task) =>{
-				await registro.create({tipo: 'Pedido', numero: numero_pedido, detalle: 'Se eliminó un pedido', empleadoLog: req.user.rut, , sucursal: req.user.sucursal}, function (err){
+	    await pedido.remove({_id: id}, async function(err, task){
+				await registro.create({tipo: 'Pedido', numero: numero_pedido, detalle: 'Se eliminó un pedido', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
 					if(!err){
 						res.sendStatus(201);
 					}
@@ -277,7 +279,7 @@ router.post('/editar_pedido/:id', isLoggedIn, async function(req, res){
 	let estado = req.body.estado.toUpperCase();
 	await pedido.findById(id, async function(err, pedido){
 		let numero_pedido = pedido.numero_pedido;
-			await registro.create({tipo: 'Pedido', numero: numero_pedido, detalle: 'Se editó un pedido', empleadoLog: req.user.rut, , sucursal: req.user.sucursal}, function (err){
+			await registro.create({tipo: 'Pedido', numero: numero_pedido, detalle: 'Se editó un pedido', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
 				if(!err){
 					res.sendStatus(201);
 				}
