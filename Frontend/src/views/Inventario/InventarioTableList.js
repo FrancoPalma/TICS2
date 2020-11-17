@@ -180,7 +180,6 @@ export default class InventarioTableList extends React.Component {
       },
       body: JSON.stringify({
         codigo: newData.codigo,
-        cantidad: newData.cantidad,
         material: newData.material,
         tipo: newData.tipo,
         piedra: newData.piedra,
@@ -220,7 +219,6 @@ export default class InventarioTableList extends React.Component {
       body: JSON.stringify({
         id: newData._id,
         codigo: newData.codigo,
-        cantidad: newData.cantidad,
         material: newData.material,
         tipo: newData.tipo,
         piedra: newData.piedra,
@@ -305,7 +303,6 @@ export default class InventarioTableList extends React.Component {
                 <MaterialTable
                     title= {nombresucursal}
                     columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric'},
-                              { title: 'Cantidad', field: 'cantidad' , type:'numeric'},
                               { title: 'Material', field: 'material' },
                               { title: 'Tipo', field: 'tipo'},
                               { title: 'Piedra', field: 'piedra' },
@@ -364,7 +361,6 @@ export default class InventarioTableList extends React.Component {
                 <MaterialTable
                     title= {nombresucursal}
                     columns={ [{ title: 'Codigo', field: 'codigo' },
-                              { title: 'Cantidad', field: 'cantidad' , type:'numeric'},
                               { title: 'Material', field: 'material' },
                               { title: 'Tipo', field: 'tipo'},
                               { title: 'Piedra', field: 'piedra' },

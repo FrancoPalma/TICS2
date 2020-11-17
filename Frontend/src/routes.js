@@ -9,6 +9,7 @@ import TableListClientes from "views/Clientes/TableListClientes.js";
 import TableListPedidos from "views/TablaPedidos/TableListPedidos.js";
 import Maps from "views/Maps/Maps.js";
 import Venta from "views/Ventas/Venta.js";
+import Boletas from "views/Boletas/Boletas.js";
 const dashboardRoutes = [
   {
     path: "/inicio",
@@ -24,6 +25,14 @@ const dashboardRoutes = [
     rtlName: "لوحة القيادة",
     icon: "store",
     component: Venta,
+    layout: "/admin"
+  },
+  {
+    path: "/boletas",
+    name: "Boletas",
+    rtlName: "لوحة القيادة",
+    icon: "store",
+    component: Boletas,
     layout: "/admin"
   },
   {

@@ -302,7 +302,6 @@ export default class Ventas extends React.Component {
   }
 
   ActualizarVentasDia() {
-    console.log("Diego puto")
   fetch('/boletasdia')
     .then(res => {
         return res.json()
@@ -552,48 +551,6 @@ export default class Ventas extends React.Component {
     </TextField>
   );
 
-  imprimir = () => {
-    if(this.state.priv_descuento >= this.state.descuento && this.state.descuento >= 0){
-      fetch('/crear_venta', {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          lista: this.state.targetKeys,
-          metodo_pago: this.state.metodo_pago,
-          descuento: this.state.descuento,
-          sucursal: this.state.sucursal,
-          vendedor: this.state.vendedor,
-          total: this.state.total,
-          empleadolog: this.state.perfil.rut,
-          cliente_nombre: this.state.cliente_nombre,
-          cliente_telefono: this.state.cliente_telefono
-        })
-        })
-        .then( (response) => {
-            if(response.status === 201) {
-                console.log("Añadido correctamente")
-                this.setState({completado: 1})
-                for(let i = 0; i<this.state.targetKeys.length;i++) {
-                  this.EliminarProducto(this.state.targetKeys[i])
-                  this.ActualizarInventario()
-                }
-            } else if(response.status === 405){
-              this.setState({completado: 8})
-            }else {
-                console.log('Hubo un error')
-                this.setState({completado: 2})
-            }
-        })
-        .catch((error) => {
-            console.log(error)
-        });
-    }else{
-      console.log("No se mando, wena")
-    }
-  }
   render() {
 
     let mensajeventa;
@@ -643,89 +600,12 @@ export default class Ventas extends React.Component {
             <Card>
               <AppBar position="static" color="primary" style={styles.Barrita}>
                 <Tabs value={this.state.tabIndex} onChange={this.handleChange2} aria-label="simple tabs example">
-                  <Tab label="Realizar Venta" {...a11yProps(0)} />
-                  <Tab label="Boletas Día" {...a11yProps(1)} />
-                  <Tab label="Boletas por Periodo" {...a11yProps(2)} />
+                  <Tab label="Boletas Día" {...a11yProps(0)} />
+                  <Tab label="Boletas por Periodo" {...a11yProps(1)} />
                 </Tabs>
               </AppBar>
               <CardBody>
                 <TabPanel value={this.state.tabIndex} index={0}>
-                  <TableTransfer
-                    dataSource={this.state.filterMock}
-                    showSearch
-
-                    operations={['Incluir', 'Descartar']}
-                    targetKeys={this.state.targetKeys}
-                    onChange={this.handleChange} // codigo tipo, material, piedra, precio
-                    filterOption={(inputValue, item) =>
-                      item.codigo.indexOf(inputValue) !== -1 || item.tipo.indexOf(inputValue.toUpperCase()) !== -1 || item.material.indexOf(inputValue.toUpperCase()) !== -1 || item.piedra.indexOf(inputValue.toUpperCase()) !== -1 || item.precio.indexOf(inputValue) !== -1
-                    }
-                    leftColumns={leftTableColumns}
-                    rightColumns={rightTableColumns}
-                  />
-                  <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                  spacing={3}>
-                    <Grid item xs={6}>
-                      <h4>
-                      Precio (sin dcto): ${this.state.suma}{"\n"} <br />
-                      Precio final: ${this.state.total}
-                      </h4>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Grid
-                      container
-                      direction="row"
-                      justify="center"
-                      alignItems="center"
-                      spacing={1}>
-                        <Grid item xs={6}>
-                          <TextField id="standard-basic" value={this.state.descuento} label="Descuento %" onChange={this.handleInputChange('descuento')}/>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <TextField id="standard-basic" value={this.state.cliente_telefono} type="number" label="Telefono" onChange={this.handleInputChange('cliente_telefono')}/>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <TextField
-                            select
-                            label="Metodo de pago"
-                            value={this.state.metodo_pago}
-                            onChange={this.handleInputChange('metodo_pago')}
-                            helperText="Selecciona la forma de pagar"
-                          >
-                            <MenuItem key={'efectivo'} value={'efectivo'}>{'Efectivo'}</MenuItem>
-                            <MenuItem key={'credito'} value={'credito'}>{'Credito'}</MenuItem>
-                            <MenuItem key={'debito'} value={'debito'}>{'Debito'}</MenuItem>
-                          </TextField>
-                        </Grid>
-                      </Grid>
-                      <Grid
-                      container
-                      direction="row"
-                      justify="center"
-                      alignItems="center"
-                      spacing={1}>
-                        <Grid item xs={6}>
-                          <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
-                        </Grid>
-                        <Grid item xs={6}>
-
-                        </Grid>
-                      </Grid>
-                      <Button style={{ float: 'right', margin: 5 }} onClick={this.imprimir}>
-                        Finalizar venta
-                      </Button>
-                      {mensajeventa}
-                    </Grid>
-                  </Grid>
-                </TabPanel>
-                <TabPanel value={this.state.tabIndex} index={1}>
                   <div style={styles.root}>
                     <Card>
                         <CardBody>
@@ -755,7 +635,7 @@ export default class Ventas extends React.Component {
                     </Card>
                   </div>
                 </TabPanel>
-                <TabPanel value={this.state.tabIndex} index={2}>
+                <TabPanel value={this.state.tabIndex} index={1}>
                   <h4>Desde</h4>
                   <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
                   <h4>Hasta</h4>
@@ -774,89 +654,12 @@ export default class Ventas extends React.Component {
           <Card>
             <AppBar position="static" color="primary" style={styles.Barrita}>
               <Tabs value={this.state.tabIndex} onChange={this.handleChange2} aria-label="simple tabs example">
-                <Tab label="Realizar Venta" {...a11yProps(0)} />
-                <Tab label="Ventas Día" {...a11yProps(1)} />
-                <Tab label="Ventas por Periodo" {...a11yProps(2)} />
+                <Tab label="Boletas Día" {...a11yProps(0)} />
+                <Tab label="Boletas por Periodo" {...a11yProps(1)} />
               </Tabs>
             </AppBar>
             <CardBody>
               <TabPanel value={this.state.tabIndex} index={0}>
-                <TableTransfer
-                  dataSource={this.state.filterMock}
-                  showSearch
-
-                  operations={['Incluir', 'Descartar']}
-                  targetKeys={this.state.targetKeys}
-                  onChange={this.handleChange} // codigo tipo, material, piedra, precio
-                  filterOption={(inputValue, item) =>
-                    item.codigo.indexOf(inputValue) !== -1 || item.tipo.indexOf(inputValue.toUpperCase()) !== -1 || item.material.indexOf(inputValue.toUpperCase()) !== -1 || item.piedra.indexOf(inputValue.toUpperCase()) !== -1 || item.precio.indexOf(inputValue) !== -1
-                  }
-                  leftColumns={leftTableColumns}
-                  rightColumns={rightTableColumns}
-                />
-                <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-                spacing={3}>
-                  <Grid item xs={6}>
-                    <h4>
-                    Precio (sin dcto): ${this.state.suma}{"\n"} <br />
-                    Precio final: ${this.state.total}
-                    </h4>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Grid
-                    container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
-                    spacing={1}>
-                      <Grid item xs={6}>
-                        <TextField id="standard-basic" value={this.state.descuento} label="Descuento %" onChange={this.handleInputChange('descuento')}/>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <TextField id="standard-basic" value={this.state.cliente_telefono} label="Telefono" type="number" onChange={this.handleInputChange('cliente_telefono')}/>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <TextField
-                          select
-                          label="Metodo de pago"
-                          value={this.state.metodo_pago}
-                          onChange={this.handleInputChange('metodo_pago')}
-                          helperText="Selecciona la forma de pagar"
-                        >
-                          <MenuItem key={'efectivo'} value={'efectivo'}>{'Efectivo'}</MenuItem>
-                          <MenuItem key={'credito'} value={'credito'}>{'Credito'}</MenuItem>
-                          <MenuItem key={'debito'} value={'debito'}>{'Debito'}</MenuItem>
-                        </TextField>
-                      </Grid>
-                    </Grid>
-                    <Grid
-                    container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
-                    spacing={1}>
-                      <Grid item xs={6}>
-                        <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
-                      </Grid>
-                      <Grid item xs={6}>
-
-                      </Grid>
-                    </Grid>
-                    <Button style={{ float: 'right', margin: 5 }} onClick={this.imprimir}>
-                      Finalizar venta
-                    </Button>
-                    {mensajeventa}
-                  </Grid>
-                </Grid>
-              </TabPanel>
-              <TabPanel value={this.state.tabIndex} index={1}>
                 <div style={styles.root}>
                   <Card>
                       <CardBody>
@@ -886,7 +689,7 @@ export default class Ventas extends React.Component {
                   </Card>
                 </div>
               </TabPanel>
-              <TabPanel value={this.state.tabIndex} index={2}>
+              <TabPanel value={this.state.tabIndex} index={1}>
                 <h4>Desde</h4>
                 <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
                 <h4>Hasta</h4>
