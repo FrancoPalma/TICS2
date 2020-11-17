@@ -280,7 +280,7 @@ router.post('/editar_pedido/:id', isLoggedIn, async function(req, res){
 	let total = req.body.total;
 	await pedido.findById(id, async function(err, pedido){
 		let numero_pedido = pedido.numero_pedido;
-		await pedido.findByIdAndUpdate(req.parmas.id,{cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, sucursal: sucursal, descripción: descripcion, estado: estado, total: total}, async function (err) {
+		await pedido.findByIdAndUpdate(req.params.id,{cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, sucursal: sucursal, descripción: descripcion, estado: estado, total: total}, async function (err) {
 			await registro.create({tipo: 'Pedido', numero: numero_pedido, detalle: 'Se editó un pedido', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
 				if(!err){
 					res.sendStatus(201);
