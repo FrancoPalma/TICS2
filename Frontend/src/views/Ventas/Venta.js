@@ -689,7 +689,7 @@ export default class Ventas extends React.Component {
                           <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
                         </Grid>
                         <Grid item xs={6}>
-                          <TextField id="standard-basic" value={this.state.cliente_telefono} type="numeric" label="Telefono" onChange={this.handleInputChange('cliente_telefono')}/>
+                          <TextField id="standard-basic" value={this.state.cliente_telefono} type="number" label="Telefono" onChange={this.handleInputChange('cliente_telefono')}/>
                         </Grid>
                         <Grid item xs={6}>
                           <TextField
@@ -819,7 +819,7 @@ export default class Ventas extends React.Component {
                         <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
                       </Grid>
                       <Grid item xs={6}>
-                        <TextField id="standard-basic" value={this.state.cliente_telefono} label="Telefono" onChange={this.handleInputChange('cliente_telefono')}/>
+                        <TextField id="standard-basic" value={this.state.cliente_telefono} label="Telefono" type="number" onChange={this.handleInputChange('cliente_telefono')}/>
                       </Grid>
                       <Grid item xs={6}>
                         <TextField
