@@ -238,7 +238,7 @@ export default class Ventas extends React.Component {
       ready: false,
       ListaProductos: "",
       descuento: 0,
-      cliente_nombre: "",
+      cliente_nombre: "Anon",
       cliente_telefono: 0,
       metodo_pago: 'efectivo',
       vendedor: '',
@@ -689,7 +689,7 @@ export default class Ventas extends React.Component {
                           <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
                         </Grid>
                         <Grid item xs={6}>
-                          <TextField id="standard-basic" value={this.state.cliente_telefono} label="Telefono" onChange={this.handleInputChange('cliente_telefono')}/>
+                          <TextField id="standard-basic" value={this.state.cliente_telefono} type="numeric" label="Telefono" onChange={this.handleInputChange('cliente_telefono')}/>
                         </Grid>
                         <Grid item xs={6}>
                           <TextField
