@@ -125,8 +125,7 @@ router.post('/agregar_prod', isLoggedIn, async function(req,res){
 	let precio = req.body.precio;
 	let descripcion = req.body.descripcion.toUpperCase();
 	let sucursal = req.body.sucursal;
-	let cantidad = req.body.cantidad;
-  await producto.create({codigo: codigo, material: material, tipo: tipo, piedra: piedra, precio: precio, descripcion: descripcion, sucursal: sucursal, cantidad: cantidad}, (err) =>{
+  await producto.create({codigo: codigo, material: material, tipo: tipo, piedra: piedra, precio: precio, descripcion: descripcion, sucursal: sucursal}, (err) =>{
 		if(!err){
      	res.sendStatus(201);
 	}else{
@@ -536,7 +535,9 @@ router.get('/empleados_descuentos', isLoggedIn, async function(req,res){
   vendedores = await empleado.find(function (err, empleado) {
 		if (!err){
 			for (i = 0; i < vendedores.length; i++){
-				empleado
+				empleado.findOne({'rut':vendedores[i].rut}, async function(err, vendedor){
+
+				})
 			}
 		}else{
 			res.sendStatus(404);
