@@ -10,6 +10,12 @@ import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import { Grid } from '@material-ui/core';
 import Link from '@material-ui/core/Link';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import {  Transfer,
+          Button,
+          Tag,
+          Table, DatePicker } from 'antd';
 
 const styles = {
   cardCategoryWhite: {
@@ -118,11 +124,31 @@ export default class InventarioTableList extends React.Component {
       tabIndex: 0,
       ready: false,
       ListaPedidos: null,
-      mensaje: null
+      mensaje: null,
+      numero_pedido: "",
+      fecha: "",
+      sucursal: null,
+      descripcion: "",
+      vendedor: "",
+      cliente_nombre: "",
+      cliente_telefono: "",
+      estado: "",
+      abono: null,
+      total:null
     }
     this.handleChange = this.handleChange.bind(this)
     this.AgregarPedido = this.AgregarPedido.bind(this)
+    this.handleChange2 = this.handleChange2.bind(this)
     this.ActualizarPedidos = this.ActualizarPedidos.bind(this)
+    this.onChange = this.onChange.bind(this)
+  }
+
+  handleInputChange(property) {
+    return e => {
+      new Promise((resolve) => {
+        this.setState({[property]: e.target.value});
+      })
+    };
   }
 
   ActualizarPedidos() {
@@ -139,15 +165,7 @@ export default class InventarioTableList extends React.Component {
   AgregarPedido(newData) {
     let regex = new RegExp("^[a-z A-Z]+$");
 
-    if(regex.test(newData.cliente)){
-
-      let estados = null;
-      if(newData.estado === true) {
-        estados = 1;
-      } else {
-        estados = 0;
-      }
-
+    if(regex.test(this.state.cliente)){
       fetch('/agregar_pedido', {
       method: 'POST',
       headers: {
@@ -155,12 +173,12 @@ export default class InventarioTableList extends React.Component {
           'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        fecha: newData.fecha,
-        cliente: newData.cliente,
+        fecha: this.state.fecha,
+        cliente: this.state.cliente,
         descripcion: newData.descripcion,
-        estado: estados,
-        total: newData.total,
-        sucursal: this.state.tabIndex.toString()
+        estado: this.state.estado,
+        total: this.state.total,
+        sucursal: this.state.perfil.sucursal
       })
       })
       .then( (response) => {
@@ -248,8 +266,7 @@ export default class InventarioTableList extends React.Component {
     let info = JSON.parse(localStorage.getItem('usuario'));
     this.setState({
       perfil: info,
-      isReady: true,
-      tabIndex: Number(info.sucursal)
+      isReady: true
     })
   }
 
@@ -265,6 +282,13 @@ export default class InventarioTableList extends React.Component {
 
   actualizarTexto(event, id, value) {
     this.setState({id: value});
+  }
+
+  handleChange2(event, newValue) {
+    this.setState({tabIndex: newValue, estado:null, estadosucursal:null, completado:null, descuento:null});
+  }
+  onChange(date, dateString) {
+    this.setState({fecha: dateString});
   }
 
   render() {
@@ -291,56 +315,118 @@ export default class InventarioTableList extends React.Component {
       return (
         <div style={styles.root}>
           <Card>
-            <CardBody>
-              <MaterialTable
-                title= {nombresucursal}
-                columns={ [{ title: 'Fecha', field: 'fecha', type: 'date' },
-                          { title: 'Cliente', field: 'cliente' },
-                          { title: 'Descripcion', field: 'descripcion'},
-                          { title: 'Estado', field: 'estado', lookup: { 0: 'EN PROCESO', 1: 'LISTO PARA RETIRO' ,2: 'ENTREGADO'}},
-                          { title: 'Total', field: 'total' ,type: 'numeric'}]}
-                data={this.state.ListaPedidos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
-                editable={{
-                  onRowAdd: newData =>
-                    new Promise((resolve, reject) => {
-                      setTimeout(() => {
-                        resolve();
-                        this.ActualizarPedidos();
-                      }, 2000)
-                      this.AgregarPedido(newData);
-
-                    }),
-                  onRowUpdate: (newData, oldData) =>
-                    new Promise((resolve) => {
-                      setTimeout(() => {
-                        resolve();
-                        this.ActualizarPedidos();
-                      }, 2000)
-                      this.EditarPedido(newData)
-                    }),
-                  onRowDelete: (oldData) =>
-                    new Promise((resolve) => {
-                      setTimeout(() => {
-                        resolve();
-                        this.ActualizarPedidos();
-                      }, 2000)
-                      this.EliminarPedido(oldData)
-                    }),
-                }}  />
-                <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-                spacing={3}>
-                  <Grid item xs={6} text-align= "center">
-                  <Box mt={8}>
-                    {mensajito}
-                    <Copyright />
-                  </Box>
-                  </Grid>
+            <AppBar position="static" color="primary" style={styles.Barrita}>
+              <Tabs value={this.state.tabIndex} onChange={this.handleChange2} aria-label="simple tabs example">
+                <Tab label="Realizar Pedido" {...a11yProps(0)} />
+                <Tab label="Pago de Pedido" {...a11yProps(1)} />
+                <Tab label="Lista de Pedidos" {...a11yProps(2)} />
+              </Tabs>
+            </AppBar>
+            <TabPanel value={this.state.tabIndex} index={0}>
+              <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              spacing={1}>
+                <Grid item xs={6}>
+                  <TextField id="standard-basic" value={this.state.numero_pedido} label="Numero de Pedido" type="number" onChange={this.handleInputChange('numero_pedido')}/>
                 </Grid>
-                </CardBody>
+                <Grid item xs={6}>
+                  <TextField id="standard-basic" value={this.state.fecha} label="Fecha" type="date" onChange={this.handleInputChange('fecha')}/>
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField id="standard-basic" value={this.state.cliente_telefono} label="Telefono de Cliente" onChange={this.handleInputChange('cliente_telefono')}/>
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    select
+                    label="Estado"
+                    value={this.state.estados}
+                    onChange={this.handleInputChange('estado')}
+                    helperText="Selecciona el estado del pedido"
+                  >
+                    <MenuItem key={0} value={0}>{'EN PROCESO'}</MenuItem>
+                    <MenuItem key={1} value={1}>{'LISTO PARA RETIRO'}</MenuItem>
+                    <MenuItem key={2} value={2}>{'ENTREGADO'}</MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField id="standard-basic" value={this.state.abono} label="Abono" type="number" onChange={this.handleInputChange('abono')}/>
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField id="standard-basic" value={this.state.total} label="Total a pagar" type="number" onChange={this.handleInputChange('total')}/>
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField id="standard-basic" value={this.state.descripcion} label="Descripción" onChange={this.handleInputChange('descripcion')}/>
+                </Grid>
+              </Grid>
+              <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              spacing={1}>
+                <Grid item xs={6}>
+                  <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
+                </Grid>
+                <Grid item xs={6}>
+
+                </Grid>
+              </Grid>
+              <Button style={{ float: 'right', margin: 15 }} onClick={this.AgregarPedido()}>
+                Finalizar pedido
+              </Button>
+            </TabPanel>
+            <TabPanel value={this.state.tabIndex} index={1}>
+            pagar
+            </TabPanel>
+            <TabPanel value={this.state.tabIndex} index={2}>
+              <CardBody>
+                <MaterialTable
+                  title= {nombresucursal}
+                  columns={ [{ title: 'Fecha', field: 'fecha', type: 'date' },
+                            { title: 'Cliente', field: 'cliente' },
+                            { title: 'Descripcion', field: 'descripcion'},
+                            { title: 'Estado', field: 'estado', lookup: { 0: 'EN PROCESO', 1: 'LISTO PARA RETIRO' ,2: 'ENTREGADO'}},
+                            { title: 'Total', field: 'total' ,type: 'numeric'}]}
+                  data={this.state.ListaPedidos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
+                  editable={{
+                    onRowUpdate: (newData, oldData) =>
+                      new Promise((resolve) => {
+                        setTimeout(() => {
+                          resolve();
+                          this.ActualizarPedidos();
+                        }, 2000)
+                        this.EditarPedido(newData)
+                      }),
+                    onRowDelete: (oldData) =>
+                      new Promise((resolve) => {
+                        setTimeout(() => {
+                          resolve();
+                          this.ActualizarPedidos();
+                        }, 2000)
+                        this.EliminarPedido(oldData)
+                      }),
+                  }}  />
+                  <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                  spacing={3}>
+                    <Grid item xs={6} text-align= "center">
+                    <Box mt={8}>
+                      {mensajito}
+                      <Copyright />
+                    </Box>
+                    </Grid>
+                  </Grid>
+                  </CardBody>
+                </TabPanel>
               </Card>
           </div>
         )
