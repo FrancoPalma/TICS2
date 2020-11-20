@@ -13,6 +13,7 @@ const crearVenta = require('../models/venta');
 const empleado = require('../models/usuario');
 const passport = require('../../config/passport');
 const boleta = require('../models/boleta');
+const detalle_venta = require('../models/detalle_venta')
 
 router.use(passport.initialize());
 router.use(passport.session());
@@ -171,17 +172,29 @@ router.post('/editar_prod/:id', isLoggedIn, async function(req, res){
  router.post('/delete_producto/:id', isLoggedIn, async function(req,res){
     let id = req.params.id;
 		await producto.findById(id, async function(err, producto){
-			let codigo = producto.codigo
+			let codigo = producto.codigo;
 			await producto.remove({_id: id}, async function(err, task){
-				await registro.create({fecha: new Date(), tipo: 'Producto', numero: codigo, detalle: 'Se eliminó un producto', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
+				await registro.create({fecha: Date.now(), tipo: 'Producto', numero: codigo, detalle: 'Se eliminó un producto', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
 					if(!err){
 						res.sendStatus(201);
 					}
 					else{
-						 res.sendStatus(404);
+						res.sendStatus(404);
 					}
 				})
 			});
+		});
+});
+
+router.post('/delete_producto_venta/:id', isLoggedIn, async function(req,res){
+	 let id = req.params.id;
+		 await producto.remove({_id: id}, async function(err, task){
+			 if(!err){
+				 res.sendStatus(201);
+			 }
+			 else{
+				 res.sendStatus(404);
+			 }
 		});
 });
 
@@ -198,7 +211,7 @@ router.get('/pedidos', isLoggedIn, async function(req, res){  //lista de product
 });
 
 router.post('/agregar_pedido', isLoggedIn, async function(req,res){
-	let fecha = req.body.fecha;
+	let fecha = Date.now();
 	let cliente_nombre = req.body.cliente_nombre.toUpperCase();
 	let cliente_telefono = req.body.cliente_telefono.toUpperCase()
 	let descripcion = req.body.descripcion.toUpperCase();
@@ -378,7 +391,7 @@ router.post('/boletasperiodo', isLoggedIn, async function(req,res){
 
 });
 
-router.post('/crear_venta', isLoggedIn, async function(req,res){
+/*router.post('/crear_venta', isLoggedIn, async function(req,res){
 	let prods = req.body.lista;
 	let fecha = Date.now();
 	let metodo_pago = req.body.metodo_pago.toUpperCase();
@@ -430,7 +443,78 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 				};
 			});
 		};
-});
+	});
+});*/
+
+router.post('/crear_venta', isLoggedIn, async function(req,res){
+	let prods = req.body.lista;
+	let fecha = Date.now();
+	let metodo_pago = req.body.metodo_pago.toUpperCase();
+	let descuento = req.body.descuento;
+	let sucursal = req.body.sucursal.toString();
+	let vendedor = req.body.vendedor.toUpperCase();
+	let total = req.body.total;
+	let empleadoLog = req.body.empleadoLog;
+	let cliente_nombre = req.body.cliente_nombre.toUpperCase();
+	let cliente_telefono = req.body.cliente_telefono;
+
+	await empleado.findOne({'rut': vendedor}, async function(err, empleado){
+		if(!empleado){
+			res.sendStatus(405);
+		}else{
+			await venta.find({} , async (err, venta) => {
+				if( venta.length == null || venta.length == 0 ){
+					let nuevo_numero_venta = 1
+					crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono}, (err, crearVenta) =>{
+						if(!err){
+							for(i = 0; i < prods.length; i++){
+								detalle_venta.create({numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i]}, (err) => {
+									if(err){
+										res.sendStatus(404)
+									}
+								});
+							}
+							boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta}, (err) => {
+								if(!err){
+									res.sendStatus(201);
+								}else{
+									res.sendStatus(406);
+								}
+							})
+							res.sendStatus(201)
+
+						}else{
+							res.sendStatus(404)
+						}
+					});
+
+				}else{
+					let nuevo_numero_venta = venta.length + 1
+					crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono}, (err) =>{
+						if(!err){
+							for(i = 0; i < prods.length; i++){
+								detalle_venta.create({numero_venta: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i].codigo}, (err) => {
+									if(err){
+										res.sendStatus(404)
+									}
+								});
+								}
+							boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta}, (err) => {
+								if(!err){
+									res.sendStatus(201);
+								}else{
+									res.sendStatus(406);
+								}
+							})
+							res.sendStatus(201)
+						}else{
+							res.sendStatus(404)
+						}
+					});
+				};
+			});
+		};
+	});
 });
 
 
