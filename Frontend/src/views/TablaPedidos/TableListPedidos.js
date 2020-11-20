@@ -380,7 +380,7 @@ export default class InventarioTableList extends React.Component {
                 </Box>
                 </Grid>
               </Grid>
-              <Button style={{ float: 'right', margin: 15 }} onClick={this.AgregarPedido()}>
+              <Button style={{ float: 'right', margin: 15 }} onClick={this.AgregarPedido}>
                 Finalizar pedido
               </Button>
 
