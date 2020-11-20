@@ -61,7 +61,9 @@ router.get('/inicio', isLoggedIn, (req, res) => {
 	}
 
 function descuento_vendedor(){
+	vendedores = await empleado.find({}, async function(err, vendedores){
 
+	})
 }
 
 	////----------------------------------------------LOG IN----------------------------------------------
