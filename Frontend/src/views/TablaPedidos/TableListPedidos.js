@@ -162,9 +162,8 @@ export default class InventarioTableList extends React.Component {
       });
     }
 
-  AgregarPedido(newData) {
+  AgregarPedido() {
     let regex = new RegExp("^[a-z A-Z]+$");
-
     if(regex.test(this.state.cliente)){
       fetch('/agregar_pedido', {
       method: 'POST',
@@ -173,10 +172,12 @@ export default class InventarioTableList extends React.Component {
           'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        fecha: this.state.fecha,
         cliente: this.state.cliente,
-        descripcion: newData.descripcion,
+        cliente_nombre: this.state.cliente_nombre,
+        cliente_telefono: this.state.cliente_telefono,
+        descripcion: this.state.descripcion,
         estado: this.state.estado,
+        abono: this.state.abono,
         total: this.state.total,
         sucursal: this.state.perfil.sucursal
       })
@@ -195,7 +196,7 @@ export default class InventarioTableList extends React.Component {
       });
 
     }else{
-      this.setState({mensaje: 6})
+      this.setState({mensaje: 2})
     }
   }
 
@@ -285,7 +286,7 @@ export default class InventarioTableList extends React.Component {
   }
 
   handleChange2(event, newValue) {
-    this.setState({tabIndex: newValue, estado:null, estadosucursal:null, completado:null, descuento:null});
+    this.setState({tabIndex: newValue, mensaje:null});
   }
   onChange(date, dateString) {
     this.setState({fecha: dateString});
@@ -305,6 +306,8 @@ export default class InventarioTableList extends React.Component {
       mensajito = <Alert severity="error">Usted solo puede editar el estado y descripción</Alert>
     }else if(this.state.mensaje === 6){
       mensajito = <Alert severity="error">No se permiten números en los campos de cliente o descripción</Alert>
+    }else if(this.state.mensaje === 99){
+      mensajito = <Alert severity="success">agregando</Alert>
     }
 
     if(this.state.ready === true) {
@@ -326,60 +329,61 @@ export default class InventarioTableList extends React.Component {
               <Grid
               container
               direction="row"
-              justify="center"
-              alignItems="center"
+              justify="left"
+              alignItems="baseline"
               spacing={1}>
-                <Grid item xs={6}>
-                  <TextField id="standard-basic" value={this.state.numero_pedido} label="Numero de Pedido" type="number" onChange={this.handleInputChange('numero_pedido')}/>
-                </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <TextField id="standard-basic" value={this.state.fecha} label="Fecha" type="date" onChange={this.handleInputChange('fecha')}/>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <TextField id="standard-basic" value={this.state.cliente_telefono} label="Telefono de Cliente" onChange={this.handleInputChange('cliente_telefono')}/>
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    select
-                    label="Estado"
-                    value={this.state.estados}
-                    onChange={this.handleInputChange('estado')}
-                    helperText="Selecciona el estado del pedido"
-                  >
-                    <MenuItem key={0} value={0}>{'EN PROCESO'}</MenuItem>
-                    <MenuItem key={1} value={1}>{'LISTO PARA RETIRO'}</MenuItem>
-                    <MenuItem key={2} value={2}>{'ENTREGADO'}</MenuItem>
-                  </TextField>
-                </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <TextField id="standard-basic" value={this.state.abono} label="Abono" type="number" onChange={this.handleInputChange('abono')}/>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <TextField id="standard-basic" value={this.state.total} label="Total a pagar" type="number" onChange={this.handleInputChange('total')}/>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <TextField id="standard-basic" value={this.state.descripcion} label="Descripción" onChange={this.handleInputChange('descripcion')}/>
                 </Grid>
+              </Grid>
+              <Grid item xs={4}>
+                <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  select
+                  label="Estado"
+                  value={this.state.estados}
+                  onChange={this.handleInputChange('estado')}
+                  helperText="Selecciona el estado del pedido"
+                >
+                  <MenuItem key={0} value={0}>{'EN PROCESO'}</MenuItem>
+                  <MenuItem key={1} value={1}>{'LISTO PARA RETIRO'}</MenuItem>
+                  <MenuItem key={2} value={2}>{'ENTREGADO'}</MenuItem>
+                </TextField>
               </Grid>
               <Grid
               container
               direction="row"
               justify="center"
               alignItems="center"
-              spacing={1}>
-                <Grid item xs={6}>
-                  <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
-                </Grid>
-                <Grid item xs={6}>
-
+              spacing={3}>
+                <Grid item xs={6} text-align= "center">
+                <Box mt={8}>
+                  {mensajito}
+                  <Copyright />
+                </Box>
                 </Grid>
               </Grid>
               <Button style={{ float: 'right', margin: 15 }} onClick={this.AgregarPedido()}>
                 Finalizar pedido
               </Button>
+
             </TabPanel>
             <TabPanel value={this.state.tabIndex} index={1}>
             pagar
