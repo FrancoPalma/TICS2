@@ -60,11 +60,7 @@ router.get('/inicio', isLoggedIn, (req, res) => {
 		});
 	}
 
-function descuento_vendedor(){
-	vendedores = await empleado.find({}, async function(err, vendedores){
 
-	})
-}
 
 	////----------------------------------------------LOG IN----------------------------------------------
 	router.get('/login', (req, res) => {
@@ -191,10 +187,7 @@ router.post('/editar_prod/:id', isLoggedIn, async function(req, res){
 router.post('/delete_producto_venta/:id', isLoggedIn, async function(req,res){
 	 let id = req.params.id;
 		 await producto.remove({_id: id}, async function(err, task){
-			 if(!err){
-				 res.sendStatus(201);
-			 }
-			 else{
+			 if(err){
 				 res.sendStatus(404);
 			 }
 		});
@@ -225,34 +218,41 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 	let vendedor = req.body.vendedor;
 	let metodo_pago = req.body.metodo_pago;
 	let descuento = req.body.descuento;
-	await pedido.find({}, async function(err, pedido){
-		let nuevo_numero_pedido = 1
-		if( pedido.length == null || pedido.length == 0 ){
-	  	await crearPedido.create({numero_pedido: nuevo_numero_pedido,fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:abono}, (err) =>{
-				boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: 1}, (err) =>{
-					if(!err){
-						res.sendStatus(201)
-					}else{
-						res.sendStatus(404)
-					}
-				});
-			});
+
+	await empleado.findOne({'rut': vendedor}, async function(err, empleado){
+		if(!empleado){
+			res.sendStatus(405);
 		}else{
-			let nuevo_numero_pedido = pedido.length + 1
-			await crearPedido.create({fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:abono}, (err) =>{
-				if(!err){
-					boleta.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: venta.length + 1}, (err) =>{
+			await pedido.find({}, async function(err, pedido){
+			let nuevo_numero_pedido = 1
+			if( pedido.length == null || pedido.length == 0 ){
+		  	await crearPedido.create({numero_pedido: nuevo_numero_pedido,fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:abono, total: total}, (err) =>{
+					boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido}, (err) =>{
 						if(!err){
 							res.sendStatus(201)
 						}else{
 							res.sendStatus(404)
 						}
 					});
-				}else{
-					res.sendStatus(404)
-				}
+				});
+			}else{
+				let nuevo_numero_pedido = pedido.length + 1
+				await crearPedido.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:abono, total: total}, (err) =>{
+					if(!err){
+						boleta.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido}, (err) =>{
+							if(!err){
+								res.sendStatus(201)
+							}else{
+								res.sendStatus(404)
+							}
+						});
+					}else{
+						res.sendStatus(404)
+					}
+				});
+			}
 			});
-	}
+		}
 	});
 });
 
@@ -467,51 +467,38 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 			await venta.find({} , async (err, venta) => {
 				if( venta.length == null || venta.length == 0 ){
 					let nuevo_numero_venta = 1
-					crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono}, (err, crearVenta) =>{
-						if(!err){
-							for(i = 0; i < prods.length; i++){
-								detalle_venta.create({numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i]}, (err) => {
-									if(err){
-										res.sendStatus(404)
-									}
-								});
-							}
-							boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta}, (err) => {
-								if(!err){
-									res.sendStatus(201);
-								}else{
-									res.sendStatus(406);
+					crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono}, (err) =>{
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta}, (err2) => {
+							if(!err){
+								for(i = 0; i < prods.length; i++){
+									detalle_venta.create({numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i]}, (err3) => {
+										if(err){
+											res.sendStatus(404)
+										}
+									});
 								}
-							})
-							res.sendStatus(201)
-
-						}else{
-							res.sendStatus(404)
-						}
+							}else{
+								res.sendStatus(404)
+							}
+						});
 					});
-
 				}else{
 					let nuevo_numero_venta = venta.length + 1
 					crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono}, (err) =>{
-						if(!err){
-							for(i = 0; i < prods.length; i++){
-								detalle_venta.create({numero_venta: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i].codigo}, (err) => {
-									if(err){
-										res.sendStatus(404)
-									}
-								});
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta}, (err2) => {
+							if(!err){
+								for(i = 0; i < prods.length; i++){
+									detalle_venta.create({numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i]}, (err3) => {
+										if(err){
+											res.sendStatus(404)
+										}
+									});
 								}
-							boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta}, (err) => {
-								if(!err){
-									res.sendStatus(201);
-								}else{
-									res.sendStatus(406);
-								}
-							})
 							res.sendStatus(201)
-						}else{
-							res.sendStatus(404)
-						}
+							}else{
+								res.sendStatus(404)
+							}
+						});
 					});
 				};
 			});
@@ -533,26 +520,6 @@ router.post('/eliminar_venta/:id', isLoggedIn, async function(req,res){
     });
 });
 
-/*router.get('/agregar_venta/:numVenta', isLoggedIn, async function(req,res){
-		await venta.findOne({numero_venta: req.params.numVenta}, (err, venta) =>{
-			res.render('agregar_venta', {
-				user: req.user,
-				venta: venta
-			});
-		});
-});
-
-router.post('/agregar_venta/:id', isLoggedIn, async function(req, res){
-    await venta.findByIdAndUpdate(req.params.id, req.body, function (err) {
-      if(err){
-        res.sendStatus(404);
-    } else {
-      res.redirect('../venta');
-    }
-    });
-  });*/
-
-
 //----------------------------------------------GESTIONAR EMPLEADOS----------------------------------------------
 router.get('/empleados', isLoggedIn, async function(req,res){
     await empleado.find(function (err, empleado) {
@@ -564,7 +531,20 @@ router.get('/empleados', isLoggedIn, async function(req,res){
     });
 });
 
-router.post('/crear_empleado', async function(req, res){
+router.get('/empleados_descuentos', isLoggedIn, async function(req,res){
+	var vendedor = [];
+  vendedores = await empleado.find(function (err, empleado) {
+		if (!err){
+			for (i = 0; i < vendedores.length; i++){
+				empleado
+			}
+		}else{
+			res.sendStatus(404);
+		}
+  });
+});
+
+router.post('/crear_empleado', isLoggedIn ,async function(req, res){
 			await passport.authenticate('local-signup', function(err, user) {
 			if (err) { return res.sendStatus(404); }
 			if (!user) { return res.sendStatus(404); }
