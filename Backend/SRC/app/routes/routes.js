@@ -536,7 +536,9 @@ router.get('/empleados_descuentos', isLoggedIn, async function(req,res){
   vendedores = await empleado.find(function (err, empleado) {
 		if (!err){
 			for (i = 0; i < vendedores.length; i++){
-				empleado
+				empleado.findOne({'rut':vendedores[i].rut}, async function(err, vendedor){
+					
+				})
 			}
 		}else{
 			res.sendStatus(404);
