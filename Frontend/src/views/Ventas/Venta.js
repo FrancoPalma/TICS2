@@ -349,7 +349,7 @@ export default class Ventas extends React.Component {
 
   EliminarProducto(oldData) {
     console.log(oldData._id)
-    fetch('/delete_producto/' + oldData._id, {
+    fetch('/delete_producto_venta/' + oldData._id, {
     method: 'POST',
     headers: {
         Accept: 'application/json',
@@ -683,7 +683,7 @@ export default class Ventas extends React.Component {
                       alignItems="center"
                       spacing={1}>
                         <Grid item xs={6}>
-                          <TextField id="standard-basic" value={this.state.descuento} label="Descuento %" onChange={this.handleInputChange('descuento')}/>
+                          <TextField id="standard-basic" value={this.state.descuento} label="Descuento %" type="number" onChange={this.handleInputChange('descuento')}/>
                         </Grid>
                         <Grid item xs={6}>
                           <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
