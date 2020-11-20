@@ -186,7 +186,7 @@ router.post('/editar_prod/:id', isLoggedIn, async function(req, res){
 		});
 });
 
-router.post('/delete_producto_ventas/:id', isLoggedIn, async function(req,res){
+router.post('/delete_producto_venta/:id', isLoggedIn, async function(req,res){
 	 let id = req.params.id;
 		 await producto.remove({_id: id}, async function(err, task){
 			 if(!err){
