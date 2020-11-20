@@ -185,7 +185,7 @@ export default class InventarioTableList extends React.Component {
         piedra: newData.piedra,
         precio: newData.precio,
         descripcion: newData.descripcion,
-        sucursal: this.state.tabIndex.toString()
+        sucursal: this.state.perfil.sucursal.toString()
       })
       })
       .then( (response) => {
@@ -224,7 +224,7 @@ export default class InventarioTableList extends React.Component {
         piedra: newData.piedra,
         precio: newData.precio,
         descripcion: newData.descripcion,
-        sucursal: this.state.tabIndex
+        sucursal: this.state.perfil.sucursal.toString()
       })
       })
       .then( (response) => {

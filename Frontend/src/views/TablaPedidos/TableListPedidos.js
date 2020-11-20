@@ -132,7 +132,7 @@ export default class InventarioTableList extends React.Component {
       vendedor: "",
       cliente_nombre: "",
       cliente_telefono: "",
-      estado: "",
+      estado: 0,
       abono: null,
       total:null
     }
@@ -175,6 +175,7 @@ export default class InventarioTableList extends React.Component {
         cliente: this.state.cliente,
         cliente_nombre: this.state.cliente_nombre,
         cliente_telefono: this.state.cliente_telefono,
+        vendedor: this.state.vendedor,
         descripcion: this.state.descripcion,
         estado: this.state.estado,
         abono: this.state.abono,
@@ -267,7 +268,8 @@ export default class InventarioTableList extends React.Component {
     let info = JSON.parse(localStorage.getItem('usuario'));
     this.setState({
       perfil: info,
-      isReady: true
+      isReady: true,
+      vendedor: info.rut
     })
   }
 
@@ -287,6 +289,7 @@ export default class InventarioTableList extends React.Component {
 
   handleChange2(event, newValue) {
     this.setState({tabIndex: newValue, mensaje:null});
+    this.ActualizarPedidos();
   }
   onChange(date, dateString) {
     this.setState({fecha: dateString});
@@ -336,10 +339,10 @@ export default class InventarioTableList extends React.Component {
                   <TextField id="standard-basic" value={this.state.fecha} label="Fecha" type="date" onChange={this.handleInputChange('fecha')}/>
                 </Grid>
                 <Grid item xs={4}>
-                  <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
+                  <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
                 </Grid>
                 <Grid item xs={4}>
-                  <TextField id="standard-basic" value={this.state.cliente_telefono} label="Telefono de Cliente" onChange={this.handleInputChange('cliente_telefono')}/>
+                  <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
                 </Grid>
                 <Grid item xs={4}>
                   <TextField id="standard-basic" value={this.state.abono} label="Abono" type="number" onChange={this.handleInputChange('abono')}/>
@@ -348,17 +351,17 @@ export default class InventarioTableList extends React.Component {
                   <TextField id="standard-basic" value={this.state.total} label="Total a pagar" type="number" onChange={this.handleInputChange('total')}/>
                 </Grid>
                 <Grid item xs={4}>
+                  <TextField id="standard-basic" value={this.state.cliente_telefono} label="Telefono de Cliente" onChange={this.handleInputChange('cliente_telefono')}/>
+                </Grid>
+                <Grid item xs={4}>
                   <TextField id="standard-basic" value={this.state.descripcion} label="Descripción" onChange={this.handleInputChange('descripcion')}/>
                 </Grid>
-              </Grid>
-              <Grid item xs={4}>
-                <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
               </Grid>
               <Grid item xs={4}>
                 <TextField
                   select
                   label="Estado"
-                  value={this.state.estados}
+                  value={this.state.estado}
                   onChange={this.handleInputChange('estado')}
                   helperText="Selecciona el estado del pedido"
                 >
@@ -392,10 +395,13 @@ export default class InventarioTableList extends React.Component {
               <CardBody>
                 <MaterialTable
                   title= {nombresucursal}
-                  columns={ [{ title: 'Fecha', field: 'fecha', type: 'date' },
-                            { title: 'Cliente', field: 'cliente' },
+                  columns={ [{ title: 'N° Pedido', field: 'numero_pedido' ,type: 'numeric'},
+                            { title: 'Fecha', field: 'fecha', type: 'date' },
+                            { title: 'Cliente', field: 'cliente_nombre' },
+                            { title: 'Telefono Cliente', field: 'cliente_telefono' },
                             { title: 'Descripcion', field: 'descripcion'},
                             { title: 'Estado', field: 'estado', lookup: { 0: 'EN PROCESO', 1: 'LISTO PARA RETIRO' ,2: 'ENTREGADO'}},
+                            { title: 'Abono', field: 'abono' ,type: 'numeric'},
                             { title: 'Total', field: 'total' ,type: 'numeric'}]}
                   data={this.state.ListaPedidos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                   editable={{
