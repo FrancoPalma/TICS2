@@ -227,19 +227,23 @@ router.post('/pagar_pedido', isLoggedIn, async function(req,res){
 			if( pedido.length == null || pedido.length == 0 ){
 				let nuevo_numero_pedido = 1
 		  	await crearPedido.findByIdAndUpdate(id, {abono:abono_actual + abono}, (err) =>{
-					boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido}, (err) =>{
-						if(!err){
-							res.sendStatus(201)
-						}else{
-							res.sendStatus(404)
-						}
-					});
+					if(!err){
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido}, (err) =>{
+							if(!err){
+								res.sendStatus(201)
+							}else{
+								res.sendStatus(404)
+							}
+						});
+					}else{
+						res.sendStatus(404)
+					}
 				});
 			}else{
 				let nuevo_numero_pedido = pedido.length + 1
 				await crearPedido.findByIdAndUpdate(id, {abono:abono_actual + abono}, (err) =>{
 					if(!err){
-						boleta.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido}, (err) =>{
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido}, (err) =>{
 							if(!err){
 								res.sendStatus(201)
 							}else{
