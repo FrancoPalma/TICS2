@@ -366,7 +366,7 @@ router.post('/eliminar_pedido/:id', isLoggedIn, async function(req,res){
 		await pedido.findById(id, async function(err, pedido){
 			let numero_pedido = pedido.numero_pedido;
 	    await eliminarPedido.remove({_id: id}, async function(err){
-				await registro.create({fecha: new Date(), tipo: 'Pedido', numero: numero_pedido, detalle: 'Se eliminó un pedido', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
+				await registro.create({fecha: Date.now(), tipo: 'Pedido', numero: numero_pedido, detalle: 'Se eliminó un pedido', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
 					if(!err){
 						res.sendStatus(201);
 					}
