@@ -414,7 +414,7 @@ export default class InventarioTableList extends React.Component {
   CalcularTotal = () => {
     let tot = 0;
     for(let i = 0; i<this.state.targetKeys.length;i++) {
-      tot = tot + this.state.targetKeys[i].precio;
+      tot = tot + this.state.targetKeys[i].total - this.state.targetKeys[i].abono ;
     }
     let resultado = Math.trunc(tot*(1-(this.state.descuento/100)));
     this.setState({total:resultado})
@@ -590,8 +590,8 @@ export default class InventarioTableList extends React.Component {
               spacing={1}>
                 <Grid item xs={6}>
                   <h4>
-                  Precio (sin dcto): ${this.state.suma}{"\n"} <br />
-                  Precio final: ${this.state.total}
+                  Total a pagar (sin dcto): ${this.state.suma}{"\n"} <br />
+                  Total a pagar: ${this.state.total}
                   </h4>
                 </Grid>
                 <Grid item xs={6}>
