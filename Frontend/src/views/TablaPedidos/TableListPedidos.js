@@ -231,7 +231,10 @@ export default class InventarioTableList extends React.Component {
       suma: 0,
       abono: null,
       total:null,
-      abono2:0
+      abono2:0,
+      descuento: 0,
+      metodo_pago: null,
+      priv_descuento :0,
 
     }
     this.handleChange = this.handleChange.bind(this)
@@ -366,7 +369,8 @@ export default class InventarioTableList extends React.Component {
       perfil: info,
       isReady: true,
       vendedor: info.rut,
-      sucursal: info.sucursal
+      sucursal: info.sucursal,
+      priv_descuento: info.descuento_permitido
     })
   }
 
@@ -582,8 +586,8 @@ export default class InventarioTableList extends React.Component {
               container
               direction="row"
               justify="center"
-              alignItems="center"
-              spacing={3}>
+              alignItems="baseline"
+              spacing={1}>
                 <Grid item xs={6}>
                   <h4>
                   Precio (sin dcto): ${this.state.suma}{"\n"} <br />
@@ -595,13 +599,13 @@ export default class InventarioTableList extends React.Component {
                   container
                   direction="row"
                   justify="center"
-                  alignItems="center"
+                  alignItems="baseline"
                   spacing={1}>
                     <Grid item xs={6}>
                       <TextField id="standard-basic" value={this.state.descuento} label="Descuento %" type="number" onChange={this.handleInputChange('descuento')}/>
                     </Grid>
                     <Grid item xs={6}>
-                      <TextField id="standard-basic" value={this.state.abono2} label="Abono" onChange={this.handleInputChange('abono')}/>
+                      <TextField id="standard-basic" value={this.state.abono2} type="number" label="Abono" onChange={this.handleInputChange('abono2')}/>
                     </Grid>
                     <Grid item xs={6}>
                       <TextField
@@ -616,18 +620,8 @@ export default class InventarioTableList extends React.Component {
                         <MenuItem key={'debito'} value={'debito'}>{'Debito'}</MenuItem>
                       </TextField>
                     </Grid>
-                  </Grid>
-                  <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                  spacing={1}>
                     <Grid item xs={6}>
                       <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
-                    </Grid>
-                    <Grid item xs={6}>
-
                     </Grid>
                   </Grid>
                   <Button style={{ float: 'right', margin: 5 }} onClick={this.imprimir}>
