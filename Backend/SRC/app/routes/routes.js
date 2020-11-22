@@ -206,18 +206,18 @@ router.get('/pedidos', isLoggedIn, async function(req, res){  //lista de product
 
 router.post('/pagar_pedido', isLoggedIn, async function(req,res){
 	let fecha = Date.now();
-	let pedido = req.body.pedido;
-	let id = pedido._id;
-	let numero = pedido.numero_pedido
-	let cliente_nombre = pedido.cliente_nombre;
-	let cliente_telefono = pedido.cliente_telefono;
-	let sucursal = pedido.sucursal;
+	let pedido_recibido = req.body.pedido;
+	let id = pedido_recibido._id;
+	let numero = pedido_recibido.numero_pedido
+	let cliente_nombre = pedido_recibido.cliente_nombre;
+	let cliente_telefono = pedido_recibido.cliente_telefono;
+	let sucursal = pedido_recibido.sucursal;
 	let abono = req.body.abono;
 	let empleadoLog = req.body.empleadoLog;
 	let vendedor = req.body.vendedor;
 	let metodo_pago = req.body.metodo_pago;
 	let descuento = req.body.descuento;
-	let abono_actual =  pedido.abono;
+	let abono_actual =  pedido_recibido.abono;
 
 	await empleado.findOne({'rut': vendedor}, async function(err, empleado){
 		if(!empleado){
@@ -228,7 +228,7 @@ router.post('/pagar_pedido', isLoggedIn, async function(req,res){
 				let nuevo_numero_pedido = 1
 		  	await crearPedido.findByIdAndUpdate(id, {abono:abono_actual + abono}, (err) =>{
 					if(!err){
-						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido}, (err) =>{
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: abono, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido}, (err) =>{
 							if(!err){
 								res.sendStatus(201)
 							}else{
@@ -243,7 +243,7 @@ router.post('/pagar_pedido', isLoggedIn, async function(req,res){
 				let nuevo_numero_pedido = pedido.length + 1
 				await crearPedido.findByIdAndUpdate(id, {abono:abono_actual + abono}, (err) =>{
 					if(!err){
-						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido}, (err) =>{
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: abono, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido}, (err) =>{
 							if(!err){
 								res.sendStatus(201)
 							}else{
