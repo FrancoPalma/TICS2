@@ -212,12 +212,12 @@ router.post('/pagar_pedido', isLoggedIn, async function(req,res){
 	let cliente_nombre = pedido_recibido.cliente_nombre;
 	let cliente_telefono = pedido_recibido.cliente_telefono;
 	let sucursal = pedido_recibido.sucursal;
-	let abono = req.body.abono;
+	let abono = parseInt(req.body.abono);
 	let empleadoLog = req.body.empleadoLog;
 	let vendedor = req.body.vendedor;
 	let metodo_pago = req.body.metodo_pago;
 	let descuento = req.body.descuento;
-	let abono_actual =  pedido_recibido.abono;
+	let abono_actual =  parseInt(pedido_recibido.abono);
 
 	await empleado.findOne({'rut': vendedor}, async function(err, empleado){
 		if(!empleado){
