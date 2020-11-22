@@ -204,7 +204,59 @@ router.get('/pedidos', isLoggedIn, async function(req, res){  //lista de product
   });
 });
 
-router.post('/agregar_pedido', isLoggedIn, async function(req,res){
+router.post('/pagar_pedido', isLoggedIn, async function(req,res){
+	let fecha = Date.now();
+	let pedido = req.body.pedido;
+	let id = pedido._id;
+	let numero = pedido.numero_pedido
+	let cliente_nombre = pedido.cliente_nombre;
+	let cliente_telefono = pedido.cliente_telefono;
+	let sucursal = pedido.sucursal;
+	let abono = req.body.abono;
+	let empleadoLog = req.body.empleadoLog;
+	let vendedor = req.body.vendedor;
+	let metodo_pago = req.body.metodo_pago;
+	let descuento = req.body.descuento;
+	let abono_actual =  pedido.abono;
+
+	await empleado.findOne({'rut': vendedor}, async function(err, empleado){
+		if(!empleado){
+			res.sendStatus(405);
+		}else{
+			await pedido.find({}, async function(err, pedido){
+			if( pedido.length == null || pedido.length == 0 ){
+				let nuevo_numero_pedido = 1
+		  	await crearPedido.findByIdAndUpdate(id, {abono:abono_actual + abono}, (err) =>{
+					boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido}, (err) =>{
+						if(!err){
+							res.sendStatus(201)
+						}else{
+							res.sendStatus(404)
+						}
+					});
+				});
+			}else{
+				let nuevo_numero_pedido = pedido.length + 1
+				await crearPedido.findByIdAndUpdate(id, {abono:abono_actual + abono}, (err) =>{
+					if(!err){
+						boleta.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido}, (err) =>{
+							if(!err){
+								res.sendStatus(201)
+							}else{
+								res.sendStatus(404)
+							}
+						});
+					}else{
+						res.sendStatus(404)
+					}
+				});
+			}
+			});
+		}
+	});
+});
+
+/*router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 	let fecha = Date.now();
 	let cliente_nombre = req.body.cliente_nombre.toUpperCase();
 	let cliente_telefono = req.body.cliente_telefono.toUpperCase()
@@ -245,6 +297,44 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 								res.sendStatus(404)
 							}
 						});
+					}else{
+						res.sendStatus(404)
+					}
+				});
+			}
+			});
+		}
+	});
+});*/
+
+router.post('/agregar_pedido', isLoggedIn, async function(req,res){
+	let fecha = Date.now();
+	let cliente_nombre = req.body.cliente_nombre.toUpperCase();
+	let cliente_telefono = req.body.cliente_telefono.toUpperCase()
+	let descripcion = req.body.descripcion.toUpperCase();
+	let sucursal = req.body.sucursal;
+	let estado = req.body.estado;
+	let total = req.body.total;
+
+	await empleado.findOne({'rut': vendedor}, async function(err, empleado){
+		if(!empleado){
+			res.sendStatus(405);
+		}else{
+			await pedido.find({}, async function(err, pedido){
+			let nuevo_numero_pedido = 1
+			if( pedido.length == null || pedido.length == 0 ){
+		  	await crearPedido.create({numero_pedido: nuevo_numero_pedido,fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total}, (err) =>{
+					if(!err){
+						res.sendStatus(201)
+					}else{
+						res.sendStatus(404)
+					}
+				});
+			}else{
+				let nuevo_numero_pedido = pedido.length + 1
+				await crearPedido.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total}, (err) =>{
+					if(!err){
+						res.sendStatus(201)
 					}else{
 						res.sendStatus(404)
 					}
@@ -532,13 +622,21 @@ router.get('/empleados', isLoggedIn, async function(req,res){
 
 router.get('/empleados_descuentos', isLoggedIn, async function(req,res){
 	var vendedor = [];
-  vendedores = await empleado.find(function (err, empleado) {
-		if (!err){
-			for (i = 0; i < vendedores.length; i++){
-				empleado.findOne({'rut':vendedores[i].rut}, async function(err, vendedor){
-
-				})
+	let suma = 0
+  await empleado.find(function (err1, empleado) {
+		if (!err1){
+			for (i = 0; i < empleado.length; i++){
+				boleta.find({'vendedor':empleado[i].rut}, async function(err2, boletas){
+					if(boletas.length > 0){
+						for (i = 0; i < boletas.length; i++){
+							suma += boletas[i].descuento
+						}
+						vendedor.push([empleado[i].rut, suma])
+					}
+					suma = 0
+				});
 			}
+			res.json(vendedor)
 		}else{
 			res.sendStatus(404);
 		}
