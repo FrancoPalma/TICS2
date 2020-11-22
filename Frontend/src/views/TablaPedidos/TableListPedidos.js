@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import MaterialTable from 'material-table';
 import Box from '@material-ui/core/Box';
 import Card from "components/Card/Card.js";
+import difference from 'lodash/difference';
 import CardBody from "components/Card/CardBody.js";
 import { Grid } from '@material-ui/core';
 import Link from '@material-ui/core/Link';
@@ -16,6 +17,100 @@ import {  Transfer,
           Button,
           Tag,
           Table, DatePicker } from 'antd';
+
+const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
+  <Transfer {...restProps} showSelectAll={false}>
+    {({
+      direction,
+      filteredItems,
+      onItemSelectAll,
+      onItemSelect,
+      selectedKeys: listSelectedKeys,
+      disabled: listDisabled,
+    }) => {
+      const columns = direction === 'left' ? leftColumns : rightColumns;
+
+      const rowSelection = {
+        getCheckboxProps: item => ({ disabled: listDisabled || item.disabled }),
+        onSelectAll(selected, selectedRows) {
+          const treeSelectedKeys = selectedRows
+            .filter(item => !item.disabled)
+            .map(({ key }) => key);
+          const diffKeys = selected
+            ? difference(treeSelectedKeys, listSelectedKeys)
+            : difference(listSelectedKeys, treeSelectedKeys);
+          onItemSelectAll(diffKeys, selected);
+        },
+        onSelect({ key }, selected) {
+          onItemSelect(key, selected);
+        },
+        selectedRowKeys: listSelectedKeys,
+      };
+
+      return (
+        <Table
+          rowSelection={rowSelection}
+          columns={columns}
+          dataSource={filteredItems}
+          size="small"
+          style={{ pointerEvents: listDisabled ? 'none' : null }}
+          onRow={({ key, disabled: itemDisabled }) => ({
+            onClick: () => {
+              if (itemDisabled || listDisabled) return;
+              onItemSelect(key, !listSelectedKeys.includes(key));
+            },
+          })}
+        />
+      );
+    }}
+  </Transfer>
+);
+
+const leftTableColumns = [
+  {
+    dataIndex: 'numero_pedido',
+    title: 'N° Pedido',
+    render: numero_pedido => <Tag>{numero_pedido}</Tag>,
+  },
+  {
+    dataIndex: 'cliente_nombre',
+    title: 'Cliente',
+  },
+  {
+    dataIndex: 'abono',
+    title: 'Abono',
+    render: abono => <Tag color="purple">{abono}</Tag>,
+  },
+  {
+    dataIndex: 'total',
+    title: 'Total',
+    render: total => <Tag color="green">{total}</Tag>,
+  },
+
+];
+
+const rightTableColumns = [
+  {
+    dataIndex: 'numero_pedido',
+    title: 'N° Pedido',
+    render: numero_pedido => <Tag>{numero_pedido}</Tag>,
+  },
+  {
+    dataIndex: 'cliente_nombre',
+    title: 'Cliente',
+  },
+  {
+    dataIndex: 'abono',
+    title: 'Abono',
+    render: abono => <Tag color="purple">{abono}</Tag>,
+  },
+  {
+    dataIndex: 'total',
+    title: 'Total',
+    render: total => <Tag color="green">{total}</Tag>,
+  },
+];
+
 
 const styles = {
   cardCategoryWhite: {
@@ -123,7 +218,7 @@ export default class InventarioTableList extends React.Component {
     this.state = {
       tabIndex: 0,
       ready: false,
-      ListaPedidos: null,
+      ListaPedidos: "",
       mensaje: null,
       numero_pedido: "",
       fecha: "",
@@ -133,8 +228,11 @@ export default class InventarioTableList extends React.Component {
       cliente_nombre: "",
       cliente_telefono: "",
       estado: 0,
+      suma: 0,
       abono: null,
-      total:null
+      total:null,
+      abono2:0
+
     }
     this.handleChange = this.handleChange.bind(this)
     this.AgregarPedido = this.AgregarPedido.bind(this)
@@ -158,6 +256,7 @@ export default class InventarioTableList extends React.Component {
       })
       .then(users => {
           this.setState({ListaPedidos: users, ready: true})
+          this.getMock();
           console.log(this.state.ListaPedidos);
       });
     }
@@ -172,13 +271,10 @@ export default class InventarioTableList extends React.Component {
           'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        cliente: this.state.cliente,
         cliente_nombre: this.state.cliente_nombre,
         cliente_telefono: this.state.cliente_telefono,
-        vendedor: this.state.vendedor,
         descripcion: this.state.descripcion,
         estado: this.state.estado,
-        abono: this.state.abono,
         total: this.state.total,
         sucursal: this.state.perfil.sucursal
       })
@@ -269,9 +365,41 @@ export default class InventarioTableList extends React.Component {
     this.setState({
       perfil: info,
       isReady: true,
-      vendedor: info.rut
+      vendedor: info.rut,
+      sucursal: info.sucursal
     })
   }
+
+  state = {
+    mockData: [],
+    filterMock: [],
+    targetKeys: [],
+  };
+
+  getMock = () => {
+    const targetKeys = [];
+    const mockData = [];
+    for (let i = 0; i < this.state.ListaPedidos.length; i++) {
+      // codigo, tipo, material, piedra, descripcion, precio
+      const data = {
+        key: this.state.ListaPedidos[i],
+        numero_pedido: `${this.state.ListaPedidos[i].numero_pedido}`,
+        cliente_nombre: `${this.state.ListaPedidos[i].cliente_nombre}`,
+        abono: `${this.state.ListaPedidos[i].abono}`,
+        total: `${this.state.ListaPedidos[i].total}`,
+      };
+      if (data.chosen) {
+        targetKeys.push(data.key);
+      }
+      mockData.push(data);
+    }
+
+    const filterMock = mockData;
+    console.log(mockData)
+    console.log("Este es")
+    console.log(filterMock)
+    this.setState({ filterMock, targetKeys });
+  };
 
   componentDidMount() {
     this.getUsuario()
@@ -279,9 +407,63 @@ export default class InventarioTableList extends React.Component {
     console.log(this.state.ListaPedidos)
   }
 
-  handleChange(event, newValue) {
-    this.setState({tabIndex: newValue});
+  CalcularTotal = () => {
+    let tot = 0;
+    for(let i = 0; i<this.state.targetKeys.length;i++) {
+      tot = tot + this.state.targetKeys[i].precio;
+    }
+    let resultado = Math.trunc(tot*(1-(this.state.descuento/100)));
+    this.setState({total:resultado})
+    this.setState({suma:tot})
   }
+
+  imprimir = () => {
+    if(this.state.priv_descuento >= this.state.descuento && this.state.descuento >= 0){
+      fetch('/pagar_pedido', {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pedido: this.state.targetKeys[0],
+          metodo_pago: this.state.metodo_pago,
+          descuento: this.state.descuento,
+          vendedor: this.state.vendedor,
+          abono: this.state.abono2,
+          empleadolog: this.state.perfil.rut,
+        })
+        })
+        .then( (response) => {
+            if(response.status === 201) {
+                console.log("Añadido correctamente")
+                this.setState({mensaje: 7})
+                this.ActualizarInventario()
+
+            } else if(response.status === 405){
+              this.setState({mensaje: 2})
+            }else {
+                console.log('Hubo un error')
+                this.setState({mensaje: 2})
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+    }else{
+      console.log("No se mando, wena")
+    }
+  }
+
+  handleChange = targetKeys => {
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+        this.CalcularTotal();
+      }, 100)
+      this.setState({ targetKeys });
+    })
+  };
 
   actualizarTexto(event, id, value) {
     this.setState({id: value});
@@ -311,6 +493,8 @@ export default class InventarioTableList extends React.Component {
       mensajito = <Alert severity="error">No se permiten números en los campos de cliente o descripción</Alert>
     }else if(this.state.mensaje === 99){
       mensajito = <Alert severity="success">agregando</Alert>
+    }else if(this.state.mensaje === 7) {
+      mensajito = <Alert severity="success">Ha abonado!</Alert>
     }
 
     if(this.state.ready === true) {
@@ -336,25 +520,17 @@ export default class InventarioTableList extends React.Component {
               alignItems="baseline"
               spacing={1}>
                 <Grid item xs={4}>
-                  <TextField id="standard-basic" value={this.state.fecha} label="Fecha" type="date" onChange={this.handleInputChange('fecha')}/>
-                </Grid>
-                <Grid item xs={4}>
-                  <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
+                  <TextField id="standard-basic" value={this.state.descripcion} label="Descripción" onChange={this.handleInputChange('descripcion')}/>
                 </Grid>
                 <Grid item xs={4}>
                   <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
                 </Grid>
                 <Grid item xs={4}>
-                  <TextField id="standard-basic" value={this.state.abono} label="Abono" type="number" onChange={this.handleInputChange('abono')}/>
+                  <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
                 </Grid>
-                <Grid item xs={4}>
-                  <TextField id="standard-basic" value={this.state.total} label="Total a pagar" type="number" onChange={this.handleInputChange('total')}/>
-                </Grid>
+
                 <Grid item xs={4}>
                   <TextField id="standard-basic" value={this.state.cliente_telefono} label="Telefono de Cliente" onChange={this.handleInputChange('cliente_telefono')}/>
-                </Grid>
-                <Grid item xs={4}>
-                  <TextField id="standard-basic" value={this.state.descripcion} label="Descripción" onChange={this.handleInputChange('descripcion')}/>
                 </Grid>
               </Grid>
               <Grid item xs={4}>
@@ -389,7 +565,77 @@ export default class InventarioTableList extends React.Component {
 
             </TabPanel>
             <TabPanel value={this.state.tabIndex} index={1}>
-            pagar
+              <TableTransfer
+                dataSource={this.state.filterMock}
+                showSearch
+
+                operations={['Incluir', 'Descartar']}
+                targetKeys={this.state.targetKeys}
+                onChange={this.handleChange} // codigo tipo, material, piedra, precio
+                filterOption={(inputValue, item) =>
+                  item.numero_pedido.indexOf(inputValue) !== -1 || item.cliente_nombre.indexOf(inputValue.toUpperCase()) !== -1 || item.abono.indexOf(inputValue.toUpperCase()) !== -1 || item.total.indexOf(inputValue.toUpperCase()) !== -1
+                }
+                leftColumns={leftTableColumns}
+                rightColumns={rightTableColumns}
+              />
+              <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              spacing={3}>
+                <Grid item xs={6}>
+                  <h4>
+                  Precio (sin dcto): ${this.state.suma}{"\n"} <br />
+                  Precio final: ${this.state.total}
+                  </h4>
+                </Grid>
+                <Grid item xs={6}>
+                  <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                  spacing={1}>
+                    <Grid item xs={6}>
+                      <TextField id="standard-basic" value={this.state.descuento} label="Descuento %" type="number" onChange={this.handleInputChange('descuento')}/>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField id="standard-basic" value={this.state.abono2} label="Abono" onChange={this.handleInputChange('abono')}/>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        select
+                        label="Metodo de pago"
+                        value={this.state.metodo_pago}
+                        onChange={this.handleInputChange('metodo_pago')}
+                        helperText="Selecciona la forma de pagar"
+                      >
+                        <MenuItem key={'efectivo'} value={'efectivo'}>{'Efectivo'}</MenuItem>
+                        <MenuItem key={'credito'} value={'credito'}>{'Credito'}</MenuItem>
+                        <MenuItem key={'debito'} value={'debito'}>{'Debito'}</MenuItem>
+                      </TextField>
+                    </Grid>
+                  </Grid>
+                  <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                  spacing={1}>
+                    <Grid item xs={6}>
+                      <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
+                    </Grid>
+                    <Grid item xs={6}>
+
+                    </Grid>
+                  </Grid>
+                  <Button style={{ float: 'right', margin: 5 }} onClick={this.imprimir}>
+                    Abonar
+                  </Button>
+                  {mensajito}
+                </Grid>
+              </Grid>
             </TabPanel>
             <TabPanel value={this.state.tabIndex} index={2}>
               <CardBody>
