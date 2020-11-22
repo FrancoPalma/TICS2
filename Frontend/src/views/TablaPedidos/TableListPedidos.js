@@ -385,7 +385,7 @@ export default class InventarioTableList extends React.Component {
     const mockData = [];
     for (let i = 0; i < this.state.ListaPedidos.length; i++) {
       // codigo, tipo, material, piedra, descripcion, precio
-      //if (this.state.ListaPedidos[i].abono < this.state.ListaPedidos[i].total){
+      if (this.state.ListaPedidos[i].abono < this.state.ListaPedidos[i].total){
         const data = {
           key: this.state.ListaPedidos[i],
           numero_pedido: `${this.state.ListaPedidos[i].numero_pedido}`,
@@ -397,7 +397,7 @@ export default class InventarioTableList extends React.Component {
           targetKeys.push(data.key);
         }
         mockData.push(data);
-      //}
+      }
     }
 
     const filterMock = mockData;
