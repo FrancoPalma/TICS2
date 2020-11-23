@@ -232,7 +232,6 @@ export default class InventarioTableList extends React.Component {
       abono: null,
       total:null,
       abono2:0,
-      descuento: 0,
       metodo_pago: null,
       priv_descuento :0,
 
@@ -247,7 +246,11 @@ export default class InventarioTableList extends React.Component {
   handleInputChange(property) {
     return e => {
       new Promise((resolve) => {
+        setTimeout(() => {
+          this.CalcularTotal();
+        }, 100)
         this.setState({[property]: e.target.value});
+
       })
     };
   }
@@ -434,7 +437,6 @@ export default class InventarioTableList extends React.Component {
         body: JSON.stringify({
           pedido: this.state.targetKeys[0],
           metodo_pago: this.state.metodo_pago,
-          descuento: this.state.descuento,
           vendedor: this.state.vendedor,
           abono: this.state.abono2,
           empleadolog: this.state.perfil.rut,
@@ -592,8 +594,7 @@ export default class InventarioTableList extends React.Component {
               spacing={1}>
                 <Grid item xs={6}>
                   <h4>
-                  Total a pagar (sin dcto): ${this.state.suma}{"\n"} <br />
-                  Total a pagar: ${this.state.total}
+                  Total a pagar: ${this.state.suma}{"\n"} <br />
                   </h4>
                 </Grid>
                 <Grid item xs={6}>
@@ -603,9 +604,6 @@ export default class InventarioTableList extends React.Component {
                   justify="center"
                   alignItems="baseline"
                   spacing={1}>
-                    <Grid item xs={6}>
-                      <TextField id="standard-basic" value={this.state.descuento} label="Descuento %" type="number" onChange={this.handleInputChange('descuento')}/>
-                    </Grid>
                     <Grid item xs={6}>
                       <TextField id="standard-basic" value={this.state.abono2} type="number" label="Abono" onChange={this.handleInputChange('abono2')}/>
                     </Grid>
