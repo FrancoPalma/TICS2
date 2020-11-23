@@ -427,7 +427,6 @@ export default class InventarioTableList extends React.Component {
   }
 
   imprimir = () => {
-    if(this.state.priv_descuento >= this.state.descuento && this.state.descuento >= 0){
       fetch('/pagar_pedido', {
         method: 'POST',
         headers: {
@@ -458,9 +457,6 @@ export default class InventarioTableList extends React.Component {
         .catch((error) => {
             console.log(error)
         });
-    }else{
-      console.log("No se mando, wena")
-    }
   }
 
   handleChange = targetKeys => {
