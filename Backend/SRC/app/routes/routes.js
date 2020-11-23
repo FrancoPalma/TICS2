@@ -216,7 +216,7 @@ router.post('/pagar_pedido', isLoggedIn, async function(req,res){
 	let empleadoLog = req.body.empleadoLog;
 	let vendedor = req.body.vendedor;
 	let metodo_pago = req.body.metodo_pago;
-	let descuento = req.body.descuento;
+	let descuento = 0;
 	let abono_actual =  parseInt(pedido_recibido.abono);
 
 	await empleado.findOne({'rut': vendedor}, async function(err, empleado){
