@@ -476,6 +476,7 @@ export default class InventarioTableList extends React.Component {
   handleChange2(event, newValue) {
     this.setState({tabIndex: newValue, mensaje:null});
     this.ActualizarPedidos();
+
   }
   onChange(date, dateString) {
     this.setState({fecha: dateString});
