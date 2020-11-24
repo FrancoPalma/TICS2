@@ -453,6 +453,39 @@ router.get('/lista_venta', isLoggedIn, isLoggedIn, async function(req,res){
 	});
 });
 
+router.get('/detalle_venta_dia', isLoggedIn, async function(req,res) {
+	let fecha = Date.now();
+	let dias = fecha/ (24*60*60*1000); //paso a dias
+	let dia_actual = dias%1;
+	let aux = dia_actual*(24*60*60*1000);
+	dias = dias*(24*60*60*1000);// paso a milisegundos
+	let dia_inicio = dias - aux;
+	await detalle_venta.find({$and: [{fecha: {$gte: new Date(dia_inicio)}},{fecha: {$lt: new Date(dias)}}]}, (err, boleta) => {
+		if(err) {
+			res.sendStatus(404);
+		}
+		else{
+			res.json(detalle_venta);
+		}
+	});
+});
+
+router.post('/detalle_venta_periodo', isLoggedIn, async function(req,res){
+		const fecha1 = req.body.desde;
+		const fecha2 = req.body.hasta;
+		const fi = fecha1.concat("T00:00:00-04:00");
+		const ff = fecha2.concat("T23:59:00-04:00");
+		await detalle_venta.find({$and: [{fecha: {$gte: new Date(fi)}},{fecha: {$lt: new Date(ff)}}]}, (err, boleta) => {
+			if(err) {
+				res.sendStatus(404);
+			}
+			else{
+				res.json(detalle_venta);
+			}
+		});
+
+});
+
 router.get('/boletasdia', isLoggedIn, async function(req,res) {
 	let fecha = Date.now();
 	let dias = fecha/ (24*60*60*1000); //paso a dias
@@ -564,7 +597,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta}, (err2) => {
 							if(!err){
 								for(i = 0; i < prods.length; i++){
-									detalle_venta.create({numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i]}, (err3) => {
+									detalle_venta.create({fecha: fecha, numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i]}, (err3) => {
 										if(err){
 											res.sendStatus(404)
 										}
@@ -581,7 +614,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta}, (err2) => {
 							if(!err){
 								for(i = 0; i < prods.length; i++){
-									detalle_venta.create({numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i]}, (err3) => {
+									detalle_venta.create({fecha: fecha, numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i]}, (err3) => {
 										if(err){
 											res.sendStatus(404)
 										}
