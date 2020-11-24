@@ -301,8 +301,7 @@ export default class Ventas extends React.Component {
     });
   }
 
-  ActualizarVentasDia() {
-    console.log("Diego puto")
+  ActualizarVentasDia(){
   fetch('/detalle_venta_dia')
     .then(res => {
         return res.json()
