@@ -232,7 +232,7 @@ export default class InventarioTableList extends React.Component {
       abono: null,
       total:null,
       abono2:0,
-      metodo_pago: null,
+      metodo_pago: 'efectivo',
       priv_descuento :0,
 
     }
@@ -395,6 +395,7 @@ export default class InventarioTableList extends React.Component {
           cliente_nombre: `${this.state.ListaPedidos[i].cliente_nombre}`,
           abono: `${this.state.ListaPedidos[i].abono}`,
           total: `${this.state.ListaPedidos[i].total}`,
+          sucursal: `${this.state.ListaPedidos[i].sucursal}`,
         };
         if (data.chosen) {
           targetKeys.push(data.key);
@@ -403,7 +404,7 @@ export default class InventarioTableList extends React.Component {
       }
     }
 
-    const filterMock = mockData;
+    const filterMock = mockData.filter(({sucursal}) => sucursal === this.state.sucursal);
     console.log(mockData)
     console.log("Este es")
     console.log(filterMock)
@@ -427,36 +428,45 @@ export default class InventarioTableList extends React.Component {
   }
 
   imprimir = () => {
-      fetch('/pagar_pedido', {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          pedido: this.state.targetKeys[0],
-          metodo_pago: this.state.metodo_pago,
-          vendedor: this.state.vendedor,
-          abono: this.state.abono2,
-          empleadolog: this.state.perfil.rut,
-        })
-        })
-        .then( (response) => {
-            if(response.status === 201) {
-                console.log("Añadido correctamente")
-                this.setState({mensaje: 7})
-                this.ActualizarInventario()
+    if(this.state.targetKeys.length ==1){
+      if(this.state.targetKeys[0].total >= this.state.abono2){
+        fetch('/pagar_pedido', {
+          method: 'POST',
+          headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            pedido: this.state.targetKeys[0],
+            metodo_pago: this.state.metodo_pago,
+            vendedor: this.state.vendedor,
+            abono: this.state.abono2,
+            empleadolog: this.state.perfil.rut,
+          })
+          })
+          .then( (response) => {
+              if(response.status === 201) {
+                  console.log("Añadido correctamente")
+                  this.setState({mensaje: 7})
+                  this.ActualizarInventario()
 
-            } else if(response.status === 405){
-              this.setState({mensaje: 2})
-            }else {
-                console.log('Hubo un error')
+              } else if(response.status === 405){
                 this.setState({mensaje: 2})
-            }
-        })
-        .catch((error) => {
-            console.log(error)
-        });
+              }else {
+                  console.log('Hubo un error')
+                  this.setState({mensaje: 2})
+              }
+          })
+          .catch((error) => {
+              console.log(error)
+          });
+
+      }else{
+        this.setState({mensaje: 9})
+      }
+    }else{
+      this.setState({mensaje: 8})
+    }
   }
 
   handleChange = targetKeys => {
@@ -500,6 +510,10 @@ export default class InventarioTableList extends React.Component {
       mensajito = <Alert severity="success">agregando</Alert>
     }else if(this.state.mensaje === 7) {
       mensajito = <Alert severity="success">Ha abonado!</Alert>
+    }else if(this.state.mensaje === 8) {
+      mensajito = <Alert severity="error">Solo se puede pagar un pedido a la vez.</Alert>
+    }else if(this.state.mensaje === 9) {
+      mensajito = <Alert severity="error">No se puede abonar más del precio total.</Alert>
     }
 
     if(this.state.ready === true) {
@@ -631,6 +645,7 @@ export default class InventarioTableList extends React.Component {
             <TabPanel value={this.state.tabIndex} index={2}>
               <CardBody>
                 <MaterialTable
+                options={{filtering: true}}
                   title= {nombresucursal}
                   columns={ [{ title: 'N° Pedido', field: 'numero_pedido' ,type: 'numeric'},
                             { title: 'Fecha', field: 'fecha', type: 'date' },

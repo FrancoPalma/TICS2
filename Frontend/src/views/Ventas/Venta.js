@@ -281,7 +281,7 @@ export default class Ventas extends React.Component {
   }
 
   ActualizarVentasPeriodo() {
-    fetch('/boletasperiodo', {
+    fetch('/detalle_venta_perido', {
     method: 'POST',
     headers: {
         Accept: 'application/json',
@@ -303,7 +303,7 @@ export default class Ventas extends React.Component {
 
   ActualizarVentasDia() {
     console.log("Diego puto")
-  fetch('/boletasdia')
+  fetch('/detalle_venta_dia')
     .then(res => {
         return res.json()
     })
@@ -731,12 +731,13 @@ export default class Ventas extends React.Component {
                         <CardBody>
                           <MaterialTable
                               title={nombresucursal}
+                              options={{filtering: true}}
                               columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                                         {title: 'Producto', field: 'cod_prod'},
                                         { title: 'Fecha', field: 'fecha', type: 'date'},
                                         {title: 'Vendedor', field: 'vendedor'},
                                         { title: 'Cliente', field: 'cliente_nombre'},
-                                        {title: 'Precio', field:'valor_prod'}]}
+                                        {title: 'Total', field:'total'}]}
                               data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                               editable={{
                                   onRowDelete: (oldData) =>
@@ -773,8 +774,8 @@ export default class Ventas extends React.Component {
             <AppBar position="static" color="primary" style={styles.Barrita}>
               <Tabs value={this.state.tabIndex} onChange={this.handleChange2} aria-label="simple tabs example">
                 <Tab label="Realizar Venta" {...a11yProps(0)} />
-                <Tab label="Ventas Día" {...a11yProps(1)} />
-                <Tab label="Ventas por Periodo" {...a11yProps(2)} />
+                <Tab label="Detalles Ventas del Día" {...a11yProps(1)} />
+                <Tab label="Detalles Ventas por Periodo" {...a11yProps(2)} />
               </Tabs>
             </AppBar>
             <CardBody>
@@ -860,6 +861,7 @@ export default class Ventas extends React.Component {
                       <CardBody>
                         <MaterialTable
                             title={nombresucursal}
+                            options={{filtering: true}}
                             columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                                       {title: 'Tipo', field: 'tipo'},
                                       {title: 'Producto', field: 'cod_prod'},
@@ -894,6 +896,7 @@ export default class Ventas extends React.Component {
                 </Button>
                 <MaterialTable
                     title={nombresucursal}
+                    options={{filtering: true}}
                     columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                               {title: 'Tipo', field: 'tipo'},
                               {title: 'Producto', field: 'cod_prod'},
