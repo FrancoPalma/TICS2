@@ -891,7 +891,7 @@ export default class Ventas extends React.Component {
                 <MaterialTable
                     title={nombresucursal}
                     options={{filtering: true}}
-                    columns={ [{ title: 'Numero', field: 'numero_venta', type: 'numeric'},
+                    columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                               {title: 'Producto', field: 'cod_prod'},
                               { title: 'Fecha', field: 'fecha', type: 'date'},
                               {title: 'Total', field:'valor_prod'}]}
