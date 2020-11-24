@@ -460,7 +460,7 @@ router.get('/detalle_venta_dia', isLoggedIn, async function(req,res) {
 	let aux = dia_actual*(24*60*60*1000);
 	dias = dias*(24*60*60*1000);// paso a milisegundos
 	let dia_inicio = dias - aux;
-	await detalle_venta.find({$and: [{fecha: {$gte: new Date(dia_inicio)}},{fecha: {$lt: new Date(dias)}}]}, (err, boleta) => {
+	await detalle_venta.find({$and: [{fecha: {$gte: new Date(dia_inicio)}},{fecha: {$lt: new Date(dias)}}]}, (err, detalle_venta) => {
 		if(err) {
 			res.sendStatus(404);
 		}
@@ -475,7 +475,7 @@ router.post('/detalle_venta_periodo', isLoggedIn, async function(req,res){
 		const fecha2 = req.body.hasta;
 		const fi = fecha1.concat("T00:00:00-04:00");
 		const ff = fecha2.concat("T23:59:00-04:00");
-		await detalle_venta.find({$and: [{fecha: {$gte: new Date(fi)}},{fecha: {$lt: new Date(ff)}}]}, (err, boleta) => {
+		await detalle_venta.find({$and: [{fecha: {$gte: new Date(fi)}},{fecha: {$lt: new Date(ff)}}]}, (err, detalle_venta) => {
 			if(err) {
 				res.sendStatus(404);
 			}
