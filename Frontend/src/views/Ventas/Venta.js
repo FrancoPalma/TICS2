@@ -4,7 +4,6 @@ import Alert from '@material-ui/lab/Alert';
 import MenuItem from '@material-ui/core/MenuItem';
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
-import CardHeader from "components/Card/CardHeader.js";
 import {  Transfer,
           Button,
           Tag,
@@ -501,6 +500,8 @@ export default class Ventas extends React.Component {
   }
   handleChange2(event, newValue) {
     this.setState({tabIndex: newValue, estado:null, estadosucursal:null, completado:null, descuento:null});
+    this.ActualizarVentasDia();
+    this.ActualizarVentasPeriodo();
   }
 
   CalcularTotal3(){
