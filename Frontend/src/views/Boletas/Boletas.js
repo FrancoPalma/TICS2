@@ -312,9 +312,9 @@ export default class Ventas extends React.Component {
     });
   }
 
-  EliminarVenta(oldData) {
+  EliminarBoleta(oldData) {
     console.log(oldData._id)
-    fetch('/eliminar_venta/' + oldData._id, {
+    fetch('/eliminar_boleta/' + oldData._id, {
     method: 'POST',
     headers: {
         Accept: 'application/json',
@@ -328,11 +328,9 @@ export default class Ventas extends React.Component {
         if(response.status === 201) {
             console.log("Eliminado correctamente")
             this.setState({estado: 3})
-            this.setState({estado: 3})
         } else {
             console.log('Hubo un error')
-            this.setState({estadosucursal: 4})
-            this.setState({estadosucursal: 4})
+            this.setState({estado: 9})
         }
     })
     .catch((error) => {
@@ -628,7 +626,7 @@ export default class Ventas extends React.Component {
                                         resolve();
                                         this.ActualizarVentasDia();
                                       }, 2000)
-                                      this.EliminarVenta(oldData)
+                                      this.EliminarBoleta(oldData)
                                     }),
                               }}
                             />
@@ -682,7 +680,7 @@ export default class Ventas extends React.Component {
                                       resolve();
                                       this.ActualizarVentasDia();
                                     }, 2000)
-                                    this.EliminarVenta(oldData)
+                                    this.EliminarBoleta(oldData)
                                   }),
                             }}
                           />
@@ -716,7 +714,7 @@ export default class Ventas extends React.Component {
                             resolve();
                             this.ActualizarVentasPeriodo();
                           }, 2000)
-                          this.EliminarVenta(oldData)
+                          this.EliminarBoleta(oldData)
                         }),
                       }}
                   />
