@@ -667,6 +667,7 @@ router.get('/empleados_descuentos', isLoggedIn, async function(req,res){
 		if (!err1){
 			for (i = 0; i < empleado.length; i++){
 				boleta.find({'vendedor':empleado[i].rut}, async function(err2, boleta){
+					console.log(boleta)
 					if(boleta.length > 0){
 						for (j = 0; j < boleta.length; j++){
 							suma += boleta[j].descuento
