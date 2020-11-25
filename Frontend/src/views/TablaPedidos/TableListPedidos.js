@@ -279,6 +279,7 @@ export default class InventarioTableList extends React.Component {
           'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        vendedor: this.state.vendedor,
         cliente_nombre: this.state.cliente_nombre,
         cliente_telefono: this.state.cliente_telefono,
         descripcion: this.state.descripcion,
@@ -551,7 +552,7 @@ export default class InventarioTableList extends React.Component {
                 </Grid>
 
                 <Grid item xs={4}>
-                  <TextField id="standard-basic" value={this.state.cliente_telefono} label="Telefono de Cliente" onChange={this.handleInputChange('cliente_telefono')}/>
+                  <TextField id="standard-basic" value={this.state.cliente_telefono} type ='number'label="Telefono de Cliente" onChange={this.handleInputChange('cliente_telefono')}/>
                 </Grid>
               </Grid>
               <Grid item xs={4}>
