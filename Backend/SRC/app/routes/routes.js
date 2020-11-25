@@ -677,7 +677,7 @@ router.get('/empleados_descuentos', isLoggedIn, async function(req,res){
 					suma = 0
 				});
 			}
-			res.json(vendedor)
+			res.json(vendedores)
 		}else{
 			res.sendStatus(404);
 		}
