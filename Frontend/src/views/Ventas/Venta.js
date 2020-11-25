@@ -737,16 +737,7 @@ export default class Ventas extends React.Component {
                                         { title: 'Fecha', field: 'fecha', type: 'date'},
                                         {title: 'Total', field:'valor_prod'}]}
                               data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
-                              editable={{
-                                  onRowDelete: (oldData) =>
-                                    new Promise((resolve) => {
-                                      setTimeout(() => {
-                                        resolve();
-                                        this.ActualizarVentasDia();
-                                      }, 2000)
-                                      this.EliminarVenta(oldData)
-                                    }),
-                              }}
+
                             />
                         </CardBody>
                     </Card>
@@ -865,16 +856,6 @@ export default class Ventas extends React.Component {
                                       { title: 'Fecha', field: 'fecha', type: 'date'},
                                       {title: 'Total', field:'valor_prod'}]}
                             data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
-                            editable={{
-                                onRowDelete: (oldData) =>
-                                  new Promise((resolve) => {
-                                    setTimeout(() => {
-                                      resolve();
-                                      this.ActualizarVentasDia();
-                                    }, 2000)
-                                    this.EliminarVenta(oldData)
-                                  }),
-                            }}
                           />
                       </CardBody>
                   </Card>
@@ -896,16 +877,6 @@ export default class Ventas extends React.Component {
                               { title: 'Fecha', field: 'fecha', type: 'date'},
                               {title: 'Total', field:'valor_prod'}]}
                     data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.sucursal)}
-                    editable={{
-                        onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                          setTimeout(() => {
-                            resolve();
-                            this.ActualizarVentasPeriodo();
-                          }, 2000)
-                          this.EliminarVenta(oldData)
-                        }),
-                      }}
                   />
               </TabPanel>
             </CardBody>

@@ -228,11 +228,11 @@ export default class InventarioTableList extends React.Component {
       descripcion: "",
       vendedor: "",
       cliente_nombre: "",
-      cliente_telefono: "",
+      cliente_telefono: 9,
       estado: 0,
       suma: 0,
       abono: null,
-      total:null,
+      totalnew:0,
       abono2:0,
       metodo_pago: 'efectivo',
       priv_descuento :0,
@@ -284,7 +284,7 @@ export default class InventarioTableList extends React.Component {
         cliente_telefono: this.state.cliente_telefono,
         descripcion: this.state.descripcion,
         estado: this.state.estado,
-        total: this.state.total,
+        total: this.state.totalnew,
         sucursal: this.state.perfil.sucursal
       })
       })
@@ -318,8 +318,8 @@ export default class InventarioTableList extends React.Component {
       body: JSON.stringify({
         id: newData._id,
         fecha: newData.fecha,
-        cliente_nombre: newData.cliente,
-        cliente_telefono: 1234,
+        cliente_nombre: newData.cliente_nombre,
+        cliente_telefono: newData.cliente_telefono,
         descripcion: newData.descripcion,
         estado: newData.estado,
         total: newData.total,
@@ -550,7 +550,9 @@ export default class InventarioTableList extends React.Component {
                 <Grid item xs={4}>
                   <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
                 </Grid>
-
+                <Grid item xs={4}>
+                  <TextField id="standard-basic" value={this.state.totalnew} type="number" label="Total" onChange={this.handleInputChange('totalnew')}/>
+                </Grid>
                 <Grid item xs={4}>
                   <TextField id="standard-basic" value={this.state.cliente_telefono} type ='number'label="Telefono de Cliente" onChange={this.handleInputChange('cliente_telefono')}/>
                 </Grid>
@@ -650,14 +652,14 @@ export default class InventarioTableList extends React.Component {
                 <MaterialTable
                 options={{filtering: true}}
                   title= {nombresucursal}
-                  columns={ [{ title: 'N° Pedido', field: 'numero_pedido' ,type: 'numeric'},
-                            { title: 'Fecha', field: 'fecha', type: 'date' },
+                  columns={ [{ title: 'N° Pedido', field: 'numero_pedido' ,type: 'numeric',editable: 'never' },
+                            { title: 'Fecha', field: 'fecha', type: 'date' ,editable: 'never' },
                             { title: 'Cliente', field: 'cliente_nombre' },
                             { title: 'Telefono Cliente', field: 'cliente_telefono' },
                             { title: 'Descripcion', field: 'descripcion'},
                             { title: 'Estado', field: 'estado', lookup: { 0: 'EN PROCESO', 1: 'LISTO PARA RETIRO' ,2: 'ENTREGADO'}},
                             { title: 'Abono', field: 'abono' ,type: 'numeric'},
-                            { title: 'Total', field: 'total' ,type: 'numeric'}]}
+                            { title: 'Total', field: 'total' ,type: 'numeric',editable: 'never' }]}
                   data={this.state.ListaPedidos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                   editable={{
                     onRowUpdate: (newData, oldData) =>
