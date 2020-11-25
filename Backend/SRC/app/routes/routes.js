@@ -477,7 +477,6 @@ router.post('/detalle_venta_periodo', isLoggedIn, async function(req,res){
 		const ff = fecha2.concat("T23:59:00-04:00");
 		await detalle_venta.find({$and: [{fecha: {$gte: new Date(fi)}},{fecha: {$lt: new Date(ff)}}]}, (err, detalle_venta) => {
 			if(err) {
-				console.log(err)
 				res.sendStatus(406);
 			}
 			else{
@@ -659,22 +658,26 @@ router.get('/empleados', isLoggedIn, async function(req,res){
 });
 
 router.get('/empleados_descuentos', isLoggedIn, async function(req,res){
-	var vendedor = [];
+	var vendedores = [];
 	let suma = 0
+	let promedio = 0
+	let persona = {rut: "", descuento: 0 ,sucursal: ""}
   await empleado.find(function (err1, empleado) {
 		if (!err1){
 			for (i = 0; i < empleado.length; i++){
-				boleta.find({'vendedor':empleado[i].rut}, async function(err2, boletas){
-					if(boletas.length > 0){
-						for (i = 0; i < boletas.length; i++){
-							suma += boletas[i].descuento
+				boleta.find({'vendedor':empleado[i].rut}, async function(err2, boleta){
+					if(boleta.length > 0){
+						for (i = 0; i < boleta.length; i++){
+							suma += boleta[i].descuento
 						}
-						vendedor.push([empleado[i].rut, suma])
+						promedio = suma / boleta.length
+						persona = {rut: boleta[i].vendedor, descuento: promedio ,sucursal: boleta.sucursal}
+						vendedor.push(persona)
 					}
 					suma = 0
 				});
 			}
-			res.json(vendedor)
+			res.json(vendedores)
 		}else{
 			res.sendStatus(404);
 		}
