@@ -280,7 +280,7 @@ export default class Ventas extends React.Component {
   }
 
   ActualizarVentasPeriodo() {
-    fetch('/detalle_venta_perido', {
+    fetch('/detalle_venta_periodo', {
     method: 'POST',
     headers: {
         Accept: 'application/json',
@@ -501,7 +501,6 @@ export default class Ventas extends React.Component {
   handleChange2(event, newValue) {
     this.setState({tabIndex: newValue, estado:null, estadosucursal:null, completado:null, descuento:null});
     this.ActualizarVentasDia();
-    this.ActualizarVentasPeriodo();
   }
 
   CalcularTotal3(){
