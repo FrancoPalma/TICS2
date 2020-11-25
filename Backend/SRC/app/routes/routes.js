@@ -319,6 +319,7 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 	let sucursal = req.body.sucursal;
 	let estado = req.body.estado;
 	let total = req.body.total;
+	let vendedor = req.body.vendedor;
 
 	await empleado.findOne({'rut': vendedor}, async function(err, empleado){
 		if(!empleado){
