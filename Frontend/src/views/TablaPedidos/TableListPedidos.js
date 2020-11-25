@@ -216,6 +216,8 @@ export default class InventarioTableList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      desde:"",
+      hasta:"",
       tabIndex: 0,
       ready: false,
       ListaPedidos: "",
