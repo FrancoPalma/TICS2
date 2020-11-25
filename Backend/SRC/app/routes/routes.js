@@ -477,7 +477,7 @@ router.post('/detalle_venta_periodo', isLoggedIn, async function(req,res){
 		const ff = fecha2.concat("T23:59:00-04:00");
 		await detalle_venta.find({$and: [{fecha: {$gte: new Date(fi)}},{fecha: {$lt: new Date(ff)}}]}, (err, detalle_venta) => {
 			if(err) {
-				res.sendStatus(406);
+				res.sendStatus(404);
 			}
 			else{
 				res.json(detalle_venta);
@@ -667,11 +667,11 @@ router.get('/empleados_descuentos', isLoggedIn, async function(req,res){
 			for (i = 0; i < empleado.length; i++){
 				boleta.find({'vendedor':empleado[i].rut}, async function(err2, boleta){
 					if(boleta.length > 0){
-						for (i = 0; i < boleta.length; i++){
-							suma += boleta[i].descuento
+						for (j = 0; j < boleta.length; j++){
+							suma += boleta[j].descuento
 						}
 						promedio = suma / boleta.length
-						persona = {rut: boleta[i].vendedor, descuento: promedio ,sucursal: boleta.sucursal}
+						persona = {rut:boleta[j].vendedor, descuento: promedio ,sucursal: boleta.sucursal}
 						vendedor.push(persona)
 					}
 					suma = 0
