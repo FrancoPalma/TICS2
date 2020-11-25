@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const router = express.Router();
 const producto = require('../models/producto');
+const editarProducto = require('../models/producto');
 const inventario = require('../models/inventario');
 const pedido = require('../models/pedido');
 const registro = require('../models/registro')
@@ -144,8 +145,8 @@ router.post('/editar_prod/:id', isLoggedIn, async function(req, res){
 	let sucursal = req.body.sucursal;
 	await producto.findById(id, async function(err, producto){
 		let codigo = producto.codigo
-	  await producto.findByIdAndUpdate(id, {material: material, tipo: tipo, piedra: piedra, precio: precio, descripcion: descripcion, sucursal: sucursal}, async function (err) {
-			await registro.create({fecha: new Date(), tipo: 'Producto', numero: codigo, detalle: 'Se editó un producto', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
+	  await editarProducto.findByIdAndUpdate(id, {material: material, tipo: tipo, piedra: piedra, precio: precio, descripcion: descripcion, sucursal: sucursal}, async function (err) {
+			await registro.create({fecha: Date.now(), tipo: 'Producto', numero: codigo, detalle: 'Se editó un producto', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
 				if(!err){
 					res.sendStatus(201);
 				}
