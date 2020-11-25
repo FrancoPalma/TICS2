@@ -477,6 +477,7 @@ router.post('/detalle_venta_periodo', isLoggedIn, async function(req,res){
 		const ff = fecha2.concat("T23:59:00-04:00");
 		await detalle_venta.find({$and: [{fecha: {$gte: new Date(fi)}},{fecha: {$lt: new Date(ff)}}]}, (err, detalle_venta) => {
 			if(err) {
+				print(err)
 				res.sendStatus(404);
 			}
 			else{
