@@ -45,11 +45,12 @@ export default class UserProfile extends React.Component {
     this.state = {
       perfil: null,
       isReady: false,
-      pass: null,
-      new_pass:"franco",
-      conf_pass:"franco"
+      pass: "",
+      new_pass:"",
+      conf_pass:""
 
     }
+    this.CambioPassword = this.CambioPassword.bind(this)
   }
 
   getUsuario = () => {
@@ -88,10 +89,9 @@ export default class UserProfile extends React.Component {
    };
  }
 
- CambioPassword() {
-   console.log(this.state.new_pass)
+ CambioPassword(){
    if(this.state.new_pass === this.state.conf_pass){
-     fetch('/editar_password/', {
+     fetch('/editar_password', {
      method: 'POST',
      headers: {
          Accept: 'application/json',

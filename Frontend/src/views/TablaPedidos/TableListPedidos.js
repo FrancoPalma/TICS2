@@ -271,7 +271,7 @@ export default class InventarioTableList extends React.Component {
 
   AgregarPedido() {
     let regex = new RegExp("^[a-z A-Z]+$");
-    if(regex.test(this.state.cliente)){
+    if(regex.test(this.state.cliente) && this.state.total > 0){
       fetch('/agregar_pedido', {
       method: 'POST',
       headers: {
@@ -658,7 +658,7 @@ export default class InventarioTableList extends React.Component {
                             { title: 'Telefono Cliente', field: 'cliente_telefono' },
                             { title: 'Descripcion', field: 'descripcion'},
                             { title: 'Estado', field: 'estado', lookup: { 0: 'EN PROCESO', 1: 'LISTO PARA RETIRO' ,2: 'ENTREGADO'}},
-                            { title: 'Abono', field: 'abono' ,type: 'numeric'},
+                            { title: 'Abono', field: 'abono' ,type: 'numeric', editable: 'never'},
                             { title: 'Total', field: 'total' ,type: 'numeric',editable: 'never' }]}
                   data={this.state.ListaPedidos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                   editable={{
