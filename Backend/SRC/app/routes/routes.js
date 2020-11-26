@@ -322,7 +322,7 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 					}
 				});
 			}else{
-				let nuevo_numero_pedido = numero_unico_pedido(pedido) + 1
+				let nuevo_numero_pedido = pedido.length + 1
 				await crearPedido.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total}, (err) =>{
 					if(!err){
 						res.sendStatus(201)
@@ -590,7 +590,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 						});
 					});
 				}else{
-					let nuevo_numero_venta = numero_unico_venta(venta) + 1
+					let nuevo_numero_venta = venta.length + 1
 					crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono}, (err) =>{
 						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta}, (err2) => {
 							if(!err){
@@ -617,6 +617,7 @@ function numero_unico_venta(lista){
 	max = 0
 	for(i = 0; i < lista.length; i++){
 		if( max <= lista.numero_venta ){
+			console.log(lista.numero_venta)
 			max = lista.numero_venta
 		}
 	}
