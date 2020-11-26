@@ -724,7 +724,8 @@ router.post('/editar_empleado/:id', async function(req, res){
 
 	router.post('/editar_password', async function(req, res){
 			let new_pass = req.body.new_pass;
-	    await empleado.findByIdAndUpdate(req.params.rut,{password: empleado.generateHash(new_pass)}, function (err) {
+			new_pass = empleado.generateHash(new_pass)
+	    await empleado.findByIdAndUpdate(req.params.rut,{password: new_pass}, function (err) {
 				if(!err){
 					res.sendStatus(201)
 				}
