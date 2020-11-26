@@ -3,6 +3,7 @@ import React from "react";
 import InputLabel from "@material-ui/core/InputLabel";
 // core components
 import GridItem from "components/Grid/GridItem.js";
+import Alert from '@material-ui/lab/Alert';
 import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
 import CardAvatar from "components/Card/CardAvatar.js";
@@ -44,6 +45,7 @@ export default class UserProfile extends React.Component {
     super(props);
     this.state = {
       perfil: null,
+      estado : null,
       isReady: false,
       pass: "",
       new_pass:"",
@@ -105,8 +107,10 @@ export default class UserProfile extends React.Component {
      .then( (response) => {
          if(response.status === 201) {
              console.log("Editado correctamente")
+             this.setState({estado: 1, new_pass: "", conf_pass:"",pass:""})
          } else {
              console.log('Hubo un error')
+             this.setState({estado: 2})
          }
      })
      .catch((error) => {
@@ -114,10 +118,20 @@ export default class UserProfile extends React.Component {
      });
    }else{
      console.log("Las pss no son iguales")
+     this.setState({estado: 3})
    }
  }
 
   render() {
+    let mensaje;
+
+    if(this.state.estado === 1) {
+      mensaje = <Alert severity="success">Contraseña cambiada.</Alert>
+    }else if(this.state.estado === 2){
+      mensaje = <Alert severity="error">Hubo un error.</Alert>
+    }else if(this.state.estado === 3){
+      mensaje = <Alert severity="error">Confirmación de contraseña invalida.</Alert>
+    }
     if(this.state.isReady === true) {
       return (
         <GridContainer>
@@ -160,6 +174,7 @@ export default class UserProfile extends React.Component {
                 >
                   Cambiar Contraseña
                 </Button>
+                {mensaje}
             </Card>
           </GridItem>
         </GridContainer>
