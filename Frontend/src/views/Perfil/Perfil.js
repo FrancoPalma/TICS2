@@ -58,6 +58,7 @@ export default class UserProfile extends React.Component {
       perfil: JSON.parse(localStorage.getItem('usuario')),
       isReady: true
     })
+    console.log(this.state.perfil)
   }
 
   componentDidMount() {
@@ -91,7 +92,7 @@ export default class UserProfile extends React.Component {
 
  CambioPassword(){
    if(this.state.new_pass === this.state.conf_pass){
-     fetch('/editar_password', {
+     fetch('/editar_password/'+this.state.perfil._id, {
      method: 'POST',
      headers: {
          Accept: 'application/json',
@@ -132,7 +133,6 @@ export default class UserProfile extends React.Component {
                 <h1 style={{fontWeight: 'bold'}}>{this.state.perfil.nombre}</h1>
                 <div style={{textAlign: 'left'}}>
                   <p>RUT: {this.state.perfil.rut}</p>
-                  <p>Fecha nacimiento: {this.state.perfil.nacimiento}</p>
                   <p>Telefono: {this.state.perfil.telefono}</p>
                   {this.state.perfil.sucursal === '0' &&
                     <p>Sucursal: Lo Castillo</p>
