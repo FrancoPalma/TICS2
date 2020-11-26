@@ -272,7 +272,7 @@ export default class InventarioTableList extends React.Component {
   AgregarPedido() {
     let regex = new RegExp("^[a-z A-Z]+$");
     if(regex.test(this.state.cliente)){
-      if(this.state.total > 0){
+      if(this.state.totalnew > 0){
         if((this.state.cliente_telefono > 0 && (this.state.cliente_telefono).toString().length == 9) || this.state.cliente_telefono == 0){
           fetch('/agregar_pedido', {
           method: 'POST',
