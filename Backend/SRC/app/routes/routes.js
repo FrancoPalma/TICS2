@@ -64,13 +64,6 @@ router.get('/inicio', isLoggedIn, (req, res) => {
 
 
 	////----------------------------------------------LOG IN----------------------------------------------
-	router.get('/login', (req, res) => {
-		res.render('login.ejs', {
-			message: req.flash('loginMessage')
-		});
-	});
-
-
 	router.post('/login', function (req,res) {
 				passport.authenticate('local-login', function(err, user) {
 				if (err) { return res.sendStatus(404); }
@@ -157,15 +150,6 @@ router.post('/editar_prod/:id', isLoggedIn, async function(req, res){
 	  });
 	});
  });
-
-/*await registro.create({tipo: 'Producto', numero: codigo, detalle: 'Se editó un producto', empleadoLog: req.user.rut, , sucursal: req.user.sucursal}, function (err){
-	if(!err){
-		res.sendStatus(201);
-	}
-	else{
-		 res.sendStatus(404);
-	}
-})*/
 
  router.post('/delete_producto/:id', isLoggedIn, async function(req,res){
     let id = req.params.id;
@@ -338,7 +322,7 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 					}
 				});
 			}else{
-				let nuevo_numero_pedido = pedido.length + 1
+				let nuevo_numero_pedido = numero_unico_pedido(pedido) + 1
 				await crearPedido.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total}, (err) =>{
 					if(!err){
 						res.sendStatus(201)
@@ -352,21 +336,15 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 	});
 });
 
-
-
-router.get('/delete_pedido/:id', isLoggedIn, async function(req,res){
-
-    let id = req.params.id;
-    await pedido.remove({_id: id}, (err, task) =>{
-			if(!err){
-				res.sendStatus(201)
-			}
-			else{
-				res.sendStatus(404)
-			}
-    });
-});
-
+function numero_unico_pedido(lista){
+	max = 0
+	for(i = 0; i < lista.length; i++){
+		if( max <= lista.numero_pedido ){
+			max = lista.numero_pedido
+		}
+	}
+	return max
+}
 
 router.post('/eliminar_pedido/:id', isLoggedIn, async function(req,res){
     let id = req.params.id;
@@ -446,7 +424,7 @@ router.post('/editar_estado_pedido/:id', isLoggedIn, async function(req, res){
 });
 
 //----------------------------------------------GESTIONAR VENTAS----------------------------------------------
-router.get('/lista_venta', isLoggedIn, isLoggedIn, async function(req,res){
+router.get('/lista_venta', isLoggedIn, async function(req,res){
   	await lista.find(function (err,lista) {
 			if (!err){
 				res.json(lista);
@@ -612,7 +590,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 						});
 					});
 				}else{
-					let nuevo_numero_venta = venta.length + 1
+					let nuevo_numero_venta = numero_unico_venta(venta) + 1
 					crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono}, (err) =>{
 						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta}, (err2) => {
 							if(!err){
@@ -635,7 +613,58 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 	});
 });
 
+function numero_unico_venta(lista){
+	max = 0
+	for(i = 0; i < lista.length; i++){
+		if( max <= lista.numero_venta ){
+			max = lista.numero_venta
+		}
+	}
+	return max
+}
 
+router.post('/eliminar_boleta/:id', isLoggedIn, async function(req,res){
+    let id = req.params.id;
+		boleta.findById(id, async function(err1, boleta){
+			if(!err1){
+				if(boleta.tipo == 'Venta'){
+					let numero_venta = boleta.numero
+					await boleta.remove({_id: id}, async function(err2){
+						if(!err2){
+							await detalle_venta.remove({numero: numero_venta}, async function(err3){
+								if(!err3){
+									await venta.remove({numero_venta: numero_venta}, function(err4){
+										if(err4){
+											res.sendStatus(404)
+										}
+									})
+								}else{
+									res.sendStatus(404)
+								}
+							})
+						}else{
+							res.sendStatus(404)
+						}
+						res.sendStatus(201)
+					})
+				}else if(boleta.tipo == 'Pedido'){
+					let numero_pedido = boleta.numero
+					await boleta.remove({_id: id}, async function(err2){
+						if(!err2){
+							await pedido.remove({numero_pedido: numero_pedido}, async function(err3){
+								if(err3){
+									res.sendStatus(404)
+								}
+							})
+						}else{
+							res.sendStatus(404)
+						}
+						res.sendStatus(201)
+					})
+				}
+			}
+		})
+});
 
 router.post('/eliminar_venta/:id', isLoggedIn, async function(req,res){
     let id = req.params.id;
@@ -723,10 +752,10 @@ router.post('/editar_empleado/:id', async function(req, res){
 });
   });
 
-	router.post('/editar_password', async function(req, res){
+	router.post('/editar_password/:id', async function(req, res){
+		  let id = req.params.id
 			let new_pass = req.body.new_pass;
-			new_pass = empleado.generateHash(new_pass)
-	    await empleado.findByIdAndUpdate(req.params.rut,{password: new_pass}, function (err) {
+	    await empleado.findByIdAndUpdate(id,{password: empleado.generateHash(new_pass)}, function (err) {
 				if(!err){
 					res.sendStatus(201)
 				}
