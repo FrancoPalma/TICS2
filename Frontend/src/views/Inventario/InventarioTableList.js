@@ -302,9 +302,9 @@ export default class InventarioTableList extends React.Component {
                 <CardBody>
                 <MaterialTable
                     title= {nombresucursal}
-                    columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric'},
-                              { title: 'Material', field: 'material' },
-                              { title: 'Tipo', field: 'tipo'},
+                    columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric',editable: 'never' },
+                              { title: 'Material', field: 'material',editable: 'never' },
+                              { title: 'Tipo', field: 'tipo',editable: 'never' },
                               { title: 'Piedra', field: 'piedra' },
                               { title: 'Precio', field: 'precio' ,type: 'numeric'},
                               { title: 'Descripcion', field: 'descripcion' }]}
@@ -360,9 +360,9 @@ export default class InventarioTableList extends React.Component {
                 <CardBody>
                 <MaterialTable
                     title= {nombresucursal}
-                    columns={ [{ title: 'Codigo', field: 'codigo' },
-                              { title: 'Material', field: 'material' },
-                              { title: 'Tipo', field: 'tipo'},
+                    columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric',editable: 'never' },
+                              { title: 'Material', field: 'material',editable: 'never' },
+                              { title: 'Tipo', field: 'tipo',editable: 'never' },
                               { title: 'Piedra', field: 'piedra' },
                               { title: 'Precio', field: 'precio' ,type: 'numeric'},
                               { title: 'Descripcion', field: 'descripcion' }]}
