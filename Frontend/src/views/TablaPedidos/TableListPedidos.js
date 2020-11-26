@@ -227,8 +227,8 @@ export default class InventarioTableList extends React.Component {
       sucursal: null,
       descripcion: "",
       vendedor: "",
-      cliente_nombre: "",
-      cliente_telefono: 9,
+      cliente_nombre: "No Definido",
+      cliente_telefono: 0,
       estado: 0,
       suma: 0,
       abono: null,
@@ -271,36 +271,43 @@ export default class InventarioTableList extends React.Component {
 
   AgregarPedido() {
     let regex = new RegExp("^[a-z A-Z]+$");
-    if(regex.test(this.state.cliente) && this.state.total > 0){
-      fetch('/agregar_pedido', {
-      method: 'POST',
-      headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        vendedor: this.state.vendedor,
-        cliente_nombre: this.state.cliente_nombre,
-        cliente_telefono: this.state.cliente_telefono,
-        descripcion: this.state.descripcion,
-        estado: this.state.estado,
-        total: this.state.totalnew,
-        sucursal: this.state.perfil.sucursal
-      })
-      })
-      .then( (response) => {
-          if(response.status === 201) {
-              console.log("Añadido correctamente")
-              this.setState({mensaje: 1})
-          } else {
-              console.log('Hubo un error')
-              this.setState({mensaje: 2})
-          }
-      })
-      .catch((error) => {
-          console.log(error)
-      });
-
+    if(regex.test(this.state.cliente)){
+      if(this.state.total > 0){
+        if((this.state.cliente_telefono > 0 && (this.state.cliente_telefono).toString().length == 9) || this.state.cliente_telefono == 0){
+          fetch('/agregar_pedido', {
+          method: 'POST',
+          headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            vendedor: this.state.vendedor,
+            cliente_nombre: this.state.cliente_nombre,
+            cliente_telefono: this.state.cliente_telefono,
+            descripcion: this.state.descripcion,
+            estado: this.state.estado,
+            total: this.state.totalnew,
+            sucursal: this.state.perfil.sucursal
+          })
+          })
+          .then( (response) => {
+              if(response.status === 201) {
+                  console.log("Añadido correctamente")
+                  this.setState({mensaje: 1})
+              } else {
+                  console.log('Hubo un error')
+                  this.setState({mensaje: 2})
+              }
+          })
+          .catch((error) => {
+              console.log(error)
+          });
+        }else{
+          this.setState({mensaje:11})
+        }
+      }else{
+        this.setState({mensaje:10})
+      }
     }else{
       this.setState({mensaje: 2})
     }
@@ -308,36 +315,41 @@ export default class InventarioTableList extends React.Component {
 
   EditarPedido(newData) {
     let regex = new RegExp("^[a-z A-Z]+$");
-    if(regex.test(newData.cliente)){
-      fetch('/editar_pedido/' + newData._id, {
-      method: 'POST',
-      headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: newData._id,
-        fecha: newData.fecha,
-        cliente_nombre: newData.cliente_nombre,
-        cliente_telefono: newData.cliente_telefono,
-        descripcion: newData.descripcion,
-        estado: newData.estado,
-        total: newData.total,
-        sucursal: this.state.tabIndex.toString()
-      })
-      })
-      .then( (response) => {
-          if(response.status === 201) {
-              console.log("Editado correctamente")
-              this.setState({mensaje: 3})
-          } else {
-              console.log('Hubo un error')
-              this.setState({mensaje: 2})
-          }
-      })
-      .catch((error) => {
-          console.log(error)
-      });
+    let regex2 = new RegExp("^[0-9]+$");
+    if(regex.test(newData.cliente_nombre)){
+      if(regex2.test(newData.cliente_telefono) && (newData.cliente_telefono).length == 9){
+        fetch('/editar_pedido/' + newData._id, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: newData._id,
+          fecha: newData.fecha,
+          cliente_nombre: newData.cliente_nombre,
+          cliente_telefono: newData.cliente_telefono,
+          descripcion: newData.descripcion,
+          estado: newData.estado,
+          total: newData.total,
+          sucursal: this.state.tabIndex.toString()
+        })
+        })
+        .then( (response) => {
+            if(response.status === 201) {
+                console.log("Editado correctamente")
+                this.setState({mensaje: 3})
+            } else {
+                console.log('Hubo un error')
+                this.setState({mensaje: 2})
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+      }else{
+        this.setState({mensaje: 11})
+      }
     }else{
       this.setState({mensaje: 6})
     }
@@ -433,37 +445,40 @@ export default class InventarioTableList extends React.Component {
   imprimir = () => {
     if(this.state.targetKeys.length ==1){
       if(this.state.targetKeys[0].total >= this.state.abono2){
-        fetch('/pagar_pedido', {
-          method: 'POST',
-          headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            pedido: this.state.targetKeys[0],
-            metodo_pago: this.state.metodo_pago,
-            vendedor: this.state.vendedor,
-            abono: this.state.abono2,
-            empleadolog: this.state.perfil.rut,
-          })
-          })
-          .then( (response) => {
-              if(response.status === 201) {
-                  console.log("Añadido correctamente")
-                  this.setState({mensaje: 7})
-                  this.ActualizarInventario()
+        if(this.state.abono2 > 0){
+          fetch('/pagar_pedido', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              pedido: this.state.targetKeys[0],
+              metodo_pago: this.state.metodo_pago,
+              vendedor: this.state.vendedor,
+              abono: this.state.abono2,
+              empleadolog: this.state.perfil.rut,
+            })
+            })
+            .then( (response) => {
+                if(response.status === 201) {
+                    console.log("Añadido correctamente")
+                    this.setState({mensaje: 7})
+                    this.ActualizarInventario()
 
-              } else if(response.status === 405){
-                this.setState({mensaje: 2})
-              }else {
-                  console.log('Hubo un error')
+                } else if(response.status === 405){
                   this.setState({mensaje: 2})
-              }
-          })
-          .catch((error) => {
-              console.log(error)
-          });
-
+                }else {
+                    console.log('Hubo un error')
+                    this.setState({mensaje: 2})
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+        }else{
+          this.setState({mensaje: 12})
+        }
       }else{
         this.setState({mensaje: 9})
       }
@@ -517,6 +532,12 @@ export default class InventarioTableList extends React.Component {
       mensajito = <Alert severity="error">Solo se puede pagar un pedido a la vez.</Alert>
     }else if(this.state.mensaje === 9) {
       mensajito = <Alert severity="error">No se puede abonar más del precio total.</Alert>
+    }else if(this.state.mensaje === 10) {
+      mensajito = <Alert severity="error">Total invalido.</Alert>
+    }else if(this.state.mensaje === 11) {
+      mensajito = <Alert severity="error">Telefono invalido.</Alert>
+    }else if(this.state.mensaje === 12) {
+      mensajito = <Alert severity="error">Abono invalido.</Alert>
     }
 
     if(this.state.ready === true) {
@@ -554,7 +575,7 @@ export default class InventarioTableList extends React.Component {
                   <TextField id="standard-basic" value={this.state.totalnew} type="number" label="Total" onChange={this.handleInputChange('totalnew')}/>
                 </Grid>
                 <Grid item xs={4}>
-                  <TextField id="standard-basic" value={this.state.cliente_telefono} type ='number'label="Telefono de Cliente" onChange={this.handleInputChange('cliente_telefono')}/>
+                  <TextField id="standard-basic" value={this.state.cliente_telefono} type ='number'label="Telefono de Cliente" helperText="0 en caso de querer ingresar un telefono." onChange={this.handleInputChange('cliente_telefono')}/>
                 </Grid>
               </Grid>
               <Grid item xs={4}>

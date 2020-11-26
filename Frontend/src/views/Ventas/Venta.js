@@ -556,42 +556,50 @@ export default class Ventas extends React.Component {
     let regex = new RegExp("^[a-z A-Z   ]+$");
     if(this.state.priv_descuento >= this.state.descuento && this.state.descuento >= 0){
       if(regex.test(this.state.cliente_nombre)){
-        fetch('/crear_venta', {
-          method: 'POST',
-          headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            lista: this.state.targetKeys,
-            metodo_pago: this.state.metodo_pago,
-            descuento: this.state.descuento,
-            sucursal: this.state.sucursal,
-            vendedor: this.state.vendedor,
-            total: this.state.total,
-            empleadolog: this.state.perfil.rut,
-            cliente_nombre: this.state.cliente_nombre,
-            cliente_telefono: this.state.cliente_telefono
-          })
-          })
-          .then( (response) => {
-              if(response.status === 201) {
-                  console.log("Añadido correctamente")
-                  this.setState({completado: 1})
-                  for(let i = 0; i<this.state.targetKeys.length;i++) {
-                    this.EliminarProducto(this.state.targetKeys[i])
-                    this.ActualizarInventario()
+        if((this.state.cliente_telefono > 0 && (this.state.cliente_telefono).toString().length == 9) || this.state.cliente_telefono == 0){
+          if(this.state.targetKeys.length > 0){
+            fetch('/crear_venta', {
+              method: 'POST',
+              headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                lista: this.state.targetKeys,
+                metodo_pago: this.state.metodo_pago,
+                descuento: this.state.descuento,
+                sucursal: this.state.sucursal,
+                vendedor: this.state.vendedor,
+                total: this.state.total,
+                empleadolog: this.state.perfil.rut,
+                cliente_nombre: this.state.cliente_nombre,
+                cliente_telefono: this.state.cliente_telefono
+              })
+              })
+              .then( (response) => {
+                  if(response.status === 201) {
+                      console.log("Añadido correctamente")
+                      this.setState({completado: 1})
+                      for(let i = 0; i<this.state.targetKeys.length;i++) {
+                        this.EliminarProducto(this.state.targetKeys[i])
+                        this.ActualizarInventario()
+                      }
+                  } else if(response.status === 405){
+                    this.setState({completado: 8})
+                  }else {
+                      console.log('Hubo un error')
+                      this.setState({completado: 2})
                   }
-              } else if(response.status === 405){
-                this.setState({completado: 8})
-              }else {
-                  console.log('Hubo un error')
-                  this.setState({completado: 2})
-              }
-          })
-          .catch((error) => {
-              console.log(error)
-          });
+              })
+              .catch((error) => {
+                  console.log(error)
+              });
+          }else{
+            this.setState({completado:5})
+          }
+        }else{
+          this.setState({completado:4})
+        }
       }else{
         this.setState({completado:3})
       }
@@ -611,8 +619,11 @@ export default class Ventas extends React.Component {
       mensajeventa = <Alert severity="error">Rut de vendedor invalido.</Alert>
     }else if(this.state.completado === 3) {
       mensajeventa = <Alert severity="error">Nombre invalido.</Alert>
+    }else if(this.state.completado === 4) {
+      mensajeventa = <Alert severity="error">Telefono invalido, por favor ingresar 9 digitos.</Alert>
+    }else if(this.state.completado === 5) {
+      mensajeventa = <Alert severity="error">Agregue productos.</Alert>
     }
-
     if(this.state.priv_descuento < this.state.descuento) {
       mensajeventa = <Alert severity="error">Excede el descuento maximo permitido.</Alert>
     }else if(this.state.descuento < 0){
@@ -697,7 +708,7 @@ export default class Ventas extends React.Component {
                           <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
                         </Grid>
                         <Grid item xs={6}>
-                          <TextField id="standard-basic" value={this.state.cliente_telefono} type="number" label="Telefono" onChange={this.handleInputChange('cliente_telefono')}/>
+                          <TextField id="standard-basic" value={this.state.cliente_telefono} helperText="0 en caso de no querer ingresar un telefono." type="number" label="Telefono" onChange={this.handleInputChange('cliente_telefono')}/>
                         </Grid>
                         <Grid item xs={6}>
                           <TextField

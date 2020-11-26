@@ -199,7 +199,7 @@ export default class InventarioTableList extends React.Component {
   EditarEmpleado(newData) {
     let regex = new RegExp("^[a-z A-Z]+$");
     let regex3 = new RegExp("^[0-9]+$");
-    if(regex.test(newData.nombre) && newData.telefono.length === 9 && regex3.test(newData.telefono)){
+    if(regex.test(newData.nombre) && (newData.telefono).toString().length === 9 && regex3.test(newData.telefono)){
       console.log(newData._id)
       fetch('/editar_empleado/' + newData._id, {
       method: 'POST',
