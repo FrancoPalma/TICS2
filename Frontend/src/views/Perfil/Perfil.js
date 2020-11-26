@@ -58,7 +58,6 @@ export default class UserProfile extends React.Component {
       perfil: JSON.parse(localStorage.getItem('usuario')),
       isReady: true
     })
-    console.log(this.state.perfil)
   }
 
   componentDidMount() {
