@@ -303,9 +303,9 @@ export default class InventarioTableList extends React.Component {
                 <MaterialTable
                     title= {nombresucursal}
                     options={{filtering: true}}
-                    columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric',editable: 'never' },
-                              { title: 'Material', field: 'material',editable: 'never' },
-                              { title: 'Tipo', field: 'tipo',editable: 'never' },
+                    columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric' },
+                              { title: 'Material', field: 'material' },
+                              { title: 'Tipo', field: 'tipo' },
                               { title: 'Piedra', field: 'piedra' },
                               { title: 'Precio', field: 'precio' ,type: 'numeric'},
                               { title: 'Descripcion', field: 'descripcion' }]}
