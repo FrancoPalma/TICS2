@@ -163,7 +163,6 @@ export default class InventarioTableList extends React.Component {
       })
       .then(users => {
           this.setState({ListaDescuentos: users})
-          console.log(this.ListaDescuentos);
       });
     }
 

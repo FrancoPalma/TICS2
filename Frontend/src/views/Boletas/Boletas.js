@@ -601,6 +601,7 @@ export default class Ventas extends React.Component {
                                         { title: 'Cliente', field: 'cliente_nombre'},
                                         { title: 'Telefono', field: 'cliente_telefono'},
                                         { title: 'Descuento', field: 'descuento'},
+                                        { title: 'Vigencia', field: 'anular' , lookup: { 1: 'Anulada', 0: 'Vigente'}},
                                         {title: 'Total', field:'total'}]}
                               data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                               editable={{
@@ -653,6 +654,7 @@ export default class Ventas extends React.Component {
                       <CardBody>
                         <MaterialTable
                             title={nombresucursal}
+                            options={{filtering: true}}
                             columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                                       {title: 'Tipo', field: 'tipo'},
                                       { title: 'Fecha', field: 'fecha', type: 'date'},
@@ -660,6 +662,7 @@ export default class Ventas extends React.Component {
                                       { title: 'Cliente', field: 'cliente_nombre'},
                                       { title: 'Telefono', field: 'cliente_telefono'},
                                       { title: 'Descuento', field: 'descuento'},
+                                      { title: 'Vigencia', field: 'anular' , lookup: { 1: 'Anulada', 0: 'Vigente'}},
                                       {title: 'Total', field:'total'}]}
                             data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                             editable={{
@@ -691,6 +694,7 @@ export default class Ventas extends React.Component {
                 </Button>
                 <MaterialTable
                     title={nombresucursal}
+                    options={{filtering: true}}
                     columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                               {title: 'Tipo', field: 'tipo'},
                               { title: 'Fecha', field: 'fecha', type: 'date'},
@@ -698,6 +702,7 @@ export default class Ventas extends React.Component {
                               { title: 'Cliente', field: 'cliente_nombre'},
                               { title: 'Telefono', field: 'cliente_telefono'},
                               { title: 'Descuento', field: 'descuento'},
+                              { title: 'Vigencia', field: 'anular' , lookup: { 1: 'Anulada', 0: 'Vigente'}},
                               {title: 'Total', field:'total'}]}
                     data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.sucursal)}
                     editable={{

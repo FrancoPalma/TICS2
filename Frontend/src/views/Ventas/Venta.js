@@ -238,7 +238,7 @@ export default class Ventas extends React.Component {
       ListaProductos: "",
       descuento: 0,
       cliente_nombre: "No Definido",
-      cliente_telefono: 0,
+      cliente_telefono: "0",
       metodo_pago: 'efectivo',
       vendedor: '',
       sucursal: '0',
@@ -554,9 +554,10 @@ export default class Ventas extends React.Component {
 
   imprimir = () => {
     let regex = new RegExp("^[a-z A-Z   ]+$");
-    if(this.state.priv_descuento >= this.state.descuento && this.state.descuento >= 0){
+    let regex3 = new RegExp("^[0-9]+$");
+    if(this.state.priv_descuento >= this.state.descuento && this.state.descuento >= 0 && this.state.descuento % 1 == 0){
       if(regex.test(this.state.cliente_nombre)){
-        if((this.state.cliente_telefono > 0 && (this.state.cliente_telefono).toString().length == 9) || this.state.cliente_telefono == 0){
+        if((regex3.test(this.state.cliente_telefono) && (this.state.cliente_telefono).length == 9) || this.state.cliente_telefono == "0"){
           if(this.state.targetKeys.length > 0){
             fetch('/crear_venta', {
               method: 'POST',
@@ -573,7 +574,7 @@ export default class Ventas extends React.Component {
                 total: this.state.total,
                 empleadolog: this.state.perfil.rut,
                 cliente_nombre: this.state.cliente_nombre,
-                cliente_telefono: this.state.cliente_telefono
+                cliente_telefono: parseInt(this.state.cliente_telefono)
               })
               })
               .then( (response) => {
@@ -627,6 +628,8 @@ export default class Ventas extends React.Component {
     if(this.state.priv_descuento < this.state.descuento) {
       mensajeventa = <Alert severity="error">Excede el descuento maximo permitido.</Alert>
     }else if(this.state.descuento < 0){
+      mensajeventa = <Alert severity="error">Valor invalido.</Alert>
+    }else if(this.state.descuento % 1 != 0){
       mensajeventa = <Alert severity="error">Valor invalido.</Alert>
     }
 
@@ -708,7 +711,7 @@ export default class Ventas extends React.Component {
                           <TextField id="standard-basic" value={this.state.cliente_nombre} label="Cliente" onChange={this.handleInputChange('cliente_nombre')}/>
                         </Grid>
                         <Grid item xs={6}>
-                          <TextField id="standard-basic" value={this.state.cliente_telefono} helperText="0 en caso de no querer ingresar un telefono." type="number" label="Telefono" onChange={this.handleInputChange('cliente_telefono')}/>
+                          <TextField id="standard-basic" value={this.state.cliente_telefono} helperText="0 en caso de no querer ingresar un telefono." label="Telefono" onChange={this.handleInputChange('cliente_telefono')}/>
                         </Grid>
                         <Grid item xs={6}>
                           <TextField
@@ -755,6 +758,7 @@ export default class Ventas extends React.Component {
                               columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                                         {title: 'Producto', field: 'cod_prod'},
                                         { title: 'Fecha', field: 'fecha', type: 'date'},
+                                        { title: 'Vigencia', field: 'anular' , lookup: { 1: 'Anulada', 0: 'Vigente'}},
                                         {title: 'Total', field:'valor_prod'}]}
                               data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
 
@@ -877,6 +881,7 @@ export default class Ventas extends React.Component {
                             columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                                       {title: 'Producto', field: 'cod_prod'},
                                       { title: 'Fecha', field: 'fecha', type: 'date'},
+                                      { title: 'Vigencia', field: 'anular' , lookup: { 1: 'Anulada', 0: 'Vigente'}},
                                       {title: 'Total', field:'valor_prod'}]}
                             data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                           />
@@ -899,6 +904,7 @@ export default class Ventas extends React.Component {
                     columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                               {title: 'Producto', field: 'cod_prod'},
                               { title: 'Fecha', field: 'fecha', type: 'date'},
+                              { title: 'Vigencia', field: 'anular' , lookup: { 1: 'Anulada', 0: 'Vigente'}},
                               {title: 'Total', field:'valor_prod'}]}
                     data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.sucursal)}
                   />

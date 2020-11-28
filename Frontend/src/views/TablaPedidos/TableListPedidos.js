@@ -692,14 +692,6 @@ export default class InventarioTableList extends React.Component {
                         }, 2000)
                         this.EditarPedido(newData)
                       }),
-                    onRowDelete: (oldData) =>
-                      new Promise((resolve) => {
-                        setTimeout(() => {
-                          resolve();
-                          this.ActualizarPedidos();
-                        }, 2000)
-                        this.EliminarPedido(oldData)
-                      }),
                   }}  />
                   <Grid
                   container
