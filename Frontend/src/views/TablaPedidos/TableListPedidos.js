@@ -666,6 +666,7 @@ export default class InventarioTableList extends React.Component {
                   </Button>
                   {mensajito}
                 </Grid>
+                <Copyright />
               </Grid>
             </TabPanel>
             <TabPanel value={this.state.tabIndex} index={2}>

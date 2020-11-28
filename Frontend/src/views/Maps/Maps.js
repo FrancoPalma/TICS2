@@ -1,5 +1,7 @@
 /*eslint-disable*/
 import React from "react";
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import Hidden from "@material-ui/core/Hidden";
@@ -13,6 +15,19 @@ import CardBody from "components/Card/CardBody.js";
 import styles from "assets/jss/material-dashboard-react/views/iconsStyle.js";
 
 const useStyles = makeStyles(styles);
+
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" target="_blank" href="https://cadisjoyas.cl/">
+        Joyeía Cadis
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
 
 export default function Icons() {
   const classes = useStyles();
@@ -147,6 +162,7 @@ export default function Icons() {
             <h4>Local N° 464</h4>
             <h4>Celular: +56 9 7869 8470</h4>
           </CardBody>
+          <Copyright />
         </Card>
       </GridItem>
 

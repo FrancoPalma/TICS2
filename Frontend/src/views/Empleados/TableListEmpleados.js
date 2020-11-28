@@ -5,6 +5,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import MaterialTable from 'material-table';
 import Box from '@material-ui/core/Box';
+import Link from '@material-ui/core/Link';
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import GridItem from "components/Grid/GridItem.js";
@@ -70,6 +71,19 @@ const styles = {
     marginRight: 5
   }
 };
+
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" target="_blank" href="https://cadisjoyas.cl/">
+        Joyeía Cadis
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -379,6 +393,7 @@ export default class InventarioTableList extends React.Component {
                       }}
                     />
                     {mensajito}
+                    <Copyright />
                   </TabPanel>
                   <TabPanel value={this.state.tabIndex} index={1}>
                   <MaterialTable
@@ -401,6 +416,7 @@ export default class InventarioTableList extends React.Component {
                       }}
                     />
                     {mensajito}
+                    <Copyright />
                   </TabPanel>
 
                   <TabPanel value={this.state.tabIndex} index={2}>
@@ -411,6 +427,7 @@ export default class InventarioTableList extends React.Component {
                                 { title: 'Sucursal', field: 'sucursal', lookup: { 0: 'Lo Castillo', 1: 'Apumanque' ,2: 'Vitacura'}}]}
                       data={this.state.ListaDescuentos}
                     />
+                    <Copyright />
                   </TabPanel>
                 </CardBody>
               </Card>
@@ -441,6 +458,7 @@ export default class InventarioTableList extends React.Component {
                       }}
                     />
                 </CardBody>
+                <Copyright />
               </Card>
           </div>
         )
@@ -485,6 +503,7 @@ export default class InventarioTableList extends React.Component {
                       }}
                     />
                 </CardBody>
+                <Copyright />
               </Card>
           </div>
         )
@@ -498,6 +517,7 @@ export default class InventarioTableList extends React.Component {
                     <h1>No tienes autorización para acceder a este sitio.</h1>
                   </div>
                 </CardBody>
+                <Copyright />
               </Card>
             </GridItem>
           </GridContainer>

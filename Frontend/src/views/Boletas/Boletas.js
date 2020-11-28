@@ -252,9 +252,8 @@ export default class Ventas extends React.Component {
       priv_dios: false,
       priv_descuento: null,
       ListaVentasDia: null,
-      total0: 0,
-      total1: 0,
-      total2: 0,
+      totald: 0,
+      totalp:0,
       estado:null,
       estadosucursal:null,
     }
@@ -298,6 +297,7 @@ export default class Ventas extends React.Component {
     .then(users => {
         this.setState({ListaVentasPeriodo: users})
         this.setState({priv_dios: true})
+        this.CalcularTotal3();
     });
   }
 
@@ -309,6 +309,7 @@ export default class Ventas extends React.Component {
     .then(users => {
         this.setState({ListaVentasDia: users, ready: true})
         console.log(this.state.ready)
+        this.CalcularTotal2();
     });
   }
 
@@ -432,21 +433,21 @@ export default class Ventas extends React.Component {
         tot0 = tot0 + this.state.ListaVentasDia[i].total;
         if(this.state.perfil.sucursal=== '0'){
           this.setState({estadosucursal:1})
-          this.setState({estado:1})
+          this.setState({estado:1, totald: tot0})
         }
       }
       else if(this.state.ListaVentasDia[i].sucursal === '1'){
         tot1 = tot1 + this.state.ListaVentasDia[i].total;
         if(this.state.perfil.sucursal=== '0'){
           this.setState({estadosucursal:1})
-          this.setState({estado:1})
+          this.setState({estado:1, totald: tot1})
         }
       }
       else if(this.state.ListaVentasDia[i].sucursal === '2'){
         tot2 = tot2 + this.state.ListaVentasDia[i].total;
         if(this.state.perfil.sucursal=== '0'){
           this.setState({estadosucursal:1})
-          this.setState({estado:1})
+          this.setState({estado:1, totald: tot2})
         }
       }
     }
@@ -455,9 +456,6 @@ export default class Ventas extends React.Component {
     }else{
       this.setState({estado: 1})
     }
-    this.setState({total0:tot0})
-    this.setState({total1:tot1})
-    this.setState({total2:tot2})
   }
 
   handleChange = targetKeys => {
@@ -508,19 +506,19 @@ export default class Ventas extends React.Component {
       if(this.state.ListaVentasPeriodo[i].sucursal === '0'){
         tot0 = tot0 + this.state.ListaVentasPeriodo[i].total;
         if(this.state.perfil.sucursal=== '0'){
-          this.setState({estadosucursal:1})
+          this.setState({estadosucursal:1, totalp: tot0})
         }
       }
       else if(this.state.ListaVentasPeriodo[i].sucursal === '1'){
         tot1 = tot1 + this.state.ListaVentasPeriodo[i].total;
         if(this.state.perfil.sucursal=== '1'){
-          this.setState({estadosucursal:1})
+          this.setState({estadosucursal:1, totalp: tot1})
         }
       }
       else if(this.state.ListaVentasPeriodo[i].sucursal === '2'){
         tot2 = tot2 + this.state.ListaVentasPeriodo[i].total;
         if(this.state.perfil.sucursal=== '2'){
-          this.setState({estadosucursal:1})
+          this.setState({estadosucursal:1, totalp: tot2})
         }
       }
     }
@@ -529,9 +527,6 @@ export default class Ventas extends React.Component {
     }else{
       this.setState({estado: 1})
     }
-    this.setState({total0:tot0})
-    this.setState({total1:tot1})
-    this.setState({total2:tot2})
   }
 
   renderFooter = () => (
@@ -574,17 +569,6 @@ export default class Ventas extends React.Component {
       mensajeventadia = <Alert severity="success">La venta se eliminó correctamente</Alert>
     }else if(this.state.estado === 4) {
       mensajeventadia = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
-    }
-
-    let mensajeventaperiodo;
-    if(this.state.estadosucursal === 1) {
-      mensajeventaperiodo = <Alert severity="success">Hay ventas!</Alert>
-    } else if(this.state.estadosucursal === 2) {
-      mensajeventaperiodo = <Alert severity="error">No se encontraron ventas :(</Alert>
-    }else if(this.state.estadosucursal === 3) {
-      mensajeventaperiodo = <Alert severity="success">La venta se eliminó correctamente</Alert>
-    }else if(this.state.estadosucursal === 4) {
-      mensajeventaperiodo = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
     }
 
     if(this.state.ready === true){
@@ -630,6 +614,10 @@ export default class Ventas extends React.Component {
                                     }),
                               }}
                             />
+                            <h4>
+                            {"\n"} <br />
+                            Total recaudado: ${this.state.totald}
+                            </h4>
                         </CardBody>
                     </Card>
                   </div>
@@ -643,6 +631,7 @@ export default class Ventas extends React.Component {
                     Listo
                   </Button>
                 </TabPanel>
+                <Copyright/>
               </CardBody>
             </Card>
           </div>
@@ -684,6 +673,10 @@ export default class Ventas extends React.Component {
                                   }),
                             }}
                           />
+                          <h4>
+                          {"\n"} <br />
+                          Total recaudado: ${this.state.totald}
+                          </h4>
                       </CardBody>
                   </Card>
                 </div>
@@ -718,8 +711,14 @@ export default class Ventas extends React.Component {
                         }),
                       }}
                   />
+
               </TabPanel>
+              <h4>
+              {"\n"} <br />
+              Total recaudado: ${this.state.totalp}
+              </h4>
             </CardBody>
+            <Copyright/>
           </Card>
         </div>
       );

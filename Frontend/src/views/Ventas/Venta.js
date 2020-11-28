@@ -742,6 +742,7 @@ export default class Ventas extends React.Component {
                       </Button>
                       {mensajeventa}
                     </Grid>
+                    <Copyright/>
                   </Grid>
                 </TabPanel>
                 <TabPanel value={this.state.tabIndex} index={1}>
@@ -759,6 +760,7 @@ export default class Ventas extends React.Component {
 
                             />
                         </CardBody>
+                        <Copyright/>
                     </Card>
                   </div>
                 </TabPanel>
@@ -770,6 +772,7 @@ export default class Ventas extends React.Component {
                   <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
                     Listo
                   </Button>
+                  <Copyright/>
                 </TabPanel>
               </CardBody>
             </Card>
@@ -861,6 +864,7 @@ export default class Ventas extends React.Component {
                     </Button>
                     {mensajeventa}
                   </Grid>
+                  <Copyright/>
                 </Grid>
               </TabPanel>
               <TabPanel value={this.state.tabIndex} index={1}>
@@ -877,6 +881,7 @@ export default class Ventas extends React.Component {
                             data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                           />
                       </CardBody>
+                      <Copyright/>
                   </Card>
                 </div>
               </TabPanel>
@@ -899,6 +904,7 @@ export default class Ventas extends React.Component {
                   />
               </TabPanel>
             </CardBody>
+            <Copyright/>
           </Card>
         </div>
       );

@@ -5,6 +5,8 @@ import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 
 import {
   dailySalesChart,
@@ -93,6 +95,18 @@ const styles = {
   }
 };
 
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" target="_blank" href="https://cadisjoyas.cl/">
+        Joyeía Cadis
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
 
 export default class Inicio extends React.Component {
   constructor(props) {
@@ -124,6 +138,7 @@ export default class Inicio extends React.Component {
               <h3>Recuerda entregar un buen servicio</h3>
             </div>
           </CardBody>
+          <Copyright />
         </Card>
       </GridItem>
     </GridContainer>
