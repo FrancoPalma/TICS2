@@ -601,7 +601,7 @@ export default class Ventas extends React.Component {
                                         { title: 'Cliente', field: 'cliente_nombre'},
                                         { title: 'Telefono', field: 'cliente_telefono'},
                                         { title: 'Descuento', field: 'descuento'},
-                                        { title: 'Vigencia', field: 'anular' , lookup: { 1: 'Anulada', 0: 'Vigente'}},
+                                        { title: 'Vigencia', field: 'anular' , lookup: { TRUE: 'Anulada', FALSE: 'Vigente'}},
                                         {title: 'Total', field:'total'}]}
                               data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                               editable={{
@@ -662,7 +662,7 @@ export default class Ventas extends React.Component {
                                       { title: 'Cliente', field: 'cliente_nombre'},
                                       { title: 'Telefono', field: 'cliente_telefono'},
                                       { title: 'Descuento', field: 'descuento'},
-                                      { title: 'Vigencia', field: 'anular' , lookup: { 1: 'Anulada', 0: 'Vigente'}},
+                                      { title: 'Vigencia', field: 'anular' , lookup: { TRUE: 'Anulada', FALSE: 'Vigente'}},
                                       {title: 'Total', field:'total'}]}
                             data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                             editable={{
@@ -702,7 +702,7 @@ export default class Ventas extends React.Component {
                               { title: 'Cliente', field: 'cliente_nombre'},
                               { title: 'Telefono', field: 'cliente_telefono'},
                               { title: 'Descuento', field: 'descuento'},
-                              { title: 'Vigencia', field: 'anular' , lookup: { 1: 'Anulada', 0: 'Vigente'}},
+                              { title: 'Vigencia', field: 'anular' , lookup: { TRUE: 'Anulada', FALSE: 'Vigente'}},
                               {title: 'Total', field:'total'}]}
                     data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.sucursal)}
                     editable={{
