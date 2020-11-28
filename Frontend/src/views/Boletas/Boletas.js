@@ -711,12 +711,11 @@ export default class Ventas extends React.Component {
                         }),
                       }}
                   />
-
+                  <h4>
+                  {"\n"} <br />
+                  Total recaudado: ${this.state.totalp}
+                  </h4>
               </TabPanel>
-              <h4>
-              {"\n"} <br />
-              Total recaudado: ${this.state.totalp}
-              </h4>
             </CardBody>
             <Copyright/>
           </Card>
