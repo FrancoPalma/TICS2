@@ -163,7 +163,6 @@ export default class InventarioTableList extends React.Component {
       })
       .then(users => {
           this.setState({ListaDescuentos: users})
-          console.log(this.ListaDescuentos);
       });
     }
 
@@ -359,8 +358,8 @@ export default class InventarioTableList extends React.Component {
                   <TabPanel value={this.state.tabIndex} index={0}>
                   <MaterialTable
                       title=''
-                      columns={ [{ title: 'Nombre', field: 'nombre', editable: 'never'},
-                                {title: 'Rut', field: 'rut', editable: 'never'},
+                      columns={ [{ title: 'Nombre', field: 'nombre', editable: 'onAdd'},
+                                {title: 'Rut', field: 'rut', editable: 'onAdd'},
                                 { title: 'Telefono', field: 'telefono'},
                                 { title: 'Sucursal', field: 'sucursal', lookup: { 0: 'Lo Castillo', 1: 'Apumanque' ,2: 'Vitacura'}}]}
                       data={this.state.ListaEmpleados}
@@ -469,8 +468,8 @@ export default class InventarioTableList extends React.Component {
                 <CardBody>
                   <MaterialTable
                       title=''
-                      columns={ [{ title: 'Nombre', field: 'nombre', editable: 'never'},
-                                {title: 'Rut', field: 'rut', editable: 'never'},
+                      columns={ [{ title: 'Nombre', field: 'nombre', editable: 'onAdd'},
+                                {title: 'Rut', field: 'rut', editable: 'onAdd'},
                                 { title: 'Telefono', field: 'telefono'},
                                 { title: 'Sucursal', field: 'sucursal', lookup: { 0: 'Lo Castillo', 1: 'Apumanque' ,2: 'Vitacura'}}]}
                       data={this.state.ListaEmpleados}
