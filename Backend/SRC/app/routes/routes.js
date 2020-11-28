@@ -14,6 +14,7 @@ const crearVenta = require('../models/venta');
 const empleado = require('../models/usuario');
 const passport = require('../../config/passport');
 const boleta = require('../models/boleta');
+const eliminarBoleta = require('../models/boleta');
 const detalle_venta = require('../models/detalle_venta')
 
 router.use(passport.initialize());
@@ -628,7 +629,7 @@ router.post('/eliminar_boleta/:id', isLoggedIn, async function(req,res){
 			if(!err1){
 				if(boleta.tipo == 'Venta'){
 					let numero_venta = boleta.numero
-					await boleta.findByIdAndUpdate({_id: id}, {anular: true}, async function(err2){
+					await eliminarBoleta.findByIdAndUpdate({_id: id}, {anular: true}, async function(err2){
 						if(!err2){
 							await detalle_venta.findOneAndUpdate({numero: numero_venta}, {anular: true},async function(err3){
 								if(!err3){
@@ -648,7 +649,7 @@ router.post('/eliminar_boleta/:id', isLoggedIn, async function(req,res){
 					})
 				}else if(boleta.tipo == 'Pedido'){
 					let numero_pedido = boleta.numero
-					await boleta.findByIdAndUpdate({_id: id}, {anular: true}, async function(err2){
+					await eliminarBoleta.findByIdAndUpdate({_id: id}, {anular: true}, async function(err2){
 						if(!err2){
 							await pedido.remove({numero_pedido: numero_pedido}, {anular: true}, async function(err3){
 								if(err3){
