@@ -586,11 +586,8 @@ export default class Ventas extends React.Component {
                   <Tab label="Boletas por Periodo" {...a11yProps(1)} />
                 </Tabs>
               </AppBar>
-              <CardBody>
                 <TabPanel value={this.state.tabIndex} index={0}>
                   <div style={styles.root}>
-                    <Card>
-                        <CardBody>
                           <MaterialTable
                               title={nombresucursal}
                               options={{filtering: true}}
@@ -601,7 +598,7 @@ export default class Ventas extends React.Component {
                                         { title: 'Cliente', field: 'cliente_nombre'},
                                         { title: 'Telefono', field: 'cliente_telefono'},
                                         { title: 'Descuento', field: 'descuento'},
-                                        { title: 'Vigencia', field: 'anular' , lookup: { TRUE: 'Anulada', FALSE: 'Vigente'}},
+                                        { title: 'Vigencia', field: 'anular' , lookup: { true: 'Anulada', false: 'Vigente'}},
                                         {title: 'Total', field:'total'}]}
                               data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                               editable={{
@@ -619,8 +616,6 @@ export default class Ventas extends React.Component {
                             {"\n"} <br />
                             Total recaudado: ${this.state.totald}
                             </h4>
-                        </CardBody>
-                    </Card>
                   </div>
                 </TabPanel>
                 <TabPanel value={this.state.tabIndex} index={1}>
@@ -633,7 +628,6 @@ export default class Ventas extends React.Component {
                   </Button>
                 </TabPanel>
                 <Copyright/>
-              </CardBody>
             </Card>
           </div>
         );
@@ -647,11 +641,8 @@ export default class Ventas extends React.Component {
                 <Tab label="Boletas por Periodo" {...a11yProps(1)} />
               </Tabs>
             </AppBar>
-            <CardBody>
               <TabPanel value={this.state.tabIndex} index={0}>
                 <div style={styles.root}>
-                  <Card>
-                      <CardBody>
                         <MaterialTable
                             title={nombresucursal}
                             options={{filtering: true}}
@@ -662,7 +653,7 @@ export default class Ventas extends React.Component {
                                       { title: 'Cliente', field: 'cliente_nombre'},
                                       { title: 'Telefono', field: 'cliente_telefono'},
                                       { title: 'Descuento', field: 'descuento'},
-                                      { title: 'Vigencia', field: 'anular' , lookup: { TRUE: 'Anulada', FALSE: 'Vigente'}},
+                                      { title: 'Vigencia', field: 'anular' , lookup: { true: 'Anulada', false: 'Vigente'}},
                                       {title: 'Total', field:'total'}]}
                             data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                             editable={{
@@ -680,8 +671,6 @@ export default class Ventas extends React.Component {
                           {"\n"} <br />
                           Total recaudado: ${this.state.totald}
                           </h4>
-                      </CardBody>
-                  </Card>
                 </div>
               </TabPanel>
               <TabPanel value={this.state.tabIndex} index={1}>
@@ -702,7 +691,7 @@ export default class Ventas extends React.Component {
                               { title: 'Cliente', field: 'cliente_nombre'},
                               { title: 'Telefono', field: 'cliente_telefono'},
                               { title: 'Descuento', field: 'descuento'},
-                              { title: 'Vigencia', field: 'anular' , lookup: { TRUE: 'Anulada', FALSE: 'Vigente'}},
+                              { title: 'Vigencia', field: 'anular' , lookup: { true: 'Anulada', false: 'Vigente'}},
                               {title: 'Total', field:'total'}]}
                     data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.sucursal)}
                     editable={{
@@ -721,7 +710,6 @@ export default class Ventas extends React.Component {
                   Total recaudado: ${this.state.totalp}
                   </h4>
               </TabPanel>
-            </CardBody>
             <Copyright/>
           </Card>
         </div>
