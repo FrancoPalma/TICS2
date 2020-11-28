@@ -214,7 +214,7 @@ router.post('/pagar_pedido', isLoggedIn, async function(req,res){
 				let nuevo_numero_pedido = 1
 		  	await crearPedido.findByIdAndUpdate(id, {abono:abono_actual + abono}, (err) =>{
 					if(!err){
-						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: abono, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido, anular: false}, (err) =>{
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: abono, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido, vigencia: 'Vigente'}, (err) =>{
 							if(!err){
 								res.sendStatus(201)
 							}else{
@@ -229,7 +229,7 @@ router.post('/pagar_pedido', isLoggedIn, async function(req,res){
 				let nuevo_numero_pedido = pedido.length + 1
 				await crearPedido.findByIdAndUpdate(id, {abono:abono_actual + abono}, (err) =>{
 					if(!err){
-						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: abono, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido, anular: false}, (err) =>{
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: abono, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido, vigencia: 'Vigente'}, (err) =>{
 							if(!err){
 								res.sendStatus(201)
 							}else{
@@ -314,7 +314,7 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 			await pedido.find({}, async function(err, pedido){
 			let nuevo_numero_pedido = 1
 			if( pedido.length == null || pedido.length == 0 ){
-		  	await crearPedido.create({numero_pedido: nuevo_numero_pedido,fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total, anular: false}, (err) =>{
+		  	await crearPedido.create({numero_pedido: nuevo_numero_pedido,fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total, vigencia: 'Vigente'}, (err) =>{
 					if(!err){
 						res.sendStatus(201)
 					}else{
@@ -324,7 +324,7 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 				});
 			}else{
 				let nuevo_numero_pedido = pedido.length + 1
-				await crearPedido.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total, anular: false}, (err) =>{
+				await crearPedido.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total, vigencia: 'Vigente'}, (err) =>{
 					if(!err){
 						res.sendStatus(201)
 					}else{
@@ -574,11 +574,11 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 			await venta.find({} , async (err, venta) => {
 				if( venta.length == null || venta.length == 0 ){
 					let nuevo_numero_venta = 1
-					await crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, anular: false}, (err) =>{
-						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta, anular: false}, (err2) => {
+					await crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, vigencia: 'Vigente'}, (err) =>{
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta, vigencia: 'Vigente'}, (err2) => {
 							if(!err){
 								for(i = 0; i < prods.length; i++){
-									detalle_venta.create({fecha: fecha, sucursal: sucursal, numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i].codigo, anular: false}, (err3) => {
+									detalle_venta.create({fecha: fecha, sucursal: sucursal, numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i].codigo, vigencia: 'Vigente'}, (err3) => {
 										if(err){
 											res.sendStatus(404)
 										}
@@ -591,11 +591,11 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 					});
 				}else{
 					let nuevo_numero_venta = venta.length + 1
-					await crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, anular: false}, (err) =>{
-						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta, anular: false}, (err2) => {
+					await crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, vigencia: 'Vigente'}, (err) =>{
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta, vigencia: 'Vigente'}, (err2) => {
 							if(!err){
 								for(i = 0; i < prods.length; i++){
-									detalle_venta.create({fecha: fecha, sucursal: sucursal, numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i].codigo, anular: false}, (err3) => {
+									detalle_venta.create({fecha: fecha, sucursal: sucursal, numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i].codigo, vigencia: 'Vigente'}, (err3) => {
 										if(err){
 											res.sendStatus(404)
 										}
@@ -629,11 +629,11 @@ router.post('/eliminar_boleta/:id', isLoggedIn, async function(req,res){
 			if(!err1){
 				if(boleta.tipo == 'Venta'){
 					let numero_venta = boleta.numero
-					await eliminarBoleta.findByIdAndUpdate({_id: id}, {anular: true}, async function(err2){
+					await eliminarBoleta.findByIdAndUpdate({_id: id}, {vigencia: 'Anulada'}, async function(err2){
 						if(!err2){
-							await detalle_venta.findOneAndUpdate({numero: numero_venta}, {anular: true},async function(err3){
+							await detalle_venta.findOneAndUpdate({numero: numero_venta}, {vigencia: 'Anulada'},async function(err3){
 								if(!err3){
-									await venta.findOneAndUpdate({numero_venta: numero_venta}, {anular: true}, function(err4){
+									await venta.findOneAndUpdate({numero_venta: numero_venta}, {vigencia: 'Anulada'}, function(err4){
 										if(err4){
 											res.sendStatus(404)
 										}
@@ -649,9 +649,9 @@ router.post('/eliminar_boleta/:id', isLoggedIn, async function(req,res){
 					})
 				}else if(boleta.tipo == 'Pedido'){
 					let numero_pedido = boleta.numero
-					await eliminarBoleta.findByIdAndUpdate({_id: id}, {anular: true}, async function(err2){
+					await eliminarBoleta.findByIdAndUpdate({_id: id}, {vigencia: 'Anulada'}, async function(err2){
 						if(!err2){
-							await pedido.remove({numero_pedido: numero_pedido}, {anular: true}, async function(err3){
+							await pedido.remove({numero_pedido: numero_pedido}, {vigencia: 'Anulada'}, async function(err3){
 								if(err3){
 									res.sendStatus(404)
 								}

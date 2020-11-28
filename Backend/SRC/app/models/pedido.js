@@ -11,7 +11,7 @@ const pedido = new Schema({
   estado : {type: String, required: true},
   abono: {type: Number, required: true},
   total: {type: Number, required: true},
-  anular: {type: Boolean, require: true}
+  vigencia: {type: String, require: true}
   },
   {collection: 'pedido'}
 )

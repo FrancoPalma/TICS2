@@ -7,7 +7,7 @@ const detalle_venta = new mongoose.Schema({
   numero: {type: Number, require: true},
   cod_prod: {type: Number, require: true},
   valor_prod: {type: Number, require: true},
-  anular: {type: Boolean, require: true}},
+  vigencia: {type: String, require: true}},
   { collection : 'detalle_venta'}
 );
 

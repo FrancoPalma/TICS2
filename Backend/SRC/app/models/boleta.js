@@ -13,7 +13,7 @@ var boleta = new Schema({
       tipo: {type: String, require: true},
       numero: {type: Number, required: true},
       sucursal: {type: String, require: true},
-      anular: {type: Boolean, require: true}
+      vigencia: {type: String, require: true}
       },
       {collection: 'boleta'}
     );
