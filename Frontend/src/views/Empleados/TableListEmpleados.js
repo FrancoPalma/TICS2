@@ -274,7 +274,6 @@ export default class InventarioTableList extends React.Component {
   componentDidMount() {
     this.getUsuario()
     this.ActualizarEmpleados()
-    this.ActualizarDescuentos()
   }
 
   EditarPrivilegios(newData) {
@@ -350,7 +349,6 @@ export default class InventarioTableList extends React.Component {
                   <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="Sucursales" >
                     <Tab label="Datos" {...a11yProps(0)}/>
                     <Tab label="Privilegios" {...a11yProps(1)}/>
-                    <Tab label="Descuentos" {...a11yProps(2)}/>
                   </Tabs>
                 </AppBar>
                 <CardBody>
@@ -415,17 +413,6 @@ export default class InventarioTableList extends React.Component {
                       }}
                     />
                     {mensajito}
-                    <Copyright />
-                  </TabPanel>
-
-                  <TabPanel value={this.state.tabIndex} index={2}>
-                    <MaterialTable
-                      title='Descuentos'
-                      columns={ [{title: 'Rut', field: 'rut'},
-                                { title: 'Descuento', field: 'descuento'},
-                                { title: 'Sucursal', field: 'sucursal', lookup: { 0: 'Lo Castillo', 1: 'Apumanque' ,2: 'Vitacura'}}]}
-                      data={this.state.ListaDescuentos}
-                    />
                     <Copyright />
                   </TabPanel>
                 </CardBody>

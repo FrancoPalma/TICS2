@@ -758,7 +758,7 @@ export default class Ventas extends React.Component {
                               columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                                         {title: 'Producto', field: 'cod_prod'},
                                         { title: 'Fecha', field: 'fecha', type: 'date'},
-                                        { title: 'Vigencia', field: 'anular' , lookup: { true: 'Anulada', false: 'Vigente'}},
+                                        { title: 'Vigencia', field: 'vigencia' },
                                         {title: 'Total', field:'valor_prod'}]}
                               data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
 
@@ -881,7 +881,7 @@ export default class Ventas extends React.Component {
                             columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                                       {title: 'Producto', field: 'cod_prod'},
                                       { title: 'Fecha', field: 'fecha', type: 'date'},
-                                      { title: 'Vigencia', field: 'anular' , lookup: { true: 'Anulada', false: 'Vigente'}},
+                                      { title: 'Vigencia', field: 'vigencia'},
                                       {title: 'Total', field:'valor_prod'}]}
                             data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                           />
@@ -904,7 +904,7 @@ export default class Ventas extends React.Component {
                     columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
                               {title: 'Producto', field: 'cod_prod'},
                               { title: 'Fecha', field: 'fecha', type: 'date'},
-                              { title: 'Vigencia', field: 'anular' , lookup: { true: 'Anulada', false: 'Vigente'}},
+                              { title: 'Vigencia', field: 'vigencia'},
                               {title: 'Total', field:'valor_prod'}]}
                     data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.sucursal)}
                   />

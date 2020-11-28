@@ -681,7 +681,7 @@ export default class InventarioTableList extends React.Component {
                             { title: 'Descripcion', field: 'descripcion'},
                             { title: 'Estado', field: 'estado', lookup: { 0: 'EN PROCESO', 1: 'LISTO PARA RETIRO' ,2: 'ENTREGADO'}},
                             { title: 'Abono', field: 'abono' ,type: 'numeric', editable: 'never'},
-                            { title: 'Vigencia', field: 'anular' , lookup: { true: 'Anulada', false: 'Vigente'}, editable: 'never'},
+                            { title: 'Vigencia', field: 'vigencia', editable: 'never'},
                             { title: 'Total', field: 'total' ,type: 'numeric',editable: 'never' }]}
                   data={this.state.ListaPedidos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                   editable={{

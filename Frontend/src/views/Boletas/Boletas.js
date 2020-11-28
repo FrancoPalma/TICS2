@@ -429,25 +429,27 @@ export default class Ventas extends React.Component {
     let tot1 = 0;
     let tot2 = 0;
     for(let i = 0; i<this.state.ListaVentasDia.length;i++) {
-      if(this.state.ListaVentasDia[i].sucursal === '0'){
-        tot0 = tot0 + this.state.ListaVentasDia[i].total;
-        if(this.state.perfil.sucursal=== '0'){
-          this.setState({estadosucursal:1})
-          this.setState({estado:1, totald: tot0})
+      if(this.state.ListaVentasDia[i].anular == false){
+        if(this.state.ListaVentasDia[i].sucursal === '0'){
+          tot0 = tot0 + this.state.ListaVentasDia[i].total;
+          if(this.state.perfil.sucursal=== '0'){
+            this.setState({estadosucursal:1})
+            this.setState({estado:1, totald: tot0})
+          }
         }
-      }
-      else if(this.state.ListaVentasDia[i].sucursal === '1'){
-        tot1 = tot1 + this.state.ListaVentasDia[i].total;
-        if(this.state.perfil.sucursal=== '0'){
-          this.setState({estadosucursal:1})
-          this.setState({estado:1, totald: tot1})
+        else if(this.state.ListaVentasDia[i].sucursal === '1'){
+          tot1 = tot1 + this.state.ListaVentasDia[i].total;
+          if(this.state.perfil.sucursal=== '1'){
+            this.setState({estadosucursal:1})
+            this.setState({estado:1, totald: tot1})
+          }
         }
-      }
-      else if(this.state.ListaVentasDia[i].sucursal === '2'){
-        tot2 = tot2 + this.state.ListaVentasDia[i].total;
-        if(this.state.perfil.sucursal=== '0'){
-          this.setState({estadosucursal:1})
-          this.setState({estado:1, totald: tot2})
+        else if(this.state.ListaVentasDia[i].sucursal === '2'){
+          tot2 = tot2 + this.state.ListaVentasDia[i].total;
+          if(this.state.perfil.sucursal=== '2'){
+            this.setState({estadosucursal:1})
+            this.setState({estado:1, totald: tot2})
+          }
         }
       }
     }
@@ -503,22 +505,24 @@ export default class Ventas extends React.Component {
     let tot1 = 0;
     let tot2 = 0;
     for(let i = 0; i<this.state.ListaVentasPeriodo.length;i++) {
-      if(this.state.ListaVentasPeriodo[i].sucursal === '0'){
-        tot0 = tot0 + this.state.ListaVentasPeriodo[i].total;
-        if(this.state.perfil.sucursal=== '0'){
-          this.setState({estadosucursal:1, totalp: tot0})
+      if(this.state.ListaVentasPeriodo[i].vigencia == "Vigente"){
+        if(this.state.ListaVentasPeriodo[i].sucursal === '0'){
+          tot0 = tot0 + this.state.ListaVentasPeriodo[i].total;
+          if(this.state.perfil.sucursal=== '0'){
+            this.setState({estadosucursal:1, totalp: tot0})
+          }
         }
-      }
-      else if(this.state.ListaVentasPeriodo[i].sucursal === '1'){
-        tot1 = tot1 + this.state.ListaVentasPeriodo[i].total;
-        if(this.state.perfil.sucursal=== '1'){
-          this.setState({estadosucursal:1, totalp: tot1})
+        else if(this.state.ListaVentasPeriodo[i].sucursal === '1'){
+          tot1 = tot1 + this.state.ListaVentasPeriodo[i].total;
+          if(this.state.perfil.sucursal=== '1'){
+            this.setState({estadosucursal:1, totalp: tot1})
+          }
         }
-      }
-      else if(this.state.ListaVentasPeriodo[i].sucursal === '2'){
-        tot2 = tot2 + this.state.ListaVentasPeriodo[i].total;
-        if(this.state.perfil.sucursal=== '2'){
-          this.setState({estadosucursal:1, totalp: tot2})
+        else if(this.state.ListaVentasPeriodo[i].sucursal === '2'){
+          tot2 = tot2 + this.state.ListaVentasPeriodo[i].total;
+          if(this.state.perfil.sucursal=== '2'){
+            this.setState({estadosucursal:1, totalp: tot2})
+          }
         }
       }
     }
@@ -598,7 +602,7 @@ export default class Ventas extends React.Component {
                                         { title: 'Cliente', field: 'cliente_nombre'},
                                         { title: 'Telefono', field: 'cliente_telefono'},
                                         { title: 'Descuento', field: 'descuento'},
-                                        { title: 'Vigencia', field: 'anular' , lookup: { true: 'Anulada', false: 'Vigente'}},
+                                        { title: 'Vigencia', field: 'vigencia' },
                                         {title: 'Total', field:'total'}]}
                               data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                               editable={{
@@ -653,7 +657,7 @@ export default class Ventas extends React.Component {
                                       { title: 'Cliente', field: 'cliente_nombre'},
                                       { title: 'Telefono', field: 'cliente_telefono'},
                                       { title: 'Descuento', field: 'descuento'},
-                                      { title: 'Vigencia', field: 'anular' , lookup: { true: 'Anulada', false: 'Vigente'}},
+                                      { title: 'Vigencia', field: 'vigencia' },
                                       {title: 'Total', field:'total'}]}
                             data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                             editable={{
@@ -691,7 +695,7 @@ export default class Ventas extends React.Component {
                               { title: 'Cliente', field: 'cliente_nombre'},
                               { title: 'Telefono', field: 'cliente_telefono'},
                               { title: 'Descuento', field: 'descuento'},
-                              { title: 'Vigencia', field: 'anular' , lookup: { true: 'Anulada', false: 'Vigente'}},
+                              { title: 'Vigencia', field: 'vigencia' },
                               {title: 'Total', field:'total'}]}
                     data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.sucursal)}
                     editable={{
