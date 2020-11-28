@@ -6,7 +6,8 @@ const detalle_venta = new mongoose.Schema({
   sucursal: {type: String, require: true},
   numero: {type: Number, require: true},
   cod_prod: {type: Number, require: true},
-  valor_prod: {type: Number, require: true}},
+  valor_prod: {type: Number, require: true},
+  anular: {type: Boolean, require: true}},
   { collection : 'detalle_venta'}
 );
 

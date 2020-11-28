@@ -10,7 +10,8 @@ const pedido = new Schema({
   cliente_telefono: {type: String, require: true},
   estado : {type: String, required: true},
   abono: {type: Number, required: true},
-  total: {type: Number, required: true}
+  total: {type: Number, required: true},
+  anular: {type: Boolean, require: true}
   },
   {collection: 'pedido'}
 )
