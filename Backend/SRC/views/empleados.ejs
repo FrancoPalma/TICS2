@@ -46,13 +46,9 @@
     <ul>
       <li><a href="/inicio">Inicio</a></li>
       <li><a href="/venta">Venta</a></li>
-      <% if ( user.rol == 'duena' || user.rol == 'JT'){%>
       <li><a href="/productos">Productos</a></li>
-      <%}%>
       <li><a  href="/pedidos">Pedidos</a></li>
-      <% if ( user.rol == 'duena' ){%>
           <li><a class="active" href="/empleados">Empleados</a></li>
-      <%}%>
       <li><a href="/profile">Perfil</a></li>
     </ul>
 
@@ -69,10 +65,7 @@
             <thead>
                 <tr>
                     <th>RUT</th>
-                    <th>nombre</th>
-                    <th>Nacimiento</th>
-                    <th>telefono</th>
-                    <th>rol</th>
+                    <th>Descuento</th>
                     <th>Sucursal</th>
                 </tr>
             </thead>
@@ -80,11 +73,8 @@
                 <% for(var i = 0; i < empleado.length; i++){ %>
                     <tr>
                         <td><%= empleado[i].rut %></td>
-                        <td><%= empleado[i].nombre %></td>
+                        <td><%= empleado[i].descuento %></td>
                         <td><%= empleado[i].nacimiento %></td>
-                        <td><%= empleado[i].telefono %></td>
-                        <td><%= empleado[i].rol %></td>
-                        <td><%= empleado[i].cod_sucursal %></td>
                         <td>
                             <!--
                             <a
@@ -93,7 +83,7 @@
                              <a
                              class="btn btn-success"
                               href="/editar_empleado/<%= empleado[i]._id%>"> <i class="fa fa-list-alt" aria-hidden="true"></i>Modificar</a>
-                            
+
                             <a
                             id = "delete"
                             class="btn btn-danger"

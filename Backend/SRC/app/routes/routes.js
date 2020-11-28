@@ -213,7 +213,7 @@ router.post('/pagar_pedido', isLoggedIn, async function(req,res){
 				let nuevo_numero_pedido = 1
 		  	await crearPedido.findByIdAndUpdate(id, {abono:abono_actual + abono}, (err) =>{
 					if(!err){
-						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: abono, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido}, (err) =>{
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: abono, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido, anular: false}, (err) =>{
 							if(!err){
 								res.sendStatus(201)
 							}else{
@@ -228,7 +228,7 @@ router.post('/pagar_pedido', isLoggedIn, async function(req,res){
 				let nuevo_numero_pedido = pedido.length + 1
 				await crearPedido.findByIdAndUpdate(id, {abono:abono_actual + abono}, (err) =>{
 					if(!err){
-						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: abono, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido}, (err) =>{
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: abono, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido, anular: false}, (err) =>{
 							if(!err){
 								res.sendStatus(201)
 							}else{
@@ -313,7 +313,7 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 			await pedido.find({}, async function(err, pedido){
 			let nuevo_numero_pedido = 1
 			if( pedido.length == null || pedido.length == 0 ){
-		  	await crearPedido.create({numero_pedido: nuevo_numero_pedido,fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total}, (err) =>{
+		  	await crearPedido.create({numero_pedido: nuevo_numero_pedido,fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total, anular: false}, (err) =>{
 					if(!err){
 						res.sendStatus(201)
 					}else{
@@ -323,7 +323,7 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 				});
 			}else{
 				let nuevo_numero_pedido = pedido.length + 1
-				await crearPedido.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total}, (err) =>{
+				await crearPedido.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total, anular: false}, (err) =>{
 					if(!err){
 						res.sendStatus(201)
 					}else{
@@ -336,14 +336,13 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 	});
 });
 
-function numero_unico_pedido(lista){
-	max = 0
-	for(i = 0; i < lista.length; i++){
-		if( max <= lista.numero_pedido ){
-			max = lista.numero_pedido
-		}
+function numero_unico_pedido(nuevo_numero){
+	nuevo_numero_aux = nuevo_numero
+	if(pedido.exists({numero_pedido: nuevo_numero_aux})){
+		numero_unico_pedido(nuevo_numero_aux + 1)
+	}else{
+		return nuevo_numero_aux
 	}
-	return max
 }
 
 router.post('/eliminar_pedido/:id', isLoggedIn, async function(req,res){
@@ -574,11 +573,11 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 			await venta.find({} , async (err, venta) => {
 				if( venta.length == null || venta.length == 0 ){
 					let nuevo_numero_venta = 1
-					crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono}, (err) =>{
-						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta}, (err2) => {
+					await crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, anular: false}, (err) =>{
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta, anular: false}, (err2) => {
 							if(!err){
 								for(i = 0; i < prods.length; i++){
-									detalle_venta.create({fecha: fecha, sucursal: sucursal, numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i].codigo}, (err3) => {
+									detalle_venta.create({fecha: fecha, sucursal: sucursal, numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i].codigo, anular: false}, (err3) => {
 										if(err){
 											res.sendStatus(404)
 										}
@@ -591,11 +590,11 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 					});
 				}else{
 					let nuevo_numero_venta = venta.length + 1
-					crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono}, (err) =>{
-						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta}, (err2) => {
+					await crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, anular: false}, (err) =>{
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta, anular: false}, (err2) => {
 							if(!err){
 								for(i = 0; i < prods.length; i++){
-									detalle_venta.create({fecha: fecha, sucursal: sucursal, numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i].codigo}, (err3) => {
+									detalle_venta.create({fecha: fecha, sucursal: sucursal, numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i].codigo, anular: false}, (err3) => {
 										if(err){
 											res.sendStatus(404)
 										}
@@ -613,16 +612,15 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 	});
 });
 
-function numero_unico_venta(lista){
-	max = 0
-	for(i = 0; i < lista.length; i++){
-		if( max <= lista.numero_venta ){
-			console.log(lista.numero_venta)
-			max = lista.numero_venta
+async function numero_unico_venta(largo){
+	numero = largo
+	for( i = 0; i < largo; i++){
+		if(await venta.exists({numero_venta: numero}) == false){
+			return numero
 		}
 	}
-	return max
 }
+
 
 router.post('/eliminar_boleta/:id', isLoggedIn, async function(req,res){
     let id = req.params.id;
@@ -630,11 +628,11 @@ router.post('/eliminar_boleta/:id', isLoggedIn, async function(req,res){
 			if(!err1){
 				if(boleta.tipo == 'Venta'){
 					let numero_venta = boleta.numero
-					await boleta.remove({_id: id}, async function(err2){
+					await boleta.findByIdAndUpdate({_id: id}, {anular: true}, async function(err2){
 						if(!err2){
-							await detalle_venta.remove({numero: numero_venta}, async function(err3){
+							await detalle_venta.findOneAndUpdate({numero: numero_venta}, {anular: true},async function(err3){
 								if(!err3){
-									await venta.remove({numero_venta: numero_venta}, function(err4){
+									await venta.findOneAndUpdate({numero_venta: numero_venta}, {anular: true}, function(err4){
 										if(err4){
 											res.sendStatus(404)
 										}
@@ -650,9 +648,9 @@ router.post('/eliminar_boleta/:id', isLoggedIn, async function(req,res){
 					})
 				}else if(boleta.tipo == 'Pedido'){
 					let numero_pedido = boleta.numero
-					await boleta.remove({_id: id}, async function(err2){
+					await boleta.findByIdAndUpdate({_id: id}, {anular: true}, async function(err2){
 						if(!err2){
-							await pedido.remove({numero_pedido: numero_pedido}, async function(err3){
+							await pedido.remove({numero_pedido: numero_pedido}, {anular: true}, async function(err3){
 								if(err3){
 									res.sendStatus(404)
 								}
@@ -663,6 +661,18 @@ router.post('/eliminar_boleta/:id', isLoggedIn, async function(req,res){
 						res.sendStatus(201)
 					})
 				}
+			}
+		})
+});
+
+router.post('/anular_boleta/:id', isLoggedIn, async function(req,res){
+    let id = req.params.id;
+		let anular = req.params.id;
+		boleta.findByIdAndUpdate(id,{anular: anular}, function(err1){
+			if(!err1){
+				res.sendStatus(201)
+			}else{
+				res.sendStatus(404)
 			}
 		})
 });
@@ -681,41 +691,13 @@ router.post('/eliminar_venta/:id', isLoggedIn, async function(req,res){
 
 //----------------------------------------------GESTIONAR EMPLEADOS----------------------------------------------
 router.get('/empleados', isLoggedIn, async function(req,res){
-    await empleado.find(function (err, empleado) {
-			if (!err){
-				res.json(empleado);
-			}else{
-				res.sendStatus(404);
-			}
-    });
-});
-
-router.get('/empleados_descuentos', isLoggedIn, async function(req,res){
-	var vendedores = [];
-	let suma = 0
-	let promedio = 0
-	let persona = {rut: "", descuento: 0 ,sucursal: ""}
-  await empleado.find(function (err1, empleado) {
-		if (!err1){
-			for (i = 0; i < empleado.length; i++){
-				boleta.find({'vendedor':empleado[i].rut}, async function(err2, boleta){
-					console.log(boleta)
-					if(boleta.length > 0){
-						for (j = 0; j < boleta.length; j++){
-							suma += boleta[j].descuento
-						}
-						promedio = suma / boleta.length
-						persona = {rut:boleta[j].vendedor, descuento: promedio ,sucursal: boleta.sucursal}
-						vendedor.push(persona)
-					}
-					suma = 0
-				});
-			}
-			res.json(vendedores)
+	empleado.find({}, function(err, empleado){
+		if(!err){
+			res.json(empleado)
 		}else{
-			res.sendStatus(404);
+			res.sendStatus(404)
 		}
-  });
+	})
 });
 
 router.post('/crear_empleado', isLoggedIn ,async function(req, res){

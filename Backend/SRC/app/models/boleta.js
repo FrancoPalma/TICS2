@@ -12,7 +12,8 @@ var boleta = new Schema({
       metodo_pago: {type: String, require: true},
       tipo: {type: String, require: true},
       numero: {type: Number, required: true},
-      sucursal: {type: String, require: true}
+      sucursal: {type: String, require: true},
+      anular: {type: Boolean, require: true}
       },
       {collection: 'boleta'}
     );

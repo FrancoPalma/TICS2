@@ -6,7 +6,8 @@ var venta = new Schema   ({
       fecha: {type: Date, require: true},
       sucursal: {type: String, require: true},
       cliente_nombre: {type: String, require: true},
-      cliente_telefono: {type: String, require: true}
+      cliente_telefono: {type: String, require: true},
+      anular: {type: Boolean, require: true}
       },
       {collection: 'venta'}
     );
