@@ -228,7 +228,7 @@ export default class InventarioTableList extends React.Component {
       descripcion: "",
       vendedor: "",
       cliente_nombre: "No Definido",
-      cliente_telefono: 0,
+      cliente_telefono: "0",
       estado: 0,
       suma: 0,
       abono: null,
@@ -271,9 +271,10 @@ export default class InventarioTableList extends React.Component {
 
   AgregarPedido() {
     let regex = new RegExp("^[a-z A-Z]+$");
+    let regex3 = new RegExp("^[0-9]+$");
     if(regex.test(this.state.cliente)){
-      if(this.state.totalnew > 0){
-        if((this.state.cliente_telefono > 0 && (this.state.cliente_telefono).toString().length == 9) || this.state.cliente_telefono == 0){
+      if(this.state.totalnew > 0 && this.state.totalnew%1 == 0){
+        if(regex3.test(this.state.cliente_telefono) && (this.state.cliente_telefono).length == 9) || this.state.cliente_telefono == "0"){
           fetch('/agregar_pedido', {
           method: 'POST',
           headers: {
@@ -283,7 +284,7 @@ export default class InventarioTableList extends React.Component {
           body: JSON.stringify({
             vendedor: this.state.vendedor,
             cliente_nombre: this.state.cliente_nombre,
-            cliente_telefono: this.state.cliente_telefono,
+            cliente_telefono: parseInt(this.state.cliente_telefono),
             descripcion: this.state.descripcion,
             estado: this.state.estado,
             total: this.state.totalnew,
@@ -444,7 +445,7 @@ export default class InventarioTableList extends React.Component {
 
   imprimir = () => {
     if(this.state.targetKeys.length ==1){
-      if(this.state.targetKeys[0].total >= this.state.abono2){
+      if(this.state.targetKeys[0].total >= this.state.abono2 && this.state.abono2 % 1 == 0){
         if(this.state.abono2 > 0){
           fetch('/pagar_pedido', {
             method: 'POST',
@@ -531,9 +532,9 @@ export default class InventarioTableList extends React.Component {
     }else if(this.state.mensaje === 8) {
       mensajito = <Alert severity="error">Solo se puede pagar un pedido a la vez.</Alert>
     }else if(this.state.mensaje === 9) {
-      mensajito = <Alert severity="error">No se puede abonar más del precio total.</Alert>
+      mensajito = <Alert severity="error">No se puede abonar más del precio total ni ingresar decimales.</Alert>
     }else if(this.state.mensaje === 10) {
-      mensajito = <Alert severity="error">Total invalido.</Alert>
+      mensajito = <Alert severity="error">Total invalido, ingrese numeros sin punto.</Alert>
     }else if(this.state.mensaje === 11) {
       mensajito = <Alert severity="error">Telefono invalido.</Alert>
     }else if(this.state.mensaje === 12) {
@@ -572,10 +573,10 @@ export default class InventarioTableList extends React.Component {
                   <TextField id="standard-basic" value={this.state.vendedor} defaultvalue={this.state.perfil.rut} label="Rut del vendedor" onChange={this.handleInputChange('vendedor')}/>
                 </Grid>
                 <Grid item xs={4}>
-                  <TextField id="standard-basic" value={this.state.totalnew} type="number" label="Total" onChange={this.handleInputChange('totalnew')}/>
+                  <TextField id="standard-basic" value={this.state.totalnew} type="number" label="Valor Total" onChange={this.handleInputChange('totalnew')}/>
                 </Grid>
                 <Grid item xs={4}>
-                  <TextField id="standard-basic" value={this.state.cliente_telefono} type ='number'label="Telefono de Cliente" helperText="0 en caso de querer ingresar un telefono." onChange={this.handleInputChange('cliente_telefono')}/>
+                  <TextField id="standard-basic" value={this.state.cliente_telefono} label="Telefono de Cliente" helperText="0 en caso de querer ingresar un telefono." onChange={this.handleInputChange('cliente_telefono')}/>
                 </Grid>
               </Grid>
               <Grid item xs={4}>
