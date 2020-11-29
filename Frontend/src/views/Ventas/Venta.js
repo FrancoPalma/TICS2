@@ -586,7 +586,7 @@ export default class Ventas extends React.Component {
                         this.ActualizarInventario()
                       }
                   } else if(response.status === 405){
-                    this.setState({completado: 8})
+                    this.setState({completado: 8, total: 0})
                   }else {
                       console.log('Hubo un error')
                       this.setState({completado: 2})
