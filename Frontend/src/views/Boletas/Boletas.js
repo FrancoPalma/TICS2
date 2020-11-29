@@ -254,7 +254,7 @@ export default class Ventas extends React.Component {
       ListaVentasDia: null,
       totald: 0,
       totalp:0,
-      estado:null,
+      estado:5,
       estadosucursal:null,
     }
     this.handleChange = this.handleChange.bind(this)
@@ -429,7 +429,7 @@ export default class Ventas extends React.Component {
     let tot1 = 0;
     let tot2 = 0;
     for(let i = 0; i<this.state.ListaVentasDia.length;i++) {
-      if(this.state.ListaVentasDia[i].anular == false){
+      if(this.state.ListaVentasDia[i].vigencia == "Vigente"){
         if(this.state.ListaVentasDia[i].sucursal === '0'){
           tot0 = tot0 + this.state.ListaVentasDia[i].total;
           if(this.state.perfil.sucursal=== '0'){
@@ -497,7 +497,7 @@ export default class Ventas extends React.Component {
     console.log(dateString)
   }
   handleChange2(event, newValue) {
-    this.setState({tabIndex: newValue, estado:null, estadosucursal:null, completado:null, descuento:null});
+    this.setState({tabIndex: newValue, estado:5, estadosucursal:null, completado:null, descuento:null});
   }
 
   CalcularTotal3(){
@@ -573,6 +573,8 @@ export default class Ventas extends React.Component {
       mensajeventadia = <Alert severity="success">La venta se eliminó correctamente</Alert>
     }else if(this.state.estado === 4) {
       mensajeventadia = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
+    }else if (this.state.estado === 5) {
+      mensajeventadia = <Alert severity="info">Para anular una boleta haz click en el basurero.</Alert>
     }
 
     if(this.state.ready === true){
