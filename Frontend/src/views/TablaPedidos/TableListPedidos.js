@@ -671,7 +671,6 @@ export default class InventarioTableList extends React.Component {
               </Grid>
             </TabPanel>
             <TabPanel value={this.state.tabIndex} index={2}>
-              <CardBody>
                 <MaterialTable
                 options={{filtering: true}}
                   title= {nombresucursal}
@@ -708,7 +707,6 @@ export default class InventarioTableList extends React.Component {
                     </Box>
                     </Grid>
                   </Grid>
-                  </CardBody>
                 </TabPanel>
               </Card>
           </div>
