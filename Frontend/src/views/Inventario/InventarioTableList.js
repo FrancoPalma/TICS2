@@ -343,21 +343,21 @@ export default class InventarioTableList extends React.Component {
                         }),
                     }}
                   />
+                  <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="flex-start"
+                  spacing={3}>
+                    <Grid item xs={6} text-align= "center">
+                    <Box mt={1}>
+                      {mensajito}
+                      <Copyright />
+                    </Box>
+                    </Grid>
+                  </Grid>
                 </CardBody>
               </Card>
-              <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              spacing={3}>
-                <Grid item xs={6} text-align= "center">
-                <Box mt={8}>
-                  {mensajito}
-                  <Copyright />
-                </Box>
-                </Grid>
-              </Grid>
           </div>
         )
       }else{
@@ -376,20 +376,21 @@ export default class InventarioTableList extends React.Component {
                     data={this.state.ListaProductos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
                     editable={{ }}
                   />
+                  <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="flex-start"
+                  spacing={3}>
+                    <Grid item xs={6} text-align= "center">
+                    <Box mt={1}>
+                      <Copyright />
+                    </Box>
+                    </Grid>
+                  </Grid>
                 </CardBody>
               </Card>
-              <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              spacing={3}>
-                <Grid item xs={6} text-align= "center">
-                <Box mt={8}>
-                  <Copyright />
-                </Box>
-                </Grid>
-              </Grid>
+
           </div>
         )
       }
