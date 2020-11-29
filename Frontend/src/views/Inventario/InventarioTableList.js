@@ -171,37 +171,41 @@ export default class InventarioTableList extends React.Component {
 
   AgregarProducto(newData) {
     let regex = new RegExp("^[a-z A-Z]+$");
-    if(regex.test(newData.material) && regex.test(newData.tipo) && regex.test(newData.piedra)){
-      fetch('/agregar_prod', {
-      method: 'POST',
-      headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        codigo: newData.codigo,
-        material: newData.material,
-        tipo: newData.tipo,
-        piedra: newData.piedra,
-        precio: newData.precio,
-        descripcion: newData.descripcion,
-        sucursal: this.state.perfil.sucursal.toString()
-      })
-      })
-      .then( (response) => {
-          if(response.status === 201) {
-              console.log("Añadido correctamente")
-              this.setState({estado:1})
-              this.setState({estadosucursal:1})
-          } else {
-              console.log('Hubo un error')
-              this.setState({estado:2})
-              this.setState({estadosucursal:2})
-          }
-      })
-      .catch((error) => {
-          console.log(error)
-      });
+    if(regex.test(newData.tipo)){
+      if(newData.precio % 1 == 0){
+        fetch('/agregar_prod', {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          codigo: newData.codigo,
+          material: newData.material,
+          tipo: newData.tipo,
+          piedra: newData.piedra,
+          precio: newData.precio,
+          descripcion: newData.descripcion,
+          sucursal: this.state.perfil.sucursal.toString()
+        })
+        })
+        .then( (response) => {
+            if(response.status === 201) {
+                console.log("Añadido correctamente")
+                this.setState({estado:1})
+                this.setState({estadosucursal:1})
+            } else {
+                console.log('Hubo un error')
+                this.setState({estado:2})
+                this.setState({estadosucursal:2})
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+      }else{
+        this.setState({mensaje: 6});
+      }
     }else{
       this.setState({mensaje: 5})
     }
@@ -286,7 +290,9 @@ export default class InventarioTableList extends React.Component {
     }else if(this.state.estado === 4) {
       mensajito = <Alert severity="success">El Producto se eliminó correctamente</Alert>
     }else if(this.state.mensaje === 5){
-      mensajito = <Alert severity="error">No se permiten números en los campos tipo, material y piedra</Alert>
+      mensajito = <Alert severity="error">No se permiten números en los campos tipo.</Alert>
+    }else if(this.state.mensaje === 6){
+      mensajito = <Alert severity="error">No se permiten ingresar decimales.</Alert>
     }
 
     if(this.state.ready === true) {
@@ -305,7 +311,7 @@ export default class InventarioTableList extends React.Component {
                     options={{filtering: true}}
                     columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric' },
                               { title: 'Material', field: 'material' },
-                              { title: 'Tipo', field: 'tipo' },
+                              { title: 'Tipo de Joya', field: 'tipo' },
                               { title: 'Piedra', field: 'piedra' },
                               { title: 'Precio', field: 'precio' ,type: 'numeric'},
                               { title: 'Descripcion', field: 'descripcion' }]}
@@ -363,7 +369,7 @@ export default class InventarioTableList extends React.Component {
                     title= {nombresucursal}
                     columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric',editable: 'never' },
                               { title: 'Material', field: 'material',editable: 'never' },
-                              { title: 'Tipo', field: 'tipo',editable: 'never' },
+                              { title: 'Tipo de Joya', field: 'tipo',editable: 'never' },
                               { title: 'Piedra', field: 'piedra' },
                               { title: 'Precio', field: 'precio' ,type: 'numeric'},
                               { title: 'Descripcion', field: 'descripcion' }]}

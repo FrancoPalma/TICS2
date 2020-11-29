@@ -274,7 +274,7 @@ export default class InventarioTableList extends React.Component {
     let regex3 = new RegExp("^[0-9]+$");
     if(regex.test(this.state.cliente)){
       if(this.state.totalnew > 0 && this.state.totalnew%1 == 0){
-        if(regex3.test(this.state.cliente_telefono) && (this.state.cliente_telefono).length == 9) || this.state.cliente_telefono == "0"){
+        if((regex3.test(this.state.cliente_telefono) && (this.state.cliente_telefono).length == 9) || this.state.cliente_telefono == "0"){
           fetch('/agregar_pedido', {
           method: 'POST',
           headers: {
