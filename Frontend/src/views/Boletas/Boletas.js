@@ -433,30 +433,27 @@ export default class Ventas extends React.Component {
         if(this.state.ListaVentasDia[i].sucursal === '0'){
           tot0 = tot0 + this.state.ListaVentasDia[i].total;
           if(this.state.perfil.sucursal=== '0'){
-            this.setState({estadosucursal:1})
             this.setState({totald: tot0})
           }
         }
         else if(this.state.ListaVentasDia[i].sucursal === '1'){
           tot1 = tot1 + this.state.ListaVentasDia[i].total;
           if(this.state.perfil.sucursal=== '1'){
-            this.setState({estadosucursal:1})
             this.setState({totald: tot1})
           }
         }
         else if(this.state.ListaVentasDia[i].sucursal === '2'){
           tot2 = tot2 + this.state.ListaVentasDia[i].total;
           if(this.state.perfil.sucursal=== '2'){
-            this.setState({estadosucursal:1})
             this.setState({totald: tot2})
           }
         }
       }
     }
     if(this.state.ListaVentasDia.length === 0){
-      this.setState({estado: 4})
+      this.setState({estado: 3})
     }else{
-      this.setState({estado: 5})
+      this.setState({estado: null})
     }
   }
 
@@ -497,7 +494,7 @@ export default class Ventas extends React.Component {
     console.log(dateString)
   }
   handleChange2(event, newValue) {
-    this.setState({tabIndex: newValue, estado:5, estadosucursal:null, completado:null, descuento:null});
+    this.setState({tabIndex: newValue, estado:null, estadosucursal:null, completado:null, descuento:null});
   }
 
   CalcularTotal3(){
@@ -509,19 +506,19 @@ export default class Ventas extends React.Component {
         if(this.state.ListaVentasPeriodo[i].sucursal === '0'){
           tot0 = tot0 + this.state.ListaVentasPeriodo[i].total;
           if(this.state.perfil.sucursal=== '0'){
-            this.setState({estadosucursal:1, totalp: tot0})
+            this.setState({totalp: tot0})
           }
         }
         else if(this.state.ListaVentasPeriodo[i].sucursal === '1'){
           tot1 = tot1 + this.state.ListaVentasPeriodo[i].total;
           if(this.state.perfil.sucursal=== '1'){
-            this.setState({estadosucursal:1, totalp: tot1})
+            this.setState({totalp: tot1})
           }
         }
         else if(this.state.ListaVentasPeriodo[i].sucursal === '2'){
           tot2 = tot2 + this.state.ListaVentasPeriodo[i].total;
           if(this.state.perfil.sucursal=== '2'){
-            this.setState({estadosucursal:1, totalp: tot2})
+            this.setState({totalp: tot2})
           }
         }
       }
@@ -529,7 +526,7 @@ export default class Ventas extends React.Component {
     if(this.state.ListaVentasPeriodo.length === 0){
       this.setState({estado: 4})
     }else{
-      this.setState({estado: 5})
+      this.setState({estado: null})
     }
   }
 
@@ -551,13 +548,12 @@ export default class Ventas extends React.Component {
   render() {
     let mensaje;
     if(this.state.estado === 4) {
-      mensaje = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
+      mensaje = <Alert severity="warning">No se encontraron boletas.</Alert>
     }else if (this.state.estado === 2) {
       mensaje = <Alert severity="success">Boleta anulada exitosamente.</Alert>
-    }else if (this.state.estado === 5) {
-      mensaje = <Alert severity="info">Para anular una boleta haz click en el basurero.</Alert>
     }
 
+    let aviso = <Alert severity="info">¡Para anular una boleta haz click en el basurero!</Alert>
     if(this.state.ready === true){
       let nombresucursal;
         if(this.state.perfil.sucursal === '0') { nombresucursal = 'Lo Castillo'}
@@ -574,6 +570,7 @@ export default class Ventas extends React.Component {
                 </Tabs>
               </AppBar>
                 <TabPanel value={this.state.tabIndex} index={0}>
+                {aviso}
                   <div style={styles.root}>
                           <MaterialTable
                               title={nombresucursal}
@@ -630,6 +627,7 @@ export default class Ventas extends React.Component {
               </Tabs>
             </AppBar>
               <TabPanel value={this.state.tabIndex} index={0}>
+              {aviso}
                 <div style={styles.root}>
                         <MaterialTable
                             title={nombresucursal}
@@ -670,6 +668,7 @@ export default class Ventas extends React.Component {
                 <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
                   Listo
                 </Button>
+                {aviso}
                 <MaterialTable
                     title={nombresucursal}
                     options={{filtering: true}}
