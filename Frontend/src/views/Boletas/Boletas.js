@@ -328,10 +328,10 @@ export default class Ventas extends React.Component {
     .then( (response) => {
         if(response.status === 201) {
             console.log("Eliminado correctamente")
-            this.setState({estado: 3})
+            this.setState({estado: 2})
         } else {
             console.log('Hubo un error')
-            this.setState({estado: 9})
+            this.setState({estado: 4})
         }
     })
     .catch((error) => {
@@ -434,29 +434,29 @@ export default class Ventas extends React.Component {
           tot0 = tot0 + this.state.ListaVentasDia[i].total;
           if(this.state.perfil.sucursal=== '0'){
             this.setState({estadosucursal:1})
-            this.setState({estado:1, totald: tot0})
+            this.setState({totald: tot0})
           }
         }
         else if(this.state.ListaVentasDia[i].sucursal === '1'){
           tot1 = tot1 + this.state.ListaVentasDia[i].total;
           if(this.state.perfil.sucursal=== '1'){
             this.setState({estadosucursal:1})
-            this.setState({estado:1, totald: tot1})
+            this.setState({totald: tot1})
           }
         }
         else if(this.state.ListaVentasDia[i].sucursal === '2'){
           tot2 = tot2 + this.state.ListaVentasDia[i].total;
           if(this.state.perfil.sucursal=== '2'){
             this.setState({estadosucursal:1})
-            this.setState({estado:1, totald: tot2})
+            this.setState({totald: tot2})
           }
         }
       }
     }
     if(this.state.ListaVentasDia.length === 0){
-      this.setState({estado: 2})
+      this.setState({estado: 4})
     }else{
-      this.setState({estado: 1})
+      this.setState({estado: 5})
     }
   }
 
@@ -527,9 +527,9 @@ export default class Ventas extends React.Component {
       }
     }
     if(this.state.ListaVentasPeriodo.length === 0){
-      this.setState({estado: 2})
+      this.setState({estado: 4})
     }else{
-      this.setState({estado: 1})
+      this.setState({estado: 5})
     }
   }
 
@@ -549,32 +549,13 @@ export default class Ventas extends React.Component {
   );
 
   render() {
-
-    let mensajeventa;
-    let mensajeventadia;
-    if(this.state.completado === 1) {
-      mensajeventa = <Alert severity="success">Venta completada</Alert>
-    } else if(this.state.completado === 2) {
-      mensajeventa = <Alert severity="error">Hubo un error con la venta.</Alert>
-    }else if(this.state.completado === 8) {
-      mensajeventa = <Alert severity="error">Rut de vendedor invalido.</Alert>
-    }
-    if(this.state.priv_descuento < this.state.descuento) {
-      mensajeventa = <Alert severity="error">Excede el descuento maximo permitido.</Alert>
-    }else if(this.state.descuento < 0){
-      mensajeventa = <Alert severity="error">Valor invalido.</Alert>
-    }
-
-    if(this.state.estado === 1) {
-      mensajeventadia = <Alert severity="success">Hay ventas!</Alert>
-    } else if(this.state.estado === 2) {
-      mensajeventadia = <Alert severity="error">No se encontraron ventas :(</Alert>
-    }else if(this.state.estado === 3) {
-      mensajeventadia = <Alert severity="success">La venta se eliminó correctamente</Alert>
-    }else if(this.state.estado === 4) {
-      mensajeventadia = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
+    let mensaje;
+    if(this.state.estado === 4) {
+      mensaje = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
+    }else if (this.state.estado === 2) {
+      mensaje = <Alert severity="success">Boleta anulada exitosamente.</Alert>
     }else if (this.state.estado === 5) {
-      mensajeventadia = <Alert severity="info">Para anular una boleta haz click en el basurero.</Alert>
+      mensaje = <Alert severity="info">Para anular una boleta haz click en el basurero.</Alert>
     }
 
     if(this.state.ready === true){
@@ -623,6 +604,7 @@ export default class Ventas extends React.Component {
                             Total recaudado: ${this.state.totald}
                             </h4>
                   </div>
+                  {mensaje}
                 </TabPanel>
                 <TabPanel value={this.state.tabIndex} index={1}>
                   <h4>Desde</h4>
@@ -678,6 +660,7 @@ export default class Ventas extends React.Component {
                           Total recaudado: ${this.state.totald}
                           </h4>
                 </div>
+                {mensaje}
               </TabPanel>
               <TabPanel value={this.state.tabIndex} index={1}>
                 <h4>Desde</h4>
@@ -715,6 +698,7 @@ export default class Ventas extends React.Component {
                   {"\n"} <br />
                   Total recaudado: ${this.state.totalp}
                   </h4>
+                  {mensaje}
               </TabPanel>
             <Copyright/>
           </Card>
