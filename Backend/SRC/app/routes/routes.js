@@ -293,7 +293,7 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 			await pedido.find({}, async function(err, pedido){
 			let nuevo_numero_pedido = 1
 			if( pedido.length == null || pedido.length == 0 ){
-		  	await crearPedido.create({numero_pedido: nuevo_numero_pedido,fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total, vigencia: 'Vigente'}, (err) =>{
+		  	await crearPedido.create({numero_pedido: nuevo_numero_pedido,fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total}, (err) =>{
 					if(!err){
 						res.sendStatus(201)
 					}else{
@@ -303,7 +303,7 @@ router.post('/agregar_pedido', isLoggedIn, async function(req,res){
 				});
 			}else{
 				let nuevo_numero_pedido = pedido.length + 1
-				await crearPedido.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total, vigencia: 'Vigente'}, (err) =>{
+				await crearPedido.create({numero_pedido: nuevo_numero_pedido, fecha: fecha, sucursal: sucursal, descripcion: descripcion, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, estado: estado, abono:0, total: total}, (err) =>{
 					if(!err){
 						res.sendStatus(201)
 					}else{
@@ -628,12 +628,16 @@ router.post('/eliminar_boleta/:id', isLoggedIn, async function(req,res){
 					})
 				}else if(boleta.tipo == 'Pedido'){
 					let numero_pedido = boleta.numero
+					let abono_pedido = boleta.total
 					await eliminarBoleta.findByIdAndUpdate({_id: id}, {vigencia: 'Anulada'}, async function(err2){
 						if(!err2){
-							await pedido.findOneAndUpdate({numero_pedido: numero_pedido}, {vigencia: 'Anulada'}, async function(err3){
-								if(err3){
-									res.sendStatus(404)
-								}
+							await eliminarPedido.findOne({numero_pedido: numero_pedido}, async function(err, pedido_buscado){
+								let abono_pedido_buscado = pedido_buscado.abono
+								await pedido.findOneAndUpdate({numero_pedido: numero_pedido}, {abono: abono_pedido_buscado - abono_pedido }, async function(err3){
+									if(err3){
+										res.sendStatus(404)
+									}
+								})
 							})
 						}else{
 							res.sendStatus(404)
