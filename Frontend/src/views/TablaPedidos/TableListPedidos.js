@@ -464,8 +464,8 @@ export default class InventarioTableList extends React.Component {
             .then( (response) => {
                 if(response.status === 201) {
                     console.log("Añadido correctamente")
-                    this.setState({mensaje: 7})
-                    this.ActualizarInventario()
+                    this.setState({mensaje: 7, total:0})
+                    this.ActualizarPedidos()
 
                 } else if(response.status === 405){
                   this.setState({mensaje: 2})
