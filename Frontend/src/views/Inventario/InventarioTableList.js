@@ -172,7 +172,7 @@ export default class InventarioTableList extends React.Component {
   AgregarProducto(newData) {
     let regex = new RegExp("^[a-z A-Z]+$");
     if(regex.test(newData.tipo)){
-      if(newData.precio % 1 == 0){
+      if(newData.precio % 1 == 0 && newData.codigo%1 == 0){
         fetch('/agregar_prod', {
         method: 'POST',
         headers: {
@@ -214,37 +214,41 @@ export default class InventarioTableList extends React.Component {
   EditarProducto(newData) {
     let regex = new RegExp("^[a-z A-Z]+$");
     if(regex.test(newData.material) && regex.test(newData.tipo) && regex.test(newData.piedra)){
-      fetch('/editar_prod/' + newData._id, {
-      method: 'POST',
-      headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: newData._id,
-        codigo: newData.codigo,
-        material: newData.material,
-        tipo: newData.tipo,
-        piedra: newData.piedra,
-        precio: newData.precio,
-        descripcion: newData.descripcion,
-        sucursal: this.state.perfil.sucursal.toString()
-      })
-      })
-      .then( (response) => {
-          if(response.status === 201) {
-              console.log("Editado correctamente")
-              this.setState({estado:3})
-              this.setState({estadosucursal:3})
-          } else {
-              console.log('Hubo un error')
-              this.setState({estado:2})
-              this.setState({estadosucursal:2})
-          }
-      })
-      .catch((error) => {
-          console.log(error)
-      });
+      if(newData.codigo % 1 == 0 && newData.precio % 1 == 0){
+        fetch('/editar_prod/' + newData._id, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: newData._id,
+          codigo: newData.codigo,
+          material: newData.material,
+          tipo: newData.tipo,
+          piedra: newData.piedra,
+          precio: newData.precio,
+          descripcion: newData.descripcion,
+          sucursal: this.state.perfil.sucursal.toString()
+        })
+        })
+        .then( (response) => {
+            if(response.status === 201) {
+                console.log("Editado correctamente")
+                this.setState({estado:3})
+                this.setState({estadosucursal:3})
+            } else {
+                console.log('Hubo un error')
+                this.setState({estado:2})
+                this.setState({estadosucursal:2})
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+      }else{
+        this.setState({mensaje: 6})
+      }
     }else{
       this.setState({mensaje: 5})
     }
@@ -290,7 +294,7 @@ export default class InventarioTableList extends React.Component {
     }else if(this.state.estado === 4) {
       mensajito = <Alert severity="success">El Producto se eliminó correctamente</Alert>
     }else if(this.state.mensaje === 5){
-      mensajito = <Alert severity="error">No se permiten números en los campos tipo.</Alert>
+      mensajito = <Alert severity="error">No se permiten números en los campos tipo, material ni piedra.</Alert>
     }else if(this.state.mensaje === 6){
       mensajito = <Alert severity="error">No se permiten ingresar decimales.</Alert>
     }
