@@ -335,7 +335,7 @@ export default class InventarioTableList extends React.Component {
     }else if(this.state.mensaje === 4) {
       mensajito = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo nuevamente.</Alert>
     }else if(this.state.mensaje === 5) {
-      mensajito = <Alert severity="error">Los datos ingresados son erróneos, por favor reviselos.</Alert>
+      mensajito = <Alert severity="error">Los datos ingresados son erróneos, por favor reviselos y no utilice tildes.</Alert>
     }else if(this.state.mensaje === 6) {
       mensajito = <Alert severity="error">El descuento permitido solo puede estar en el rango de 0 a 100.</Alert>
     }
