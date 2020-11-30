@@ -570,8 +570,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 						}
 					});
 				});
-			});
-		};
+			};
 	});
 });
 
