@@ -135,14 +135,14 @@ export default class UserProfile extends React.Component {
     if(this.state.isReady === true) {
       return (
         <GridContainer>
-          <GridItem xs={12} sm={12} md={12} style={{display: 'flex', margin:'100', justifyContent:'center', height: '65vh'}}>
-            <Card profile style = {{width: 580, height: 400}}>
+          <GridItem xs={6} sm={6} md={6} style={{display: 'flex', margin:'100', justifyContent:'center', height: '65vh'}}>
+            <Card profile style = {{width: 450, height: 350}}>
               <CardAvatar profile>
                 <a href="#pablo" onClick={e => e.preventDefault()}>
                   <img src={avatar} alt="..." />
                 </a>
               </CardAvatar>
-              <CardBody profile>
+              <CardBody profile >
                 <h1 style={{fontWeight: 'bold'}}>{this.state.perfil.nombre}</h1>
                 <div style={{textAlign: 'left'}}>
                   <p>RUT: {this.state.perfil.rut}</p>
@@ -159,15 +159,20 @@ export default class UserProfile extends React.Component {
                 </div>
               </CardBody>
             </Card>
-            <Card profile style = {{width: 400, height:250 ,margin: "0", fontSize: "14px", marginTop: "",}}>
+            </GridItem>
+            <GridItem xs={6} sm={6} md={6} style={{display: 'flex', margin:'100', justifyContent:'center', height: '65vh'}}>
+            <Card profile style = {{width: 450, height:300 ,margin: "10", fontSize: "14px", marginTop: "",}}>
               <Typography component="h1" variant="h5">
                 Cambio de Contraseña
               </Typography>
-              <TextField id="standard-basic" value={this.state.pass} type ="password" label="Contraseña actual" onChange={this.handleInputChange('pass')}/>
-              <TextField id="standard-basic" value={this.state.new_pass} type ="password" label="Contraseña nueva" onChange={this.handleInputChange('new_pass')}/>
-              <TextField id="standard-basic" value={this.state.conf_pass} type ="password" label="confirmar contraseña" onChange={this.handleInputChange('conf_pass')}/>
+              <TextField id="standard-basic" value={this.state.pass} type ="password" label="  Contraseña actual" onChange={this.handleInputChange('pass')}/>
+              {"\n"} <br />
+              <TextField id="standard-basic" value={this.state.new_pass} type ="password" label="  Contraseña nueva" onChange={this.handleInputChange('new_pass')}/>
+              {"\n"} <br />
+              <TextField id="standard-basic" value={this.state.conf_pass} type ="password" label="  Confirmar contraseña" onChange={this.handleInputChange('conf_pass')}/>
+              {"\n"} <br />
                 <Button
-                  fullWidth
+                  halfWidth
                   variant="contained"
                   color="primary"
                   onClick={this.CambioPassword}
