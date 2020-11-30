@@ -131,14 +131,13 @@ router.post('/agregar_prod', isLoggedIn, async function(req,res){
 
 router.post('/editar_prod/:id', isLoggedIn, async function(req, res){
 	let id = req.params.id;
-	let codigo = producto.body.codigo 
+	let codigo = producto.body.codigo
 	let material = req.body.material.toUpperCase();
 	let tipo = req.body.tipo.toUpperCase();
 	let piedra = req.body.piedra.toUpperCase();
 	let precio = req.body.precio;
 	let descripcion = req.body.descripcion.toUpperCase();
 	let sucursal = req.body.sucursal;
-		let codigo = producto.codigo
 	  await editarProducto.findByIdAndUpdate(id, {codigo: codigo, material: material, tipo: tipo, piedra: piedra, precio: precio, descripcion: descripcion, sucursal: sucursal}, async function (err) {
 			await registro.create({fecha: Date.now(), tipo: 'Producto', numero: codigo, detalle: 'Se editó un producto', empleadoLog: req.user.rut, sucursal: req.user.sucursal}, function (err){
 				if(!err){
