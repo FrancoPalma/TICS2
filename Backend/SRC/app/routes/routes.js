@@ -188,7 +188,7 @@ router.get('/pedidos', isLoggedIn, async function(req, res){  //lista de product
   });
 });
 
-router.post('/pagar_pedido', isLoggedIn, async function(req,res){
+router.post('/pagar_pedido/:id', isLoggedIn, async function(req,res){
 	let fecha = Date.now();
 	let pedido_recibido = req.body.pedido;
 	let id = pedido_recibido._id;
@@ -207,38 +207,19 @@ router.post('/pagar_pedido', isLoggedIn, async function(req,res){
 		if(!empleado){
 			res.sendStatus(405);
 		}else{
-			await pedido.find({}, async function(err, pedido){
-			if( pedido.length == null || pedido.length == 0 ){
-				let nuevo_numero_pedido = 1
-		  	await crearPedido.findByIdAndUpdate(id, {abono:abono_actual + abono}, (err) =>{
-					if(!err){
-						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: abono, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido, vigencia: 'Vigente'}, (err) =>{
-							if(!err){
-								res.sendStatus(201)
-							}else{
-								res.sendStatus(404)
-							}
-						});
-					}else{
-						res.sendStatus(404)
-					}
-				});
-			}else{
-				let nuevo_numero_pedido = pedido.length + 1
-				await crearPedido.findByIdAndUpdate(id, {abono:abono_actual + abono}, (err) =>{
-					if(!err){
-						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: abono, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido, vigencia: 'Vigente'}, (err) =>{
-							if(!err){
-								res.sendStatus(201)
-							}else{
-								res.sendStatus(404)
-							}
-						});
-					}else{
-						res.sendStatus(404)
-					}
-				});
-			}
+			let nuevo_numero_pedido = numero
+		 	await crearPedido.findByIdAndUpdate(id, {abono:abono_actual + abono}, (err) =>{
+				if(!err){
+					boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: abono, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Pedido', numero: nuevo_numero_pedido, vigencia: 'Vigente'}, (err) =>{
+						if(!err){
+							res.sendStatus(201)
+						}else{
+							res.sendStatus(404)
+						}
+					});
+				}else{
+					res.sendStatus(404)
+				}
 			});
 		}
 	});
@@ -649,7 +630,7 @@ router.post('/eliminar_boleta/:id', isLoggedIn, async function(req,res){
 					let numero_pedido = boleta.numero
 					await eliminarBoleta.findByIdAndUpdate({_id: id}, {vigencia: 'Anulada'}, async function(err2){
 						if(!err2){
-							await pedido.remove({numero_pedido: numero_pedido}, {vigencia: 'Anulada'}, async function(err3){
+							await pedido.findOneAndUpdate({numero_pedido: numero_pedido}, {vigencia: 'Anulada'}, async function(err3){
 								if(err3){
 									res.sendStatus(404)
 								}
