@@ -551,7 +551,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 			res.sendStatus(405);
 		}else{
 			await venta.find({} , async (err, venta) => {
-				if( venta.length == null || venta.length == 0 ){
+				if( venta.length == 0 ){
 					let nuevo_numero_venta = 1
 					await crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, vigencia: 'Vigente'}, (err) =>{
 						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta, vigencia: 'Vigente'}, (err2) => {
@@ -568,7 +568,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 							}
 						});
 					});
-				}else{
+				}else if(venta.length > 0){
 					let nuevo_numero_venta = venta.length + 1
 					await crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, vigencia: 'Vigente'}, (err) =>{
 						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta, vigencia: 'Vigente'}, (err2) => {
