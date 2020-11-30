@@ -553,24 +553,28 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 		if(!empleado){
 			res.sendStatus(405);
 		}else{
-				let nuevo_numero_venta = venta.length + 1
-				await crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, vigencia: 'Vigente'}, (err) =>{
-					boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta, vigencia: 'Vigente'}, (err2) => {
-						if(!err){
-							for(i = 0; i < prods.length; i++){
-								detalle_venta.create({fecha: fecha, sucursal: sucursal, numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i].codigo, vigencia: 'Vigente'}, (err3) => {
-									if(err){
-										res.sendStatus(404)
-									}
-								});
+			await venta.find({}, async function(err, venta){
+				if(!err){
+					let nuevo_numero_venta = venta.length + 1
+					await crearVenta.create({numero_venta: nuevo_numero_venta, fecha: fecha, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, vigencia: 'Vigente'}, (err) =>{
+						boleta.create({fecha: fecha, empleadoLog: empleadoLog, vendedor: vendedor, metodo_pago: metodo_pago, descuento: descuento, total: total, sucursal: sucursal, cliente_nombre: cliente_nombre, cliente_telefono: cliente_telefono, tipo: 'Venta', numero: nuevo_numero_venta, vigencia: 'Vigente'}, (err2) => {
+							if(!err){
+								for(i = 0; i < prods.length; i++){
+									detalle_venta.create({fecha: fecha, sucursal: sucursal, numero: nuevo_numero_venta, valor_prod: prods[i].precio, cod_prod: prods[i].codigo, vigencia: 'Vigente'}, (err3) => {
+										if(err){
+											res.sendStatus(404)
+										}
+									});
+								}
+							res.sendStatus(201)
+							}else{
+								res.sendStatus(404)
 							}
-						res.sendStatus(201)
-						}else{
-							res.sendStatus(404)
-						}
+						});
 					});
-				});
-			};
+				}
+			})
+		};
 	});
 });
 
