@@ -273,7 +273,7 @@ export default class InventarioTableList extends React.Component {
     let regex = new RegExp("^[a-z A-Z]+$");
     let regex3 = new RegExp("^[0-9]+$");
     if(regex.test(this.state.cliente)){
-      if(this.state.totalnew > 0 && this.state.totalnew%1 == 0){
+      if(this.state.totalnew > 0 && this.state.totalnew.toString().indexOf('.') == -1){
         if((regex3.test(this.state.cliente_telefono) && (this.state.cliente_telefono).length == 9) || this.state.cliente_telefono == "0"){
           fetch('/agregar_pedido', {
           method: 'POST',
@@ -284,7 +284,7 @@ export default class InventarioTableList extends React.Component {
           body: JSON.stringify({
             vendedor: this.state.vendedor,
             cliente_nombre: this.state.cliente_nombre,
-            cliente_telefono: parseInt(this.state.cliente_telefono),
+            cliente_telefono: this.state.cliente_telefono,
             descripcion: this.state.descripcion,
             estado: this.state.estado,
             total: this.state.totalnew,
@@ -318,7 +318,7 @@ export default class InventarioTableList extends React.Component {
     let regex = new RegExp("^[a-z A-Z]+$");
     let regex2 = new RegExp("^[0-9]+$");
     if(regex.test(newData.cliente_nombre)){
-      if(regex2.test(newData.cliente_telefono) && (newData.cliente_telefono).length == 9){
+      if((regex2.test(newData.cliente_telefono) && (newData.cliente_telefono).length == 9) || newData.cliente_telefono == "0"){
         fetch('/editar_pedido/' + newData._id, {
         method: 'POST',
         headers: {
@@ -445,7 +445,7 @@ export default class InventarioTableList extends React.Component {
 
   imprimir = () => {
     if(this.state.targetKeys.length ==1){
-      if(this.state.targetKeys[0].total >= this.state.abono2 && this.state.abono2 % 1 == 0){
+      if(this.state.targetKeys[0].total >= this.state.abono2 && this.state.abono2.toString().indexOf('.') == -1){
         if(this.state.abono2 > 0){
           fetch('/pagar_pedido', {
             method: 'POST',
@@ -464,7 +464,7 @@ export default class InventarioTableList extends React.Component {
             .then( (response) => {
                 if(response.status === 201) {
                     console.log("Añadido correctamente")
-                    this.setState({mensaje: 7, total:0})
+                    this.setState({mensaje: 7, suma:0})
                     this.ActualizarPedidos()
 
                 } else if(response.status === 405){
@@ -528,7 +528,7 @@ export default class InventarioTableList extends React.Component {
     }else if(this.state.mensaje === 99){
       mensajito = <Alert severity="success">agregando</Alert>
     }else if(this.state.mensaje === 7) {
-      mensajito = <Alert severity="success">Ha abonado!</Alert>
+      mensajito = <Alert severity="success">Abonado exitoso!</Alert>
     }else if(this.state.mensaje === 8) {
       mensajito = <Alert severity="error">Solo se puede pagar un pedido a la vez.</Alert>
     }else if(this.state.mensaje === 9) {

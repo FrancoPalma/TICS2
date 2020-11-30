@@ -172,7 +172,7 @@ export default class InventarioTableList extends React.Component {
   AgregarProducto(newData) {
     let regex = new RegExp("^[a-z A-Z]+$");
     if(regex.test(newData.tipo)){
-      if(newData.precio % 1 == 0 && newData.codigo%1 == 0){
+      if(newData.codigo.toString().indexOf('.') == -1 && newData.precio.toString().indexOf('.') == -1){
         fetch('/agregar_prod', {
         method: 'POST',
         headers: {
@@ -214,7 +214,7 @@ export default class InventarioTableList extends React.Component {
   EditarProducto(newData) {
     let regex = new RegExp("^[a-z A-Z]+$");
     if(regex.test(newData.material) && regex.test(newData.tipo) && regex.test(newData.piedra)){
-      if(newData.codigo % 1 == 0 && newData.precio % 1 == 0){
+      if(newData.codigo.toString().indexOf('.') == -1 && newData.precio.toString().indexOf('.') == -1){
         fetch('/editar_prod/' + newData._id, {
         method: 'POST',
         headers: {

@@ -555,7 +555,7 @@ export default class Ventas extends React.Component {
   imprimir = () => {
     let regex = new RegExp("^[a-z A-Z   ]+$");
     let regex3 = new RegExp("^[0-9]+$");
-    if(this.state.priv_descuento >= this.state.descuento && this.state.descuento >= 0 && this.state.descuento % 1 == 0){
+    if(this.state.priv_descuento >= this.state.descuento && this.state.descuento >= 0){
       if(regex.test(this.state.cliente_nombre)){
         if((regex3.test(this.state.cliente_telefono) && (this.state.cliente_telefono).length == 9) || this.state.cliente_telefono == "0"){
           if(this.state.targetKeys.length > 0){
@@ -580,7 +580,7 @@ export default class Ventas extends React.Component {
               .then( (response) => {
                   if(response.status === 201) {
                       console.log("Añadido correctamente")
-                      this.setState({completado: 1})
+                      this.setState({completado: 1, suma:0,total:0})
                       for(let i = 0; i<this.state.targetKeys.length;i++) {
                         this.EliminarProducto(this.state.targetKeys[i])
                         this.ActualizarInventario()
@@ -617,20 +617,18 @@ export default class Ventas extends React.Component {
     } else if(this.state.completado === 2) {
       mensajeventa = <Alert severity="error">Hubo un error con la venta.</Alert>
     }else if(this.state.completado === 8) {
-      mensajeventa = <Alert severity="error">Rut de vendedor invalido.</Alert>
+      mensajeventa = <Alert severity="error">Rut de vendedor inválido.</Alert>
     }else if(this.state.completado === 3) {
-      mensajeventa = <Alert severity="error">Nombre invalido.</Alert>
+      mensajeventa = <Alert severity="error">Nombre inválido.</Alert>
     }else if(this.state.completado === 4) {
-      mensajeventa = <Alert severity="error">Telefono invalido, por favor ingresar 9 digitos.</Alert>
+      mensajeventa = <Alert severity="error">Teléfono inválido, por favor ingresar 9 dígitos.</Alert>
     }else if(this.state.completado === 5) {
       mensajeventa = <Alert severity="error">Agregue productos.</Alert>
     }
     if(this.state.priv_descuento < this.state.descuento) {
       mensajeventa = <Alert severity="error">Excede el descuento maximo permitido.</Alert>
     }else if(this.state.descuento < 0){
-      mensajeventa = <Alert severity="error">Valor invalido.</Alert>
-    }else if(this.state.descuento % 1 != 0){
-      mensajeventa = <Alert severity="error">Valor invalido.</Alert>
+      mensajeventa = <Alert severity="error">Valor inválido.</Alert>
     }
 
     if(this.state.estado === 1) {

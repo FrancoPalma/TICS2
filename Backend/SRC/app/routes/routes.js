@@ -131,7 +131,7 @@ router.post('/agregar_prod', isLoggedIn, async function(req,res){
 
 router.post('/editar_prod/:id', isLoggedIn, async function(req, res){
 	let id = req.params.id;
-	let codigo = producto.body.codigo
+	let codigo = req.body.codigo
 	let material = req.body.material.toUpperCase();
 	let tipo = req.body.tipo.toUpperCase();
 	let piedra = req.body.piedra.toUpperCase();

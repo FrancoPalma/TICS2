@@ -329,15 +329,15 @@ export default class InventarioTableList extends React.Component {
     if(this.state.mensaje === 1) {
       mensajito = <Alert severity="success">¡Empleado agregado correctamente!</Alert>
     }else if(this.state.mensaje === 2) {
-      mensajito = <Alert severity="success">¡Empleado editado correctamente!</Alert>
+      mensajito = <Alert severity="success">¡Empleado editado correctamente! Por favor reinicie la cuenta.</Alert>
     }else if(this.state.mensaje === 3) {
       mensajito = <Alert severity="success">¡Empleado eliminado correctamente!</Alert>
     }else if(this.state.mensaje === 4) {
       mensajito = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo nuevamente.</Alert>
     }else if(this.state.mensaje === 5) {
-      mensajito = <Alert severity="error">Los datos ingresados son erroneos, por favor reviselos.</Alert>
+      mensajito = <Alert severity="error">Los datos ingresados son erróneos, por favor reviselos.</Alert>
     }else if(this.state.mensaje === 6) {
-      mensajito = <Alert severity="error">El descuento permitido solo puede estan en el rango de 0 a 100.</Alert>
+      mensajito = <Alert severity="error">El descuento permitido solo puede estar en el rango de 0 a 100.</Alert>
     }
 
     if(this.state.ready === true) {
