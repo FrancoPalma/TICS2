@@ -188,7 +188,7 @@ router.get('/pedidos', isLoggedIn, async function(req, res){  //lista de product
   });
 });
 
-router.post('/pagar_pedido/:id', isLoggedIn, async function(req,res){
+router.post('/pagar_pedido', isLoggedIn, async function(req,res){
 	let fecha = Date.now();
 	let pedido_recibido = req.body.pedido;
 	let id = pedido_recibido._id;
