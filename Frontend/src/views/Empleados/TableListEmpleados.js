@@ -397,7 +397,7 @@ export default class InventarioTableList extends React.Component {
                       title='Privilegios'
                       columns={ [{ title: 'Nombre', field: 'nombre'},
                                 {title: 'Gestión Empleados', field: 'gestion_empleado', type:'boolean'},
-                                { title: 'Gestión Invetario', field: 'gestion_inventario', type:'boolean'},
+                                { title: 'Gestión Inventario', field: 'gestion_inventario', type:'boolean'},
                                 { title: 'Gestión Privilegios', field: 'gestion_privilegios', type:'boolean'},
                                 { title: 'Descuento Permitido', field: 'descuento_permitido', type:'numeric'}]}
                       data={this.state.ListaEmpleados}
@@ -428,7 +428,7 @@ export default class InventarioTableList extends React.Component {
                       title='Privilegios'
                       columns={ [{ title: 'Nombre', field: 'nombre'},
                                 {title: 'Gestión Empleados', field: 'gestion_empleado', type:'boolean'},
-                                { title: 'Gestión Invetario', field: 'gestion_inventario', type:'boolean'},
+                                { title: 'Gestión Inventario', field: 'gestion_inventario', type:'boolean'},
                                 { title: 'Gestión Privilegios', field: 'gestion_privilegios', type:'boolean'},
                                 { title: 'Descuento Permitido', field: 'descuento_permitido', type:'numeric'}]}
                       data={this.state.ListaEmpleados}
