@@ -122,6 +122,10 @@ export default class InventarioTableList extends React.Component {
       priv_emple: null,
       priv_priv: null,
       ListaProductos: null,
+      ListaProductosPeriodo: null,
+      desde: "",
+      hasta: "",
+      periodo : false,
       sucursal : null,
       ready: false,
     }
@@ -130,6 +134,9 @@ export default class InventarioTableList extends React.Component {
     this.ActualizarInventario = this.ActualizarInventario.bind(this)
     this.EditarProducto = this.EditarProducto.bind(this)
     this.EliminarProducto = this.EliminarProducto.bind(this)
+    this.onChange = this.onChange.bind(this)
+    this.onChange2 = this.onChange2.bind(this)
+    this.ActualizarInventarioPeriodo = this.ActualizarInventarioPeriodo.bind(this)
   }
 
   getUsuario = () => {
@@ -154,6 +161,28 @@ export default class InventarioTableList extends React.Component {
       });
   }
 
+  ActualizarInventarioPeriodo() {
+    fetch('/productos_periodo', {
+    method: 'POST',
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      desde : this.state.desde,
+      hasta : this.state.hasta
+    })
+    })
+    .then(res => {
+        return res.json()
+    })
+    .then(users => {
+        this.setState({ListaProductosPeriodo: users})
+        this.setState({periodo: true})
+        this.CalcularTotal3();
+    });
+  }
+
   componentDidMount() {
     this.getUsuario();
     this.ActualizarInventario();
@@ -161,7 +190,7 @@ export default class InventarioTableList extends React.Component {
   }
 
   handleChange(event, newValue) {
-    this.setState({tabIndex: newValue});
+    this.setState({tabIndex: newValue, mensaje:null, estado: null});
     console.log(this.state.tabIndex)
   }
 
@@ -282,6 +311,15 @@ export default class InventarioTableList extends React.Component {
     });
   }
 
+  onChange(date, dateString) {
+    this.setState({desde: dateString});
+    console.log(dateString)
+  }
+  onChange2(date, dateString) {
+    this.setState({hasta: dateString});
+    console.log(dateString)
+  }
+
   render(){
     let mensajito;
 
@@ -304,101 +342,353 @@ export default class InventarioTableList extends React.Component {
         if(this.state.perfil.sucursal === '0') { nombresucursal = 'Lo Castillo'}
         if(this.state.perfil.sucursal === '1') { nombresucursal = 'Apumanque'}
         if(this.state.perfil.sucursal === '2') { nombresucursal = 'Vitacura'}
+      if(this.state.periodo == false){
+        if(this.state.perfil.gestion_inventario === true){
+          return (
+            <div style={styles.root}>
+                <Card>
+                <AppBar position="static" color="primary" style={styles.Barrita}>
+                  <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="simple tabs example">
+                    <Tab label="Inventario" {...a11yProps(0)} />
+                    <Tab label="Inventario por periodo" {...a11yProps(1)} />
+                  </Tabs>
+                </AppBar>
+                  <TabPanel value={this.state.tabIndex} index={0}>
 
-      if(this.state.perfil.gestion_inventario === true){
-        return (
-          <div style={styles.root}>
-              <Card>
-                <CardBody>
-                <MaterialTable
-                    title= {nombresucursal}
-                    options={{filtering: true}}
-                    columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric' },
-                              { title: 'Material', field: 'material' },
-                              { title: 'Tipo de Joya', field: 'tipo' },
-                              { title: 'Piedra', field: 'piedra' },
-                              { title: 'Precio', field: 'precio' ,type: 'numeric'},
-                              { title: 'Descripcion', field: 'descripcion' }]}
-                    data={this.state.ListaProductos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
-                    editable={{
-                      onRowAdd: newData =>
-                        new Promise((resolve, reject) => {
-                          setTimeout(() => {
-                            resolve();
-                            this.ActualizarInventario();
-                          }, 2000)
-                          this.AgregarProducto(newData);
-                        }),
-                      onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve) => {
-                          setTimeout(() => {
-                            resolve();
-                            this.ActualizarInventario();
-                          }, 2000)
-                          this.EditarProducto(newData)
-                        }),
-                      onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                          setTimeout(() => {
-                            resolve();
-                            this.ActualizarInventario();
-                          }, 2000)
-                          this.EliminarProducto(oldData)
-                        }),
-                    }}
-                  />
-                  <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="flex-start"
-                  spacing={3}>
-                    <Grid item xs={6} text-align= "center">
-                    <Box mt={1}>
-                      {mensajito}
-                      <Copyright />
-                    </Box>
+                  <CardBody>
+                  <MaterialTable
+                      title= {nombresucursal}
+                      options={{filtering: true}}
+                      columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric' },
+                                { title: 'Material', field: 'material' },
+                                { title: 'Tipo de Joya', field: 'tipo' },
+                                { title: 'Piedra', field: 'piedra' },
+                                {title: 'Fecha', field: 'fecha', type: 'date'},
+                                { title: 'Precio', field: 'precio' ,type: 'numeric'},
+                                { title: 'Descripcion', field: 'descripcion' }]}
+                      data={this.state.ListaProductos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
+                      editable={{
+                        onRowAdd: newData =>
+                          new Promise((resolve, reject) => {
+                            setTimeout(() => {
+                              resolve();
+                              this.ActualizarInventario();
+                            }, 2000)
+                            this.AgregarProducto(newData);
+                          }),
+                        onRowUpdate: (newData, oldData) =>
+                          new Promise((resolve) => {
+                            setTimeout(() => {
+                              resolve();
+                              this.ActualizarInventario();
+                            }, 2000)
+                            this.EditarProducto(newData)
+                          }),
+                        onRowDelete: (oldData) =>
+                          new Promise((resolve) => {
+                            setTimeout(() => {
+                              resolve();
+                              this.ActualizarInventario();
+                            }, 2000)
+                            this.EliminarProducto(oldData)
+                          }),
+                      }}
+                    />
+                    <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="flex-start"
+                    spacing={3}>
+                      <Grid item xs={6} text-align= "center">
+                      <Box mt={1}>
+                        {mensajito}
+                        <Copyright />
+                      </Box>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </CardBody>
-              </Card>
-          </div>
-        )
+                  </CardBody>
+                  </TabPanel>
+                  <TabPanel value={this.state.tabIndex} index={1}>
+                    <h4>Desde</h4>
+                    <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
+                    <h4>Hasta</h4>
+                    <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
+                    <Button style={{margin: 5 }} onClick={this.ActualizarInventarioPeriodo}>
+                      Listo
+                    </Button>
+                  </TabPanel>
+                </Card>
+            </div>
+          )
+        }else{
+          return (
+            <div style={styles.root}>
+                <Card>
+                <AppBar position="static" color="primary" style={styles.Barrita}>
+                  <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="simple tabs example">
+                    <Tab label="Inventario" {...a11yProps(0)} />
+                    <Tab label="Inventario por periodo" {...a11yProps(1)} />
+                  </Tabs>
+                </AppBar>
+                <TabPanel value={this.state.tabIndex} index={0}>
+                  <CardBody>
+                  <MaterialTable
+                      title= {nombresucursal}
+                      options={{filtering: true}}
+                      columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric',editable: 'never' },
+                                { title: 'Material', field: 'material',editable: 'never' },
+                                { title: 'Tipo de Joya', field: 'tipo',editable: 'never' },
+                                { title: 'Piedra', field: 'piedra' },
+                                {title: 'Fecha', field: 'fecha', type: 'date'},
+                                { title: 'Precio', field: 'precio' ,type: 'numeric'},
+                                { title: 'Descripcion', field: 'descripcion' }]}
+                      data={this.state.ListaProductos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
+                      editable={{ }}
+                    />
+                    <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="flex-start"
+                    spacing={3}>
+                      <Grid item xs={6} text-align= "center">
+                      <Box mt={1}>
+                        <Copyright />
+                      </Box>
+                      </Grid>
+                    </Grid>
+                  </CardBody>
+                  </TabPanel>
+                  <TabPanel value={this.state.tabIndex} index={1}>
+                    <h4>Desde</h4>
+                    <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
+                    <h4>Hasta</h4>
+                    <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
+                    <Button style={{margin: 5 }} onClick={this.ActualizarInventarioPeriodo}>
+                      Listo
+                    </Button>
+                  </TabPanel>
+                </Card>
+
+            </div>
+          )
+        }
       }else{
-        return (
-          <div style={styles.root}>
-              <Card>
-                <CardBody>
-                <MaterialTable
-                    title= {nombresucursal}
-                    options={{filtering: true}}
-                    columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric',editable: 'never' },
-                              { title: 'Material', field: 'material',editable: 'never' },
-                              { title: 'Tipo de Joya', field: 'tipo',editable: 'never' },
-                              { title: 'Piedra', field: 'piedra' },
-                              { title: 'Precio', field: 'precio' ,type: 'numeric'},
-                              { title: 'Descripcion', field: 'descripcion' }]}
-                    data={this.state.ListaProductos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
-                    editable={{ }}
-                  />
-                  <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="flex-start"
-                  spacing={3}>
-                    <Grid item xs={6} text-align= "center">
-                    <Box mt={1}>
-                      <Copyright />
-                    </Box>
-                    </Grid>
-                  </Grid>
-                </CardBody>
-              </Card>
+        if(this.state.perfil.gestion_inventario === true){
+          return (
+            <div style={styles.root}>
+                <Card>
+                <AppBar position="static" color="primary" style={styles.Barrita}>
+                  <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="simple tabs example">
+                    <Tab label="Inventario" {...a11yProps(0)} />
+                    <Tab label="Inventario por periodo" {...a11yProps(1)} />
+                  </Tabs>
+                </AppBar>
+                  <TabPanel value={this.state.tabIndex} index={0}>
 
-          </div>
-        )
+                  <CardBody>
+                  <MaterialTable
+                      title= {nombresucursal}
+                      options={{filtering: true}}
+                      columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric' },
+                                { title: 'Material', field: 'material' },
+                                { title: 'Tipo de Joya', field: 'tipo' },
+                                { title: 'Piedra', field: 'piedra' },
+                                {title: 'Fecha', field: 'fecha', type: 'date'},
+                                { title: 'Precio', field: 'precio' ,type: 'numeric'},
+                                { title: 'Descripcion', field: 'descripcion' }]}
+                      data={this.state.ListaProductos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
+                      editable={{
+                        onRowAdd: newData =>
+                          new Promise((resolve, reject) => {
+                            setTimeout(() => {
+                              resolve();
+                              this.ActualizarInventario();
+                            }, 2000)
+                            this.AgregarProducto(newData);
+                          }),
+                        onRowUpdate: (newData, oldData) =>
+                          new Promise((resolve) => {
+                            setTimeout(() => {
+                              resolve();
+                              this.ActualizarInventario();
+                            }, 2000)
+                            this.EditarProducto(newData)
+                          }),
+                        onRowDelete: (oldData) =>
+                          new Promise((resolve) => {
+                            setTimeout(() => {
+                              resolve();
+                              this.ActualizarInventario();
+                            }, 2000)
+                            this.EliminarProducto(oldData)
+                          }),
+                      }}
+                    />
+                    <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="flex-start"
+                    spacing={3}>
+                      <Grid item xs={6} text-align= "center">
+                      <Box mt={1}>
+                        {mensajito}
+                        <Copyright />
+                      </Box>
+                      </Grid>
+                    </Grid>
+                  </CardBody>
+                  </TabPanel>
+                  <TabPanel value={this.state.tabIndex} index={1}>
+                    <h4>Desde</h4>
+                    <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
+                    <h4>Hasta</h4>
+                    <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
+                    <Button style={{margin: 5 }} onClick={this.ActualizarInventarioPeriodo}>
+                      Listo
+                    </Button>
+                    <CardBody>
+                    <MaterialTable
+                        title= {nombresucursal}
+                        options={{filtering: true}}
+                        columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric' },
+                                  { title: 'Material', field: 'material' },
+                                  { title: 'Tipo de Joya', field: 'tipo' },
+                                  { title: 'Piedra', field: 'piedra' },
+                                  {title: 'Fecha', field: 'fecha', type: 'date'},
+                                  { title: 'Precio', field: 'precio' ,type: 'numeric'},
+                                  { title: 'Descripcion', field: 'descripcion' }]}
+                        data={this.state.ListaProductosPeriodo.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
+                        editable={{
+                          onRowAdd: newData =>
+                            new Promise((resolve, reject) => {
+                              setTimeout(() => {
+                                resolve();
+                                this.ActualizarInventarioPeriodo();
+                              }, 2000)
+                              this.AgregarProducto(newData);
+                            }),
+                          onRowUpdate: (newData, oldData) =>
+                            new Promise((resolve) => {
+                              setTimeout(() => {
+                                resolve();
+                                this.ActualizarInventarioPeriodo();
+                              }, 2000)
+                              this.EditarProducto(newData)
+                            }),
+                          onRowDelete: (oldData) =>
+                            new Promise((resolve) => {
+                              setTimeout(() => {
+                                resolve();
+                                this.ActualizarInventarioPeriodo();
+                              }, 2000)
+                              this.EliminarProducto(oldData)
+                            }),
+                        }}
+                      />
+                      <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="flex-start"
+                      spacing={3}>
+                        <Grid item xs={6} text-align= "center">
+                        <Box mt={1}>
+                          {mensajito}
+                          <Copyright />
+                        </Box>
+                        </Grid>
+                      </Grid>
+                    </CardBody>
+                  </TabPanel>
+                </Card>
+            </div>
+          )
+        }else{
+          return (
+            <div style={styles.root}>
+                <Card>
+                <AppBar position="static" color="primary" style={styles.Barrita}>
+                  <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="simple tabs example">
+                    <Tab label="Inventario" {...a11yProps(0)} />
+                    <Tab label="Inventario por periodo" {...a11yProps(1)} />
+                  </Tabs>
+                </AppBar>
+                <TabPanel value={this.state.tabIndex} index={0}>
+                  <CardBody>
+                  <MaterialTable
+                      title= {nombresucursal}
+                      options={{filtering: true}}
+                      columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric',editable: 'never' },
+                                { title: 'Material', field: 'material',editable: 'never' },
+                                { title: 'Tipo de Joya', field: 'tipo',editable: 'never' },
+                                { title: 'Piedra', field: 'piedra' },
+                                {title: 'Fecha', field: 'fecha', type: 'date'},
+                                { title: 'Precio', field: 'precio' ,type: 'numeric'},
+                                { title: 'Descripcion', field: 'descripcion' }]}
+                      data={this.state.ListaProductos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
+                      editable={{ }}
+                    />
+                    <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="flex-start"
+                    spacing={3}>
+                      <Grid item xs={6} text-align= "center">
+                      <Box mt={1}>
+                        <Copyright />
+                      </Box>
+                      </Grid>
+                    </Grid>
+                  </CardBody>
+                  </TabPanel>
+
+                  <TabPanel value={this.state.tabIndex} index={1}>
+                    <h4>Desde</h4>
+                    <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
+                    <h4>Hasta</h4>
+                    <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
+                    <Button style={{margin: 5 }} onClick={this.ActualizarInventarioPeriodo}>
+                      Listo
+                    </Button>
+                    <CardBody>
+                    <MaterialTable
+                        title= {nombresucursal}
+                        options={{filtering: true}}
+                        columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric',editable: 'never' },
+                                  { title: 'Material', field: 'material',editable: 'never' },
+                                  { title: 'Tipo de Joya', field: 'tipo',editable: 'never' },
+                                  { title: 'Piedra', field: 'piedra' },
+                                  {title: 'Fecha', field: 'fecha', type: 'date'},
+                                  { title: 'Precio', field: 'precio' ,type: 'numeric'},
+                                  { title: 'Descripcion', field: 'descripcion' }]}
+                        data={this.state.ListaProductosPeriodo.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
+                        editable={{ }}
+                      />
+                      <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="flex-start"
+                      spacing={3}>
+                        <Grid item xs={6} text-align= "center">
+                        <Box mt={1}>
+                          <Copyright />
+                        </Box>
+                        </Grid>
+                      </Grid>
+                    </CardBody>
+                  </TabPanel>
+                </Card>
+
+            </div>
+          )
+        }
       }
+
     } else if(this.state.ready === false) {
       return(
         <div style={styles.root}>
