@@ -112,7 +112,23 @@ router.get('/productos', isLoggedIn,async function(req, res){  //lista de produc
 		});
 });
 
+router.post('/productos_periodo', isLoggedIn, async function(req,res){
+		const fecha1 = req.body.desde;
+		const fecha2 = req.body.hasta;
+		const fi = fecha1.concat("T00:00:00-04:00");
+		const ff = fecha2.concat("T23:59:00-04:00");
+		await producto.find({$and: [{fecha: {$gte: new Date(fi)}},{fecha: {$lt: new Date(ff)}}]}, (err, producto) => {
+			if(err) {
+				res.sendStatus(404);
+			}
+			else{
+				res.json(producto);
+			}
+		});
+});
+
 router.post('/agregar_prod', isLoggedIn, async function(req,res){
+	let fecha = Date.now();
 	let codigo = req.body.codigo.toUpperCase();
 	let material = req.body.material.toUpperCase();
 	let tipo = req.body.tipo.toUpperCase();
@@ -120,7 +136,7 @@ router.post('/agregar_prod', isLoggedIn, async function(req,res){
 	let precio = req.body.precio;
 	let descripcion = req.body.descripcion.toUpperCase();
 	let sucursal = req.body.sucursal;
-  await producto.create({codigo: codigo, material: material, tipo: tipo, piedra: piedra, precio: precio, descripcion: descripcion, sucursal: sucursal}, (err) =>{
+  await producto.create({codigo: codigo, fecha:fecha , material: material, tipo: tipo, piedra: piedra, precio: precio, descripcion: descripcion, sucursal: sucursal}, (err) =>{
 		if(!err){
      	res.sendStatus(201);
 	}else{

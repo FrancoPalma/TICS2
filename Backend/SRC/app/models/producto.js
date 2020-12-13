@@ -3,6 +3,7 @@ const {Schema} = mongoose;
 
 var producto = new Schema   ({
         codigo: {type: String, require: true},
+        fecha: {type: Date, require: true},
         tipo: {type: String, require: true},
         material: {type: String, require: true},
         piedra: {type: String, require: true},
