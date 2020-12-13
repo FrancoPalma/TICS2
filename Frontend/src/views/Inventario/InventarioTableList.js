@@ -362,8 +362,8 @@ export default class InventarioTableList extends React.Component {
                   <MaterialTable
                       title= {nombresucursal}
                       options={{filtering: true}}
-                      columns={ [{title: 'Fecha', field: 'fecha', type: 'date'},
-                                { title: 'Codigo', field: 'codigo' , type:'numeric', editable: 'onAdd' },
+                      columns={ [{title: 'Fecha', field: 'fecha', type: 'date', editable: 'never'},
+                                { title: 'Codigo', field: 'codigo' , type:'numeric' },
                                 { title: 'Material', field: 'material' },
                                 { title: 'Tipo de Joya', field: 'tipo' },
                                 { title: 'Piedra', field: 'piedra' },
@@ -439,11 +439,11 @@ export default class InventarioTableList extends React.Component {
                   <MaterialTable
                       title= {nombresucursal}
                       options={{filtering: true}}
-                      columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric',editable: 'never' },
-                                { title: 'Material', field: 'material',editable: 'never' },
-                                { title: 'Tipo de Joya', field: 'tipo',editable: 'never' },
+                      columns={ [{title: 'Fecha', field: 'fecha', type: 'date', editable: 'never'},
+                                { title: 'Codigo', field: 'codigo' , type:'numeric' },
+                                { title: 'Material', field: 'material' },
+                                { title: 'Tipo de Joya', field: 'tipo' },
                                 { title: 'Piedra', field: 'piedra' },
-                                {title: 'Fecha', field: 'fecha', type: 'date'},
                                 { title: 'Precio', field: 'precio' ,type: 'numeric'},
                                 { title: 'Descripcion', field: 'descripcion' }]}
                       data={this.state.ListaProductos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
@@ -494,11 +494,11 @@ export default class InventarioTableList extends React.Component {
                   <MaterialTable
                       title= {nombresucursal}
                       options={{filtering: true}}
-                      columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric' },
+                      columns={ [{title: 'Fecha', field: 'fecha', type: 'date', editable: 'never'},
+                                { title: 'Codigo', field: 'codigo' , type:'numeric' },
                                 { title: 'Material', field: 'material' },
                                 { title: 'Tipo de Joya', field: 'tipo' },
                                 { title: 'Piedra', field: 'piedra' },
-                                {title: 'Fecha', field: 'fecha', type: 'date'},
                                 { title: 'Precio', field: 'precio' ,type: 'numeric'},
                                 { title: 'Descripcion', field: 'descripcion' }]}
                       data={this.state.ListaProductos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
@@ -556,11 +556,11 @@ export default class InventarioTableList extends React.Component {
                     <MaterialTable
                         title= {nombresucursal}
                         options={{filtering: true}}
-                        columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric' },
+                        columns={ [{title: 'Fecha', field: 'fecha', type: 'date', editable: 'never'},
+                                  { title: 'Codigo', field: 'codigo' , type:'numeric' },
                                   { title: 'Material', field: 'material' },
                                   { title: 'Tipo de Joya', field: 'tipo' },
                                   { title: 'Piedra', field: 'piedra' },
-                                  {title: 'Fecha', field: 'fecha', type: 'date'},
                                   { title: 'Precio', field: 'precio' ,type: 'numeric'},
                                   { title: 'Descripcion', field: 'descripcion' }]}
                         data={this.state.ListaProductosPeriodo.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
@@ -624,11 +624,11 @@ export default class InventarioTableList extends React.Component {
                   <MaterialTable
                       title= {nombresucursal}
                       options={{filtering: true}}
-                      columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric',editable: 'never' },
-                                { title: 'Material', field: 'material',editable: 'never' },
-                                { title: 'Tipo de Joya', field: 'tipo',editable: 'never' },
+                      columns={ [{title: 'Fecha', field: 'fecha', type: 'date', editable: 'never'},
+                                { title: 'Codigo', field: 'codigo' , type:'numeric' },
+                                { title: 'Material', field: 'material' },
+                                { title: 'Tipo de Joya', field: 'tipo' },
                                 { title: 'Piedra', field: 'piedra' },
-                                {title: 'Fecha', field: 'fecha', type: 'date'},
                                 { title: 'Precio', field: 'precio' ,type: 'numeric'},
                                 { title: 'Descripcion', field: 'descripcion' }]}
                       data={this.state.ListaProductos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
@@ -661,11 +661,11 @@ export default class InventarioTableList extends React.Component {
                     <MaterialTable
                         title= {nombresucursal}
                         options={{filtering: true}}
-                        columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric',editable: 'never' },
-                                  { title: 'Material', field: 'material',editable: 'never' },
-                                  { title: 'Tipo de Joya', field: 'tipo',editable: 'never' },
+                        columns={ [{title: 'Fecha', field: 'fecha', type: 'date', editable: 'never'},
+                                  { title: 'Codigo', field: 'codigo' , type:'numeric' },
+                                  { title: 'Material', field: 'material' },
+                                  { title: 'Tipo de Joya', field: 'tipo' },
                                   { title: 'Piedra', field: 'piedra' },
-                                  {title: 'Fecha', field: 'fecha', type: 'date'},
                                   { title: 'Precio', field: 'precio' ,type: 'numeric'},
                                   { title: 'Descripcion', field: 'descripcion' }]}
                         data={this.state.ListaProductosPeriodo.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
