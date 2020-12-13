@@ -335,7 +335,7 @@ export default class InventarioTableList extends React.Component {
     }else if(this.state.estado === 4) {
       mensajito = <Alert severity="success">El Producto se eliminó correctamente</Alert>
     }else if(this.state.mensaje === 5){
-      mensajito = <Alert severity="error">No se permiten números en los campos tipo, material ni piedra.</Alert>
+      mensajito = <Alert severity="error">No se permiten números ni tildes en los campos tipo, material ni piedra.</Alert>
     }else if(this.state.mensaje === 6){
       mensajito = <Alert severity="error">No se permite ingresar números decimales.</Alert>
     }
