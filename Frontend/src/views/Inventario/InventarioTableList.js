@@ -362,11 +362,11 @@ export default class InventarioTableList extends React.Component {
                   <MaterialTable
                       title= {nombresucursal}
                       options={{filtering: true}}
-                      columns={ [{ title: 'Codigo', field: 'codigo' , type:'numeric', editable: 'onAdd' },
+                      columns={ [{title: 'Fecha', field: 'fecha', type: 'date'},
+                                { title: 'Codigo', field: 'codigo' , type:'numeric', editable: 'onAdd' },
                                 { title: 'Material', field: 'material' },
                                 { title: 'Tipo de Joya', field: 'tipo' },
                                 { title: 'Piedra', field: 'piedra' },
-                                {title: 'Fecha', field: 'fecha', type: 'date', editable: 'onAdd'},
                                 { title: 'Precio', field: 'precio' ,type: 'numeric'},
                                 { title: 'Descripcion', field: 'descripcion' }]}
                       data={this.state.ListaProductos.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
