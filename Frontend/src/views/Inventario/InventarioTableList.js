@@ -10,6 +10,10 @@ import CardBody from "components/Card/CardBody.js";
 import Alert from '@material-ui/lab/Alert';
 import { Grid } from '@material-ui/core';
 import Link from '@material-ui/core/Link';
+import {  Transfer,
+          Button,
+          Tag,
+          Table, DatePicker } from 'antd';
 
 const styles = {
   cardCategoryWhite: {
