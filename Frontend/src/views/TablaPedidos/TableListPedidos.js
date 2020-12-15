@@ -333,7 +333,7 @@ export default class InventarioTableList extends React.Component {
           descripcion: newData.descripcion,
           estado: newData.estado,
           total: newData.total,
-          sucursal: this.state.tabIndex.toString()
+          sucursal: this.state.perfil.sucursal.toString()
         })
         })
         .then( (response) => {
