@@ -524,7 +524,7 @@ export default class InventarioTableList extends React.Component {
     }else if(this.state.mensaje === 5) {
       mensajito = <Alert severity="error">Usted solo puede editar el estado y descripción</Alert>
     }else if(this.state.mensaje === 6){
-      mensajito = <Alert severity="error">No se permiten números en los campos de cliente o descripción</Alert>
+      mensajito = <Alert severity="error">No se permiten números en los campos de cliente.</Alert>
     }else if(this.state.mensaje === 99){
       mensajito = <Alert severity="success">agregando</Alert>
     }else if(this.state.mensaje === 7) {
