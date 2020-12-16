@@ -450,6 +450,7 @@ export default class InventarioTableList extends React.Component {
                       }}
                     />
                 </CardBody>
+                {mensajito}
                 <Copyright />
               </Card>
           </div>
@@ -495,6 +496,7 @@ export default class InventarioTableList extends React.Component {
                       }}
                     />
                 </CardBody>
+                {mensajito}
                 <Copyright />
               </Card>
           </div>
