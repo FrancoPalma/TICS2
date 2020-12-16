@@ -167,7 +167,7 @@ export default class InventarioTableList extends React.Component {
     }
 
   AgregarEmpleado(newData) {
-    let regex = new RegExp("^[a-z A-Z]+$");
+    let regex = new RegExp("^[ñÑ a-z A-Z]+$");
     let regex2 = new RegExp("^[0-9 k]+$");
     let regex3 = new RegExp("^[0-9]+$");
 
@@ -395,7 +395,7 @@ export default class InventarioTableList extends React.Component {
                   <TabPanel value={this.state.tabIndex} index={1}>
                   <MaterialTable
                       title='Privilegios'
-                      columns={ [{ title: 'Nombre', field: 'nombre'},
+                      columns={ [{ title: 'Nombre', field: 'nombre', editable: 'never'},
                                 {title: 'Gestión Empleados', field: 'gestion_empleado', type:'boolean'},
                                 { title: 'Gestión Inventario', field: 'gestion_inventario', type:'boolean'},
                                 { title: 'Gestión Privilegios', field: 'gestion_privilegios', type:'boolean'},
@@ -426,7 +426,7 @@ export default class InventarioTableList extends React.Component {
                 <CardBody>
                   <MaterialTable
                       title='Privilegios'
-                      columns={ [{ title: 'Nombre', field: 'nombre'},
+                      columns={ [{ title: 'Nombre', field: 'nombre', editable:'never'},
                                 {title: 'Gestión Empleados', field: 'gestion_empleado', type:'boolean'},
                                 { title: 'Gestión Inventario', field: 'gestion_inventario', type:'boolean'},
                                 { title: 'Gestión Privilegios', field: 'gestion_privilegios', type:'boolean'},

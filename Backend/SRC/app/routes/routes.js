@@ -559,7 +559,7 @@ router.post('/crear_venta', isLoggedIn, async function(req,res){
 	let metodo_pago = req.body.metodo_pago.toUpperCase();
 	let descuento = req.body.descuento;
 	let sucursal = req.body.sucursal.toString();
-	let vendedor = req.body.vendedor.toUpperCase();
+	let vendedor = req.body.vendedor;
 	let total = req.body.total;
 	let empleadoLog = req.body.empleadoLog;
 	let cliente_nombre = req.body.cliente_nombre.toUpperCase();

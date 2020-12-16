@@ -553,10 +553,10 @@ export default class Ventas extends React.Component {
   );
 
   imprimir = () => {
-    let regex = new RegExp("^[a-z A-Z]+$");
+    let regex = new RegExp("^[ñÑ a-z A-Z]+$");
     let regex3 = new RegExp("^[0-9]+$");
     if(this.state.priv_descuento >= this.state.descuento && this.state.descuento >= 0 && this.state.descuento !== null && this.state.descuento !== ""){
-      if(regex.test(this.state.cliente_nombre) && this.state.cliente.length > 0){
+      if(regex.test(this.state.cliente_nombre) && this.state.cliente_nombre.length > 0){
         if((regex3.test(this.state.cliente_telefono) && (this.state.cliente_telefono).length == 9) || this.state.cliente_telefono == "0"){
           if(this.state.targetKeys.length > 0){
             fetch('/crear_venta', {
@@ -586,7 +586,7 @@ export default class Ventas extends React.Component {
                         this.ActualizarInventario()
                       }
                   } else if(response.status === 405){
-                    this.setState({completado: 8, total: 0})
+                    this.setState({completado: 8})
                   }else {
                       console.log('Hubo un error')
                       this.setState({completado: 2})
