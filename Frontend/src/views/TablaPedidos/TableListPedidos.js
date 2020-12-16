@@ -540,7 +540,7 @@ export default class InventarioTableList extends React.Component {
     }else if(this.state.mensaje === 12) {
       mensajito = <Alert severity="error">Abono invalido.</Alert>
     }else if(this.state.mensaje === 13) {
-      mensajito = <Alert severity="error">No se permiten tildes en Cliente.</Alert>
+      mensajito = <Alert severity="error">Nombre de cliente invalido, por favor no deje en blanco ni utilice tildes.</Alert>
     }
 
     if(this.state.ready === true) {

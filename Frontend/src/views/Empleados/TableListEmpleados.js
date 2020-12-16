@@ -173,37 +173,41 @@ export default class InventarioTableList extends React.Component {
 
 
     if(regex.test(newData.nombre) && regex2.test(newData.rut) && newData.telefono.length === 9 && regex3.test(newData.telefono)){
-      fetch('/crear_empleado', {
-      method: 'POST',
-      headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        nombre: newData.nombre,
-        password: "Joyeria",
-        rut: newData.rut,
-        telefono: newData.telefono,
-        sucursal: newData.sucursal,
-        gestion_empleado: false,
-        gestion_inventario: false,
-        gestion_privilegios: false,
-        descuento_permitido: 0
-      })
-      })
-      .then( (response) => {
-          if(response.status === 201) {
-              console.log("Añadido correctamente")
-              this.setState({mensaje: 1});
+      if(regex2.test(newData.rut) && newData.rut.length <10 && newData.rut.length >= 8 && (newData.rut.indexOf('k') === -1 || newData.rut.indexOf('k') === 8 || newData.rut.indexOf('k') === 9)){
+        fetch('/crear_empleado', {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nombre: newData.nombre,
+          password: "Joyeria",
+          rut: newData.rut,
+          telefono: newData.telefono,
+          sucursal: newData.sucursal,
+          gestion_empleado: false,
+          gestion_inventario: false,
+          gestion_privilegios: false,
+          descuento_permitido: 0
+        })
+        })
+        .then( (response) => {
+            if(response.status === 201) {
+                console.log("Añadido correctamente")
+                this.setState({mensaje: 1});
 
-          } else {
-              console.log('Hubo un error')
-              this.setState({mensaje: 4});
-          }
-      })
-      .catch((error) => {
-          console.log(error)
-      });
+            } else {
+                console.log('Hubo un error')
+                this.setState({mensaje: 4});
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+      }else{
+        this.setState({mensaje: 7})
+      }
     }else{
       this.setState({mensaje: 5})
     }
@@ -338,6 +342,8 @@ export default class InventarioTableList extends React.Component {
       mensajito = <Alert severity="error">Los datos ingresados son erróneos, por favor reviselos y no utilice tildes.</Alert>
     }else if(this.state.mensaje === 6) {
       mensajito = <Alert severity="error">El descuento permitido solo puede estar en el rango de 0 a 100.</Alert>
+    }else if(this.state.mensaje === 7) {
+      mensajito = <Alert severity="error">Rut invalido.</Alert>
     }
 
     if(this.state.ready === true) {
