@@ -202,8 +202,9 @@ export default class InventarioTableList extends React.Component {
   }
 
   AgregarProducto(newData) {
-    let regex = new RegExp("^[a-z A-Z]+$");
-    if(regex.test(newData.tipo)){
+    let regex = new RegExp("^[ñÑ a-z A-Z]+$");
+    let regex1 = new RegExp("^[ñÑ a-z A-Z 0-9]+$");
+    if(regex.test(newData.tipo) && regex.test(newData.material) && regex.test(newData.piedra)){
       if(newData.codigo.toString().indexOf('.') == -1 && newData.precio.toString().indexOf('.') == -1){
         fetch('/agregar_prod', {
         method: 'POST',

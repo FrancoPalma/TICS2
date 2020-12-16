@@ -553,10 +553,10 @@ export default class Ventas extends React.Component {
   );
 
   imprimir = () => {
-    let regex = new RegExp("^[a-z A-Z   ]+$");
+    let regex = new RegExp("^[a-z A-Z]+$");
     let regex3 = new RegExp("^[0-9]+$");
-    if(this.state.priv_descuento >= this.state.descuento && this.state.descuento >= 0){
-      if(regex.test(this.state.cliente_nombre)){
+    if(this.state.priv_descuento >= this.state.descuento && this.state.descuento >= 0 && this.state.descuento !== null && this.state.descuento !== ""){
+      if(regex.test(this.state.cliente_nombre) && this.state.cliente.length > 0){
         if((regex3.test(this.state.cliente_telefono) && (this.state.cliente_telefono).length == 9) || this.state.cliente_telefono == "0"){
           if(this.state.targetKeys.length > 0){
             fetch('/crear_venta', {
@@ -605,7 +605,7 @@ export default class Ventas extends React.Component {
         this.setState({completado:3})
       }
     }else{
-      console.log("No se mando, wena")
+      this.setState({completado:6})
     }
   }
   render() {
@@ -619,11 +619,13 @@ export default class Ventas extends React.Component {
     }else if(this.state.completado === 8) {
       mensajeventa = <Alert severity="error">Rut de vendedor inválido.</Alert>
     }else if(this.state.completado === 3) {
-      mensajeventa = <Alert severity="error">Nombre inválido.</Alert>
+      mensajeventa = <Alert severity="error">Nombre del cliente inválido.</Alert>
     }else if(this.state.completado === 4) {
       mensajeventa = <Alert severity="error">Teléfono inválido, por favor ingresar 9 dígitos.</Alert>
     }else if(this.state.completado === 5) {
       mensajeventa = <Alert severity="error">Agregue productos.</Alert>
+    }else if(this.state.completado === 6) {
+      mensajeventa = <Alert severity="error">Descuento invalido.</Alert>
     }
     if(this.state.priv_descuento < this.state.descuento) {
       mensajeventa = <Alert severity="error">Excede el descuento maximo permitido.</Alert>

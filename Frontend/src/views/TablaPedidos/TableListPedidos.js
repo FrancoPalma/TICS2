@@ -270,9 +270,9 @@ export default class InventarioTableList extends React.Component {
     }
 
   AgregarPedido() {
-    let regex = new RegExp("^[a-z A-Z]+$");
+    let regex = new RegExp("^[ñÑ a-z A-Z]+$");
     let regex3 = new RegExp("^[0-9]+$");
-    if(regex.test(this.state.cliente)){
+    if(regex.test(this.state.cliente_nombre)){
       if(this.state.totalnew > 0 && this.state.totalnew.toString().indexOf('.') == -1){
         if((regex3.test(this.state.cliente_telefono) && (this.state.cliente_telefono).length == 9) || this.state.cliente_telefono == "0"){
           fetch('/agregar_pedido', {
@@ -310,7 +310,7 @@ export default class InventarioTableList extends React.Component {
         this.setState({mensaje:10})
       }
     }else{
-      this.setState({mensaje: 2})
+      this.setState({mensaje: 13})
     }
   }
 
@@ -539,6 +539,8 @@ export default class InventarioTableList extends React.Component {
       mensajito = <Alert severity="error">Telefono invalido.</Alert>
     }else if(this.state.mensaje === 12) {
       mensajito = <Alert severity="error">Abono invalido.</Alert>
+    }else if(this.state.mensaje === 13) {
+      mensajito = <Alert severity="error">No se permiten tildes en Cliente.</Alert>
     }
 
     if(this.state.ready === true) {
