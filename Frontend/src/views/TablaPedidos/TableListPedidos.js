@@ -315,7 +315,7 @@ export default class InventarioTableList extends React.Component {
   }
 
   EditarPedido(newData) {
-    let regex = new RegExp("^[a-z A-Z]+$");
+    let regex = new RegExp("^[ñÑ a-z A-Z]+$");
     let regex2 = new RegExp("^[0-9]+$");
     if(regex.test(newData.cliente_nombre)){
       if((regex2.test(newData.cliente_telefono) && (newData.cliente_telefono).length == 9) || newData.cliente_telefono == "0"){
@@ -352,7 +352,7 @@ export default class InventarioTableList extends React.Component {
         this.setState({mensaje: 11})
       }
     }else{
-      this.setState({mensaje: 6})
+      this.setState({mensaje: 13})
     }
   }
 
