@@ -133,6 +133,8 @@ export default class InventarioTableList extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.MostrarNuevoMenu = this.MostrarNuevoMenu.bind(this)
     this.AgregarEmpleado = this.AgregarEmpleado.bind(this)
+    this.EditarEmpleado = this.EditarEmpleado.bind(this)
+    this.EditarPrivilegios = this.EditarPrivilegios.bind(this)
   }
 
   getUsuario = () => {
@@ -189,6 +191,7 @@ export default class InventarioTableList extends React.Component {
           gestion_empleado: false,
           gestion_inventario: false,
           gestion_privilegios: false,
+          ver_totales : false,
           descuento_permitido: 0
         })
         })
@@ -294,7 +297,8 @@ export default class InventarioTableList extends React.Component {
         gestion_empleado: newData.gestion_empleado,
         gestion_inventario: newData.gestion_inventario,
         gestion_privilegios: newData.gestion_privilegios,
-        descuento_permitido: newData.descuento_permitido
+        descuento_permitido: newData.descuento_permitido,
+        ver_totales: newData.ver_totales
       })
       })
       .then( (response) => {
