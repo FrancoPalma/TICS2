@@ -741,7 +741,8 @@ router.post('/editar_empleado/:id', async function(req, res){
 		let gestion_i = req.body.gestion_inventario;
 		let gestion_p = req.body.gestion_privilegios;
 		let descuento_permitido = req.body.descuento_permitido;
-		await empleado.findByIdAndUpdate(req.params.id,{gestion_empleado:gestion_e, gestion_inventario:gestion_i, gestion_privilegios:gestion_p, descuento_permitido:descuento_permitido},function(err){
+		let ver_t = req.body.ver_totales;
+		await empleado.findByIdAndUpdate(req.params.id,{gestion_empleado:gestion_e, gestion_inventario:gestion_i, gestion_privilegios:gestion_p, descuento_permitido:descuento_permitido, ver_totales: ver_t},function(err){
 			if (!err){
 				res.sendStatus(201);
 			}else{
