@@ -676,7 +676,7 @@ export default class Ventas extends React.Component {
                     <Tab label="Boletas por Periodo" {...a11yProps(1)} />
                   </Tabs>
                 </AppBar>
-                  <TabPanel value={this.state.tabIndexSucursal} index={'0'}
+                  <TabPanel value={this.state.tabIndexSucursal} index={'0'}>
                   <TabPanel value={this.state.tabIndex} index={0}>
                   {aviso}
                     <div style={styles.root}>
