@@ -509,9 +509,9 @@ export default class Ventas extends React.Component {
                 <Card>
                   <AppBar position="static" color="primary" style={styles.Barrita}>
                     <Tabs value={this.state.tabIndexSucursal} onChange={this.handleChange3} aria-label="simple tabs example">
-                      <Tab label="Lo Castillo" {...a11yProps('0')} />
-                      <Tab label="Apumanque" {...a11yProps('1')} />
-                      <Tab label="Vitacura" {...a11yProps('2')} />
+                      <Tab label="Lo Castillo" {...a11yProps(0)} />
+                      <Tab label="Apumanque" {...a11yProps(1)} />
+                      <Tab label="Vitacura" {...a11yProps(2)} />
                     </Tabs>
                   </AppBar>
                   <AppBar position="static" color="primary" style={styles.Barrita}>
@@ -520,7 +520,7 @@ export default class Ventas extends React.Component {
                       <Tab label="Boletas por Periodo" {...a11yProps(1)} />
                     </Tabs>
                   </AppBar>
-                    <TabPanel value={this.state.tabIndexSucursal} index={'0'}>
+                    <TabPanel value={this.state.tabIndexSucursal} index={0}>
                       <TabPanel value={this.state.tabIndex} index={0}>
                       {aviso}
                         <div style={styles.root}>
@@ -565,7 +565,7 @@ export default class Ventas extends React.Component {
                         </Button>
                       </TabPanel>
                     </TabPanel>
-                    <TabPanel value={this.state.tabIndexSucursal} index={'1'}>
+                    <TabPanel value={this.state.tabIndexSucursal} index={1}>
                     <TabPanel value={this.state.tabIndex} index={0}>
                     {aviso}
                       <div style={styles.root}>
@@ -610,7 +610,7 @@ export default class Ventas extends React.Component {
                       </Button>
                     </TabPanel>
                     </TabPanel>
-                    <TabPanel value={this.state.tabIndexSucursal} index={'2'}>
+                    <TabPanel value={this.state.tabIndexSucursal} index={2}>
                     <TabPanel value={this.state.tabIndex} index={0}>
                     {aviso}
                       <div style={styles.root}>
@@ -665,9 +665,9 @@ export default class Ventas extends React.Component {
               <Card>
                 <AppBar position="static" color="primary" style={styles.Barrita}>
                   <Tabs value={this.state.tabIndexSucursal} onChange={this.handleChange3} aria-label="simple tabs example">
-                    <Tab label="Lo Castillo" {...a11yProps('0')} />
-                    <Tab label="Apumanque" {...a11yProps('1')} />
-                    <Tab label="Vitacura" {...a11yProps('2')} />
+                    <Tab label="Lo Castillo" {...a11yProps(0)} />
+                    <Tab label="Apumanque" {...a11yProps(1)} />
+                    <Tab label="Vitacura" {...a11yProps(2)} />
                   </Tabs>
                 </AppBar>
                 <AppBar position="static" color="primary" style={styles.Barrita}>
@@ -676,7 +676,7 @@ export default class Ventas extends React.Component {
                     <Tab label="Boletas por Periodo" {...a11yProps(1)} />
                   </Tabs>
                 </AppBar>
-                  <TabPanel value={this.state.tabIndexSucursal} index={'0'}>
+                  <TabPanel value={this.state.tabIndexSucursal} index={0}>
                   <TabPanel value={this.state.tabIndex} index={0}>
                   {aviso}
                     <div style={styles.root}>
@@ -751,7 +751,7 @@ export default class Ventas extends React.Component {
                       {mensaje}
                   </TabPanel>
                   </TabPanel>
-                  <TabPanel value={this.state.tabIndexSucursal} index={'1'}>
+                  <TabPanel value={this.state.tabIndexSucursal} index={1}>
                   <TabPanel value={this.state.tabIndex} index={0}>
                   {aviso}
                     <div style={styles.root}>
@@ -826,7 +826,7 @@ export default class Ventas extends React.Component {
                       {mensaje}
                   </TabPanel>
                   </TabPanel>
-                  <TabPanel value={this.state.tabIndexSucursal} index={'0'}>
+                  <TabPanel value={this.state.tabIndexSucursal} index={2}>
                   <TabPanel value={this.state.tabIndex} index={0}>
                   {aviso}
                     <div style={styles.root}>
