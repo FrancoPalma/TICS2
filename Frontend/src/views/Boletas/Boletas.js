@@ -751,7 +751,7 @@ export default class Ventas extends React.Component {
                       {mensaje}
                   </TabPanel>
                   </TabPanel>
-                  <TabPanel value={this.state.tabIndexSucursal} index={'1'}
+                  <TabPanel value={this.state.tabIndexSucursal} index={'1'}>
                   <TabPanel value={this.state.tabIndex} index={0}>
                   {aviso}
                     <div style={styles.root}>
@@ -826,7 +826,7 @@ export default class Ventas extends React.Component {
                       {mensaje}
                   </TabPanel>
                   </TabPanel>
-                  <TabPanel value={this.state.tabIndexSucursal} index={'0'}
+                  <TabPanel value={this.state.tabIndexSucursal} index={'0'}>
                   <TabPanel value={this.state.tabIndex} index={0}>
                   {aviso}
                     <div style={styles.root}>
