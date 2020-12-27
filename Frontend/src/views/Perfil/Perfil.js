@@ -1,6 +1,5 @@
 import React from "react";
 // @material-ui/core components
-import InputLabel from "@material-ui/core/InputLabel";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import Alert from '@material-ui/lab/Alert';
@@ -12,33 +11,6 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import avatar from "assets/img/faces/user.png";
-import { makeStyles } from '@material-ui/core/styles';
-const styles = makeStyles((theme) => ({
-  cardCategoryWhite: {
-    color: "rgba(255,255,255,.62)",
-    margin: "0",
-    fontSize: "14px",
-    marginTop: "0",
-    marginBottom: "0"
-  },
-  cardTitleWhite: {
-    color: "#FFFFFF",
-    marginTop: "0px",
-    minHeight: "auto",
-    fontWeight: "300",
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: "3px",
-    textDecoration: "none"
-  },
-  form: {
-    width: '75%', // Fix IE 11 issue.
-    marginTop: theme.spacing(5),
-    margin: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
 
 export default class UserProfile extends React.Component {
   constructor(props){
@@ -69,7 +41,7 @@ export default class UserProfile extends React.Component {
 
   handleChangeInput(evento, newValue) {
    //destructurin de los valores enviados por el metodo onchange de cada input
-   const { name, value } = evento.target;
+   const {  value } = evento.target;
    let regex = new RegExp("^[0-9 k]+$");
 
    if (regex.test(value) && value.length <10 && value.length >= 8 && (value.indexOf('k') === -1 || value.indexOf('k') === 8 || value.indexOf('k') === 9)) {
@@ -184,7 +156,7 @@ export default class UserProfile extends React.Component {
           </GridItem>
         </GridContainer>
       );
-    } else if(this.state.isReady == false) {
+    } else if(this.state.isReady === false) {
       return (
         <Card>
           <CardBody>

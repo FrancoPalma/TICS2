@@ -4,123 +4,15 @@ import Alert from '@material-ui/lab/Alert';
 import MenuItem from '@material-ui/core/MenuItem';
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
-import CardHeader from "components/Card/CardHeader.js";
-import {  Transfer,
-          Button,
-          Tag,
-          Table, DatePicker } from 'antd';
-import difference from 'lodash/difference';
+import {  Button,
+           DatePicker } from 'antd';
 import MaterialTable from 'material-table';
-import { Grid } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-
-const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
-  <Transfer {...restProps} showSelectAll={false}>
-    {({
-      direction,
-      filteredItems,
-      onItemSelectAll,
-      onItemSelect,
-      selectedKeys: listSelectedKeys,
-      disabled: listDisabled,
-    }) => {
-      const columns = direction === 'left' ? leftColumns : rightColumns;
-
-      const rowSelection = {
-        getCheckboxProps: item => ({ disabled: listDisabled || item.disabled }),
-        onSelectAll(selected, selectedRows) {
-          const treeSelectedKeys = selectedRows
-            .filter(item => !item.disabled)
-            .map(({ key }) => key);
-          const diffKeys = selected
-            ? difference(treeSelectedKeys, listSelectedKeys)
-            : difference(listSelectedKeys, treeSelectedKeys);
-          onItemSelectAll(diffKeys, selected);
-        },
-        onSelect({ key }, selected) {
-          onItemSelect(key, selected);
-        },
-        selectedRowKeys: listSelectedKeys,
-      };
-
-      return (
-        <Table
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={filteredItems}
-          size="small"
-          style={{ pointerEvents: listDisabled ? 'none' : null }}
-          onRow={({ key, disabled: itemDisabled }) => ({
-            onClick: () => {
-              if (itemDisabled || listDisabled) return;
-              onItemSelect(key, !listSelectedKeys.includes(key));
-            },
-          })}
-        />
-      );
-    }}
-  </Transfer>
-);
-
-const leftTableColumns = [
-  {
-    dataIndex: 'codigo',
-    title: 'Codigo',
-    render: codigo => <Tag>{codigo}</Tag>,
-  },
-  {
-    dataIndex: 'tipo',
-    title: 'Tipo',
-  },
-  {
-    dataIndex: 'material',
-    title: 'Material',
-    render: material => <Tag color="purple">{material}</Tag>,
-  },
-  {
-    dataIndex: 'piedra',
-    title: 'Piedra',
-    render: piedra => <Tag color="green">{piedra}</Tag>,
-  },
-  {
-    dataIndex: 'precio',
-    title: 'Precio',
-    render: precio => <Tag color="red">{precio}</Tag>,
-  },
-
-];
-
-const rightTableColumns = [
-  {
-    dataIndex: 'codigo',
-    title: 'Codigo',
-    render: codigo => <Tag>{codigo}</Tag>,
-  },
-  {
-    dataIndex: 'tipo',
-    title: 'Tipo',
-  },
-  {
-    dataIndex: 'material',
-    title: 'Material',
-    render: material => <Tag color="purple">{material}</Tag>,
-  },
-  {
-    dataIndex: 'piedra',
-    title: 'Piedra',
-    render: piedra => <Tag color="green">{piedra}</Tag>,
-  },
-  {
-    dataIndex: 'precio',
-    title: 'Precio',
-    render: precio => <Tag color="red">{precio}</Tag>,
-  },
-];
 
 const styles = {
   cardCategoryWhite: {
@@ -235,6 +127,7 @@ export default class Ventas extends React.Component {
       totalp2: 0,
       //
       tabIndex: 0,
+      tabIndexSucursal:0,
       ready: false,
       ListaProductos: "",
       descuento: 0,
@@ -252,10 +145,17 @@ export default class Ventas extends React.Component {
       priv_dios: false,
       priv_descuento: null,
       ListaVentasDia: null,
+      gerente: false,
       totald: 0,
       totalp:0,
       estado:5,
       estadosucursal:null,
+      t1:0,
+      t2:0,
+      t3:0,
+      tp1:0,
+      tp2:0,
+      tp3:0
     }
     this.handleChange = this.handleChange.bind(this)
     this.ActualizarInventario = this.ActualizarInventario.bind(this)
@@ -265,6 +165,7 @@ export default class Ventas extends React.Component {
     this.onChange = this.onChange.bind(this)
     this.onChange2 = this.onChange2.bind(this)
     this.handleChange2 = this.handleChange2.bind(this)
+    this.handleChange3 = this.handleChange3.bind(this)
     this.ActualizarVentasPeriodo = this.ActualizarVentasPeriodo.bind(this)
     this.CalcularTotal3 = this.CalcularTotal3.bind(this)
   }
@@ -274,7 +175,8 @@ export default class Ventas extends React.Component {
       perfil: info,
       vendedor: info.rut,
       sucursal: info.sucursal,
-      priv_descuento: info.descuento_permitido
+      priv_descuento: info.descuento_permitido,
+      gerente: info.gerente
     })
     console.log(info.sucursal)
   }
@@ -428,24 +330,43 @@ export default class Ventas extends React.Component {
     let tot0 = 0;
     let tot1 = 0;
     let tot2 = 0;
-    for(let i = 0; i<this.state.ListaVentasDia.length;i++) {
-      if(this.state.ListaVentasDia[i].vigencia == "Vigente"){
-        if(this.state.ListaVentasDia[i].sucursal === '0'){
-          tot0 = tot0 + this.state.ListaVentasDia[i].total;
-          if(this.state.perfil.sucursal=== '0'){
-            this.setState({totald: tot0})
+    if(this.state.perfil.gerente ===  true){
+      for(let i = 0; i<this.state.ListaVentasDia.length;i++) {
+        if(this.state.ListaVentasDia[i].vigencia === "Vigente"){
+          if(this.state.ListaVentasDia[i].sucursal === '0'){
+            tot0 = tot0 + this.state.ListaVentasDia[i].total;
+          }
+          else if(this.state.ListaVentasDia[i].sucursal === '1'){
+            tot1 = tot1 + this.state.ListaVentasDia[i].total;
+          }
+          else if(this.state.ListaVentasDia[i].sucursal === '2'){
+            tot2 = tot2 + this.state.ListaVentasDia[i].total;
           }
         }
-        else if(this.state.ListaVentasDia[i].sucursal === '1'){
-          tot1 = tot1 + this.state.ListaVentasDia[i].total;
-          if(this.state.perfil.sucursal=== '1'){
-            this.setState({totald: tot1})
+      }
+      this.setState({t1: tot0})
+      this.setState({t2: tot1})
+      this.setState({t3: tot2})
+    }else{
+      for(let i = 0; i<this.state.ListaVentasDia.length;i++) {
+        if(this.state.ListaVentasDia[i].vigencia === "Vigente"){
+          if(this.state.ListaVentasDia[i].sucursal === '0'){
+            tot0 = tot0 + this.state.ListaVentasDia[i].total;
+            if(this.state.perfil.sucursal=== '0'){
+              this.setState({totald: tot0})
+            }
           }
-        }
-        else if(this.state.ListaVentasDia[i].sucursal === '2'){
-          tot2 = tot2 + this.state.ListaVentasDia[i].total;
-          if(this.state.perfil.sucursal=== '2'){
-            this.setState({totald: tot2})
+          else if(this.state.ListaVentasDia[i].sucursal === '1'){
+            tot1 = tot1 + this.state.ListaVentasDia[i].total;
+            if(this.state.perfil.sucursal=== '1'){
+              this.setState({totald: tot1})
+            }
+          }
+          else if(this.state.ListaVentasDia[i].sucursal === '2'){
+            tot2 = tot2 + this.state.ListaVentasDia[i].total;
+            if(this.state.perfil.sucursal=== '2'){
+              this.setState({totald: tot2})
+            }
           }
         }
       }
@@ -496,29 +417,50 @@ export default class Ventas extends React.Component {
   handleChange2(event, newValue) {
     this.setState({tabIndex: newValue, estado:null, estadosucursal:null, completado:null, descuento:null});
   }
-
+  handleChange3(event, newValue) {
+    this.setState({tabIndexSucursal: newValue, estado:null, estadosucursal:null, completado:null, descuento:null, priv_dios: false});
+  }
   CalcularTotal3(){
     let tot0 = 0;
     let tot1 = 0;
     let tot2 = 0;
-    for(let i = 0; i<this.state.ListaVentasPeriodo.length;i++) {
-      if(this.state.ListaVentasPeriodo[i].vigencia == "Vigente"){
-        if(this.state.ListaVentasPeriodo[i].sucursal === '0'){
-          tot0 = tot0 + this.state.ListaVentasPeriodo[i].total;
-          if(this.state.perfil.sucursal=== '0'){
-            this.setState({totalp: tot0})
+    if(this.state.perfil.gerente ===  true){
+      for(let i = 0; i<this.state.ListaVentasPeriodo.length;i++) {
+        if(this.state.ListaVentasPeriodo[i].vigencia === "Vigente"){
+          if(this.state.ListaVentasPeriodo[i].sucursal === '0'){
+            tot0 = tot0 + this.state.ListaVentasPeriodo[i].total;
+          }
+          else if(this.state.ListaVentasPeriodo[i].sucursal === '1'){
+            tot1 = tot1 + this.state.ListaVentasPeriodo[i].total;
+          }
+          else if(this.state.ListaVentasPeriodo[i].sucursal === '2'){
+            tot2 = tot2 + this.state.ListaVentasPeriodo[i].total;
           }
         }
-        else if(this.state.ListaVentasPeriodo[i].sucursal === '1'){
-          tot1 = tot1 + this.state.ListaVentasPeriodo[i].total;
-          if(this.state.perfil.sucursal=== '1'){
-            this.setState({totalp: tot1})
+      }
+      this.setState({tp1: tot0})
+      this.setState({tp2: tot1})
+      this.setState({tp3: tot2})
+    }else{
+      for(let i = 0; i<this.state.ListaVentasPeriodo.length;i++) {
+        if(this.state.ListaVentasPeriodo[i].vigencia === "Vigente"){
+          if(this.state.ListaVentasPeriodo[i].sucursal === '0'){
+            tot0 = tot0 + this.state.ListaVentasPeriodo[i].total;
+            if(this.state.perfil.sucursal=== '0'){
+              this.setState({totalp: tot0})
+            }
           }
-        }
-        else if(this.state.ListaVentasPeriodo[i].sucursal === '2'){
-          tot2 = tot2 + this.state.ListaVentasPeriodo[i].total;
-          if(this.state.perfil.sucursal=== '2'){
-            this.setState({totalp: tot2})
+          else if(this.state.ListaVentasPeriodo[i].sucursal === '1'){
+            tot1 = tot1 + this.state.ListaVentasPeriodo[i].total;
+            if(this.state.perfil.sucursal=== '1'){
+              this.setState({totalp: tot1})
+            }
+          }
+          else if(this.state.ListaVentasPeriodo[i].sucursal === '2'){
+            tot2 = tot2 + this.state.ListaVentasPeriodo[i].total;
+            if(this.state.perfil.sucursal=== '2'){
+              this.setState({totalp: tot2})
+            }
           }
         }
       }
@@ -556,155 +498,563 @@ export default class Ventas extends React.Component {
     let aviso = <Alert severity="info">¡Para anular una boleta haz click en el basurero!</Alert>
     if(this.state.ready === true){
       let nombresucursal;
-        if(this.state.perfil.sucursal === '0') { nombresucursal = 'Lo Castillo'}
-        if(this.state.perfil.sucursal === '1') { nombresucursal = 'Apumanque'}
-        if(this.state.perfil.sucursal === '2') { nombresucursal = 'Vitacura'}
-      if(this.state.priv_dios === false){
-        return (
-          <div>
-            <Card>
-              <AppBar position="static" color="primary" style={styles.Barrita}>
-                <Tabs value={this.state.tabIndex} onChange={this.handleChange2} aria-label="simple tabs example">
-                  <Tab label="Boletas Día" {...a11yProps(0)} />
-                  <Tab label="Boletas por Periodo" {...a11yProps(1)} />
-                </Tabs>
-              </AppBar>
-                <TabPanel value={this.state.tabIndex} index={0}>
-                {aviso}
-                  <div style={styles.root}>
-                          <MaterialTable
-                              title={nombresucursal}
-                              options={{filtering: true}}
-                              columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
-                                        {title: 'Tipo', field: 'tipo'},
-                                        { title: 'Fecha', field: 'fecha', type: 'date'},
-                                        {title: 'Vendedor', field: 'vendedor'},
-                                        { title: 'Cliente', field: 'cliente_nombre'},
-                                        { title: 'Telefono', field: 'cliente_telefono'},
-                                        { title: 'Descuento', field: 'descuento'},
-                                        { title: 'Vigencia', field: 'vigencia' },
-                                        {title: 'Total', field:'total'}]}
-                              data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
-                              editable={{
-                                  onRowDelete: (oldData) =>
-                                    new Promise((resolve) => {
-                                      setTimeout(() => {
-                                        resolve();
-                                        this.ActualizarVentasDia();
-                                      }, 2000)
-                                      this.EliminarBoleta(oldData)
-                                    }),
-                              }}
-                            />
-                            <h4>
-                            {"\n"} <br />
-                            Total recaudado: ${this.state.totald}
-                            </h4>
-                  </div>
-                  {mensaje}
-                </TabPanel>
-                <TabPanel value={this.state.tabIndex} index={1}>
-                  <h4>Desde</h4>
-                  <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
-                  <h4>Hasta</h4>
-                  <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
-                  <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
-                    Listo
-                  </Button>
-                </TabPanel>
+      if(this.state.perfil.sucursal === '0') { nombresucursal = 'Lo Castillo'}
+      if(this.state.perfil.sucursal === '1') { nombresucursal = 'Apumanque'}
+      if(this.state.perfil.sucursal === '2') { nombresucursal = 'Vitacura'}
+
+      if(this.state.gerente === true){
+        if(this.state.priv_dios === false){
+            return (
+              <div>
+                <Card>
+                  <AppBar position="static" color="primary" style={styles.Barrita}>
+                    <Tabs value={this.state.tabIndexSucursal} onChange={this.handleChange3} aria-label="simple tabs example">
+                      <Tab label="Lo Castillo" {...a11yProps('0')} />
+                      <Tab label="Apumanque" {...a11yProps('1')} />
+                      <Tab label="Vitacura" {...a11yProps('2')} />
+                    </Tabs>
+                  </AppBar>
+                  <AppBar position="static" color="primary" style={styles.Barrita}>
+                    <Tabs value={this.state.tabIndex} onChange={this.handleChange2} aria-label="simple tabs example">
+                      <Tab label="Boletas Día" {...a11yProps(0)} />
+                      <Tab label="Boletas por Periodo" {...a11yProps(1)} />
+                    </Tabs>
+                  </AppBar>
+                    <TabPanel value={this.state.tabIndexSucursal} index={'0'}>
+                    <TabPanel value={this.state.tabIndex} index={0}>
+                    {aviso}
+                      <div style={styles.root}>
+                              <MaterialTable
+                                  title={'Lo Castillo'}
+                                  options={{filtering: true}}
+                                  columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
+                                            {title: 'Tipo', field: 'tipo'},
+                                            { title: 'Fecha', field: 'fecha', type: 'date'},
+                                            {title: 'Vendedor', field: 'vendedor'},
+                                            { title: 'Cliente', field: 'cliente_nombre'},
+                                            { title: 'Telefono', field: 'cliente_telefono'},
+                                            { title: 'Descuento', field: 'descuento'},
+                                            { title: 'Vigencia', field: 'vigencia' },
+                                            {title: 'Total', field:'total'}]}
+                                  data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === '0')}
+                                  editable={{
+                                      onRowDelete: (oldData) =>
+                                        new Promise((resolve) => {
+                                          setTimeout(() => {
+                                            resolve();
+                                            this.ActualizarVentasDia();
+                                          }, 2000)
+                                          this.EliminarBoleta(oldData)
+                                        }),
+                                  }}
+                                />
+                                <h4>
+                                {"\n"} <br />
+                                Total recaudado: ${this.state.t1}
+                                </h4>
+                      </div>
+                      {mensaje}
+                    </TabPanel>
+                    <TabPanel value={this.state.tabIndex} index={1}>
+                      <h4>Desde</h4>
+                      <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
+                      <h4>Hasta</h4>
+                      <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
+                      <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
+                        Listo
+                      </Button>
+                    </TabPanel>
+                    </TabPanel>
+                    <TabPanel value={this.state.tabIndexSucursal} index={'1'}>
+                    <TabPanel value={this.state.tabIndex} index={0}>
+                    {aviso}
+                      <div style={styles.root}>
+                              <MaterialTable
+                                  title={'Apumanque'}
+                                  options={{filtering: true}}
+                                  columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
+                                            {title: 'Tipo', field: 'tipo'},
+                                            { title: 'Fecha', field: 'fecha', type: 'date'},
+                                            {title: 'Vendedor', field: 'vendedor'},
+                                            { title: 'Cliente', field: 'cliente_nombre'},
+                                            { title: 'Telefono', field: 'cliente_telefono'},
+                                            { title: 'Descuento', field: 'descuento'},
+                                            { title: 'Vigencia', field: 'vigencia' },
+                                            {title: 'Total', field:'total'}]}
+                                  data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === '1')}
+                                  editable={{
+                                      onRowDelete: (oldData) =>
+                                        new Promise((resolve) => {
+                                          setTimeout(() => {
+                                            resolve();
+                                            this.ActualizarVentasDia();
+                                          }, 2000)
+                                          this.EliminarBoleta(oldData)
+                                        }),
+                                  }}
+                                />
+                                <h4>
+                                {"\n"} <br />
+                                Total recaudado: ${this.state.t2}
+                                </h4>
+                      </div>
+                      {mensaje}
+                    </TabPanel>
+                    <TabPanel value={this.state.tabIndex} index={1}>
+                      <h4>Desde</h4>
+                      <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
+                      <h4>Hasta</h4>
+                      <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
+                      <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
+                        Listo
+                      </Button>
+                    </TabPanel>
+                    </TabPanel>
+                    <TabPanel value={this.state.tabIndexSucursal} index={'2'}>
+                    <TabPanel value={this.state.tabIndex} index={0}>
+                    {aviso}
+                      <div style={styles.root}>
+                              <MaterialTable
+                                  title={'Vitacura'}
+                                  options={{filtering: true}}
+                                  columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
+                                            {title: 'Tipo', field: 'tipo'},
+                                            { title: 'Fecha', field: 'fecha', type: 'date'},
+                                            {title: 'Vendedor', field: 'vendedor'},
+                                            { title: 'Cliente', field: 'cliente_nombre'},
+                                            { title: 'Telefono', field: 'cliente_telefono'},
+                                            { title: 'Descuento', field: 'descuento'},
+                                            { title: 'Vigencia', field: 'vigencia' },
+                                            {title: 'Total', field:'total'}]}
+                                  data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === '2')}
+                                  editable={{
+                                      onRowDelete: (oldData) =>
+                                        new Promise((resolve) => {
+                                          setTimeout(() => {
+                                            resolve();
+                                            this.ActualizarVentasDia();
+                                          }, 2000)
+                                          this.EliminarBoleta(oldData)
+                                        }),
+                                  }}
+                                />
+                                <h4>
+                                {"\n"} <br />
+                                Total recaudado: ${this.state.t3}
+                                </h4>
+                      </div>
+                      {mensaje}
+                    </TabPanel>
+                    <TabPanel value={this.state.tabIndex} index={1}>
+                      <h4>Desde</h4>
+                      <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
+                      <h4>Hasta</h4>
+                      <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
+                      <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
+                        Listo
+                      </Button>
+                    </TabPanel>
+                    </TabPanel>
+                    <Copyright/>
+                </Card>
+              </div>
+            );
+        }else{
+          return (
+            <div>
+              <Card>
+                <AppBar position="static" color="primary" style={styles.Barrita}>
+                  <Tabs value={this.state.tabIndexSucursal} onChange={this.handleChange3} aria-label="simple tabs example">
+                    <Tab label="Lo Castillo" {...a11yProps('0')} />
+                    <Tab label="Apumanque" {...a11yProps('1')} />
+                    <Tab label="Vitacura" {...a11yProps('2')} />
+                  </Tabs>
+                </AppBar>
+                <AppBar position="static" color="primary" style={styles.Barrita}>
+                  <Tabs value={this.state.tabIndex} onChange={this.handleChange2} aria-label="simple tabs example">
+                    <Tab label="Boletas Día" {...a11yProps(0)} />
+                    <Tab label="Boletas por Periodo" {...a11yProps(1)} />
+                  </Tabs>
+                </AppBar>
+                  <TabPanel value={this.state.tabIndexSucursal} index={'0'}
+                  <TabPanel value={this.state.tabIndex} index={0}>
+                  {aviso}
+                    <div style={styles.root}>
+                            <MaterialTable
+                                title={'Lo Castillo'}
+                                options={{filtering: true}}
+                                columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
+                                          {title: 'Tipo', field: 'tipo'},
+                                          { title: 'Fecha', field: 'fecha', type: 'date'},
+                                          {title: 'Vendedor', field: 'vendedor'},
+                                          { title: 'Cliente', field: 'cliente_nombre'},
+                                          { title: 'Telefono', field: 'cliente_telefono'},
+                                          { title: 'Descuento', field: 'descuento'},
+                                          { title: 'Vigencia', field: 'vigencia' },
+                                          {title: 'Total', field:'total'}]}
+                                data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === '0')}
+                                editable={{
+                                    onRowDelete: (oldData) =>
+                                      new Promise((resolve) => {
+                                        setTimeout(() => {
+                                          resolve();
+                                          this.ActualizarVentasDia();
+                                        }, 2000)
+                                        this.EliminarBoleta(oldData)
+                                      }),
+                                }}
+                              />
+                              <h4>
+                              {"\n"} <br />
+                              Total recaudado: ${this.state.t1}
+                              </h4>
+                    </div>
+                    {mensaje}
+                  </TabPanel>
+                  <TabPanel value={this.state.tabIndex} index={1}>
+                    <h4>Desde</h4>
+                    <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
+                    <h4>Hasta</h4>
+                    <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
+                    <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
+                      Listo
+                    </Button>
+                    {aviso}
+                    <MaterialTable
+                        title={'Lo Castillo'}
+                        options={{filtering: true}}
+                        columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
+                                  {title: 'Tipo', field: 'tipo'},
+                                  { title: 'Fecha', field: 'fecha', type: 'date'},
+                                  {title: 'Vendedor', field: 'vendedor'},
+                                  { title: 'Cliente', field: 'cliente_nombre'},
+                                  { title: 'Telefono', field: 'cliente_telefono'},
+                                  { title: 'Descuento', field: 'descuento'},
+                                  { title: 'Vigencia', field: 'vigencia' },
+                                  {title: 'Total', field:'total'}]}
+                        data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === '0')}
+                        editable={{
+                            onRowDelete: (oldData) =>
+                            new Promise((resolve) => {
+                              setTimeout(() => {
+                                resolve();
+                                this.ActualizarVentasPeriodo();
+                              }, 2000)
+                              this.EliminarBoleta(oldData)
+                            }),
+                          }}
+                      />
+                      <h4>
+                      {"\n"} <br />
+                      Total recaudado: ${this.state.tp1}
+                      </h4>
+                      {mensaje}
+                  </TabPanel>
+                  </TabPanel>
+                  <TabPanel value={this.state.tabIndexSucursal} index={'1'}
+                  <TabPanel value={this.state.tabIndex} index={0}>
+                  {aviso}
+                    <div style={styles.root}>
+                            <MaterialTable
+                                title={'Apumanque'}
+                                options={{filtering: true}}
+                                columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
+                                          {title: 'Tipo', field: 'tipo'},
+                                          { title: 'Fecha', field: 'fecha', type: 'date'},
+                                          {title: 'Vendedor', field: 'vendedor'},
+                                          { title: 'Cliente', field: 'cliente_nombre'},
+                                          { title: 'Telefono', field: 'cliente_telefono'},
+                                          { title: 'Descuento', field: 'descuento'},
+                                          { title: 'Vigencia', field: 'vigencia' },
+                                          {title: 'Total', field:'total'}]}
+                                data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === '1')}
+                                editable={{
+                                    onRowDelete: (oldData) =>
+                                      new Promise((resolve) => {
+                                        setTimeout(() => {
+                                          resolve();
+                                          this.ActualizarVentasDia();
+                                        }, 2000)
+                                        this.EliminarBoleta(oldData)
+                                      }),
+                                }}
+                              />
+                              <h4>
+                              {"\n"} <br />
+                              Total recaudado: ${this.state.t2}
+                              </h4>
+                    </div>
+                    {mensaje}
+                  </TabPanel>
+                  <TabPanel value={this.state.tabIndex} index={1}>
+                    <h4>Desde</h4>
+                    <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
+                    <h4>Hasta</h4>
+                    <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
+                    <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
+                      Listo
+                    </Button>
+                    {aviso}
+                    <MaterialTable
+                        title={'Apumanque'}
+                        options={{filtering: true}}
+                        columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
+                                  {title: 'Tipo', field: 'tipo'},
+                                  { title: 'Fecha', field: 'fecha', type: 'date'},
+                                  {title: 'Vendedor', field: 'vendedor'},
+                                  { title: 'Cliente', field: 'cliente_nombre'},
+                                  { title: 'Telefono', field: 'cliente_telefono'},
+                                  { title: 'Descuento', field: 'descuento'},
+                                  { title: 'Vigencia', field: 'vigencia' },
+                                  {title: 'Total', field:'total'}]}
+                        data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === '1')}
+                        editable={{
+                            onRowDelete: (oldData) =>
+                            new Promise((resolve) => {
+                              setTimeout(() => {
+                                resolve();
+                                this.ActualizarVentasPeriodo();
+                              }, 2000)
+                              this.EliminarBoleta(oldData)
+                            }),
+                          }}
+                      />
+                      <h4>
+                      {"\n"} <br />
+                      Total recaudado: ${this.state.tp2}
+                      </h4>
+                      {mensaje}
+                  </TabPanel>
+                  </TabPanel>
+                  <TabPanel value={this.state.tabIndexSucursal} index={'0'}
+                  <TabPanel value={this.state.tabIndex} index={0}>
+                  {aviso}
+                    <div style={styles.root}>
+                            <MaterialTable
+                                title={'Vitacura'}
+                                options={{filtering: true}}
+                                columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
+                                          {title: 'Tipo', field: 'tipo'},
+                                          { title: 'Fecha', field: 'fecha', type: 'date'},
+                                          {title: 'Vendedor', field: 'vendedor'},
+                                          { title: 'Cliente', field: 'cliente_nombre'},
+                                          { title: 'Telefono', field: 'cliente_telefono'},
+                                          { title: 'Descuento', field: 'descuento'},
+                                          { title: 'Vigencia', field: 'vigencia' },
+                                          {title: 'Total', field:'total'}]}
+                                data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === '2')}
+                                editable={{
+                                    onRowDelete: (oldData) =>
+                                      new Promise((resolve) => {
+                                        setTimeout(() => {
+                                          resolve();
+                                          this.ActualizarVentasDia();
+                                        }, 2000)
+                                        this.EliminarBoleta(oldData)
+                                      }),
+                                }}
+                              />
+                              <h4>
+                              {"\n"} <br />
+                              Total recaudado: ${this.state.t3}
+                              </h4>
+                    </div>
+                    {mensaje}
+                  </TabPanel>
+                  <TabPanel value={this.state.tabIndex} index={1}>
+                    <h4>Desde</h4>
+                    <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
+                    <h4>Hasta</h4>
+                    <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
+                    <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
+                      Listo
+                    </Button>
+                    {aviso}
+                    <MaterialTable
+                        title={'Vitacura'}
+                        options={{filtering: true}}
+                        columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
+                                  {title: 'Tipo', field: 'tipo'},
+                                  { title: 'Fecha', field: 'fecha', type: 'date'},
+                                  {title: 'Vendedor', field: 'vendedor'},
+                                  { title: 'Cliente', field: 'cliente_nombre'},
+                                  { title: 'Telefono', field: 'cliente_telefono'},
+                                  { title: 'Descuento', field: 'descuento'},
+                                  { title: 'Vigencia', field: 'vigencia' },
+                                  {title: 'Total', field:'total'}]}
+                        data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === '2')}
+                        editable={{
+                            onRowDelete: (oldData) =>
+                            new Promise((resolve) => {
+                              setTimeout(() => {
+                                resolve();
+                                this.ActualizarVentasPeriodo();
+                              }, 2000)
+                              this.EliminarBoleta(oldData)
+                            }),
+                          }}
+                      />
+                      <h4>
+                      {"\n"} <br />
+                      Total recaudado: ${this.state.tp3}
+                      </h4>
+                      {mensaje}
+                  </TabPanel>
+                  </TabPanel>
                 <Copyright/>
-            </Card>
-          </div>
-        );
+              </Card>
+            </div>
+          );
+      }
       }else{
-      return (
-        <div>
-          <Card>
-            <AppBar position="static" color="primary" style={styles.Barrita}>
-              <Tabs value={this.state.tabIndex} onChange={this.handleChange2} aria-label="simple tabs example">
-                <Tab label="Boletas Día" {...a11yProps(0)} />
-                <Tab label="Boletas por Periodo" {...a11yProps(1)} />
-              </Tabs>
-            </AppBar>
-              <TabPanel value={this.state.tabIndex} index={0}>
-              {aviso}
-                <div style={styles.root}>
-                        <MaterialTable
-                            title={nombresucursal}
-                            options={{filtering: true}}
-                            columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
-                                      {title: 'Tipo', field: 'tipo'},
-                                      { title: 'Fecha', field: 'fecha', type: 'date'},
-                                      {title: 'Vendedor', field: 'vendedor'},
-                                      { title: 'Cliente', field: 'cliente_nombre'},
-                                      { title: 'Telefono', field: 'cliente_telefono'},
-                                      { title: 'Descuento', field: 'descuento'},
-                                      { title: 'Vigencia', field: 'vigencia' },
-                                      {title: 'Total', field:'total'}]}
-                            data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
-                            editable={{
-                                onRowDelete: (oldData) =>
-                                  new Promise((resolve) => {
-                                    setTimeout(() => {
-                                      resolve();
-                                      this.ActualizarVentasDia();
-                                    }, 2000)
-                                    this.EliminarBoleta(oldData)
-                                  }),
-                            }}
-                          />
-                          <h4>
-                          {"\n"} <br />
-                          Total recaudado: ${this.state.totald}
-                          </h4>
-                </div>
-                {mensaje}
-              </TabPanel>
-              <TabPanel value={this.state.tabIndex} index={1}>
-                <h4>Desde</h4>
-                <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
-                <h4>Hasta</h4>
-                <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
-                <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
-                  Listo
-                </Button>
-                {aviso}
-                <MaterialTable
-                    title={nombresucursal}
-                    options={{filtering: true}}
-                    columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
-                              {title: 'Tipo', field: 'tipo'},
-                              { title: 'Fecha', field: 'fecha', type: 'date'},
-                              {title: 'Vendedor', field: 'vendedor'},
-                              { title: 'Cliente', field: 'cliente_nombre'},
-                              { title: 'Telefono', field: 'cliente_telefono'},
-                              { title: 'Descuento', field: 'descuento'},
-                              { title: 'Vigencia', field: 'vigencia' },
-                              {title: 'Total', field:'total'}]}
-                    data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.sucursal)}
-                    editable={{
-                        onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                          setTimeout(() => {
-                            resolve();
-                            this.ActualizarVentasPeriodo();
-                          }, 2000)
-                          this.EliminarBoleta(oldData)
-                        }),
-                      }}
-                  />
-                  <h4>
-                  {"\n"} <br />
-                  Total recaudado: ${this.state.totalp}
-                  </h4>
-                  {mensaje}
-              </TabPanel>
-            <Copyright/>
-          </Card>
-        </div>
-      );
-    }
-  }else if(this.state.ready === false) {
+        if(this.state.priv_dios === false){
+
+            return (
+              <div>
+                <Card>
+                  <AppBar position="static" color="primary" style={styles.Barrita}>
+                    <Tabs value={this.state.tabIndex} onChange={this.handleChange2} aria-label="simple tabs example">
+                      <Tab label="Boletas Día" {...a11yProps(0)} />
+                      <Tab label="Boletas por Periodo" {...a11yProps(1)} />
+                    </Tabs>
+                  </AppBar>
+                    <TabPanel value={this.state.tabIndex} index={0}>
+                    {aviso}
+                      <div style={styles.root}>
+                              <MaterialTable
+                                  title={nombresucursal}
+                                  options={{filtering: true}}
+                                  columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
+                                            {title: 'Tipo', field: 'tipo'},
+                                            { title: 'Fecha', field: 'fecha', type: 'date'},
+                                            {title: 'Vendedor', field: 'vendedor'},
+                                            { title: 'Cliente', field: 'cliente_nombre'},
+                                            { title: 'Telefono', field: 'cliente_telefono'},
+                                            { title: 'Descuento', field: 'descuento'},
+                                            { title: 'Vigencia', field: 'vigencia' },
+                                            {title: 'Total', field:'total'}]}
+                                  data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
+                                  editable={{
+                                      onRowDelete: (oldData) =>
+                                        new Promise((resolve) => {
+                                          setTimeout(() => {
+                                            resolve();
+                                            this.ActualizarVentasDia();
+                                          }, 2000)
+                                          this.EliminarBoleta(oldData)
+                                        }),
+                                  }}
+                                />
+                                <h4>
+                                {"\n"} <br />
+                                Total recaudado: ${this.state.totald}
+                                </h4>
+                      </div>
+                      {mensaje}
+                    </TabPanel>
+                    <TabPanel value={this.state.tabIndex} index={1}>
+                      <h4>Desde</h4>
+                      <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
+                      <h4>Hasta</h4>
+                      <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
+                      <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
+                        Listo
+                      </Button>
+                    </TabPanel>
+                    <Copyright/>
+                </Card>
+              </div>
+            );
+        }else{
+          return (
+            <div>
+              <Card>
+                <AppBar position="static" color="primary" style={styles.Barrita}>
+                  <Tabs value={this.state.tabIndex} onChange={this.handleChange2} aria-label="simple tabs example">
+                    <Tab label="Boletas Día" {...a11yProps(0)} />
+                    <Tab label="Boletas por Periodo" {...a11yProps(1)} />
+                  </Tabs>
+                </AppBar>
+                  <TabPanel value={this.state.tabIndex} index={0}>
+                  {aviso}
+                    <div style={styles.root}>
+                            <MaterialTable
+                                title={nombresucursal}
+                                options={{filtering: true}}
+                                columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
+                                          {title: 'Tipo', field: 'tipo'},
+                                          { title: 'Fecha', field: 'fecha', type: 'date'},
+                                          {title: 'Vendedor', field: 'vendedor'},
+                                          { title: 'Cliente', field: 'cliente_nombre'},
+                                          { title: 'Telefono', field: 'cliente_telefono'},
+                                          { title: 'Descuento', field: 'descuento'},
+                                          { title: 'Vigencia', field: 'vigencia' },
+                                          {title: 'Total', field:'total'}]}
+                                data={this.state.ListaVentasDia.filter(({sucursal}) => sucursal === this.state.perfil.sucursal)}
+                                editable={{
+                                    onRowDelete: (oldData) =>
+                                      new Promise((resolve) => {
+                                        setTimeout(() => {
+                                          resolve();
+                                          this.ActualizarVentasDia();
+                                        }, 2000)
+                                        this.EliminarBoleta(oldData)
+                                      }),
+                                }}
+                              />
+                              <h4>
+                              {"\n"} <br />
+                              Total recaudado: ${this.state.totald}
+                              </h4>
+                    </div>
+                    {mensaje}
+                  </TabPanel>
+                  <TabPanel value={this.state.tabIndex} index={1}>
+                    <h4>Desde</h4>
+                    <DatePicker onChange={this.onChange} format={"YYYY-MM-DD"} />
+                    <h4>Hasta</h4>
+                    <DatePicker onChange={this.onChange2} format={"YYYY-MM-DD"} />
+                    <Button style={{margin: 5 }} onClick={this.ActualizarVentasPeriodo}>
+                      Listo
+                    </Button>
+                    {aviso}
+                    <MaterialTable
+                        title={nombresucursal}
+                        options={{filtering: true}}
+                        columns={ [{ title: 'Numero', field: 'numero', type: 'numeric'},
+                                  {title: 'Tipo', field: 'tipo'},
+                                  { title: 'Fecha', field: 'fecha', type: 'date'},
+                                  {title: 'Vendedor', field: 'vendedor'},
+                                  { title: 'Cliente', field: 'cliente_nombre'},
+                                  { title: 'Telefono', field: 'cliente_telefono'},
+                                  { title: 'Descuento', field: 'descuento'},
+                                  { title: 'Vigencia', field: 'vigencia' },
+                                  {title: 'Total', field:'total'}]}
+                        data={this.state.ListaVentasPeriodo.filter(({sucursal}) => sucursal === this.state.sucursal)}
+                        editable={{
+                            onRowDelete: (oldData) =>
+                            new Promise((resolve) => {
+                              setTimeout(() => {
+                                resolve();
+                                this.ActualizarVentasPeriodo();
+                              }, 2000)
+                              this.EliminarBoleta(oldData)
+                            }),
+                          }}
+                      />
+                      <h4>
+                      {"\n"} <br />
+                      Total recaudado: ${this.state.totalp}
+                      </h4>
+                      {mensaje}
+                  </TabPanel>
+                <Copyright/>
+              </Card>
+            </div>
+          );
+      }
+      }
+    }else if(this.state.ready === false) {
     return (
       <div>
         <Card>

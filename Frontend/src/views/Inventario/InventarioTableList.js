@@ -10,10 +10,8 @@ import CardBody from "components/Card/CardBody.js";
 import Alert from '@material-ui/lab/Alert';
 import { Grid } from '@material-ui/core';
 import Link from '@material-ui/core/Link';
-import {  Transfer,
-          Button,
-          Tag,
-          Table, DatePicker } from 'antd';
+import {  Button
+          , DatePicker } from 'antd';
 
 const styles = {
   cardCategoryWhite: {
@@ -203,9 +201,8 @@ export default class InventarioTableList extends React.Component {
 
   AgregarProducto(newData) {
     let regex = new RegExp("^[ñÑ a-z A-Z]+$");
-    let regex1 = new RegExp("^[ñÑ a-z A-Z 0-9]+$");
     if(regex.test(newData.tipo) && regex.test(newData.material) && regex.test(newData.piedra)){
-      if(newData.codigo.toString().indexOf('.') == -1 && newData.precio.toString().indexOf('.') == -1){
+      if(newData.codigo.toString().indexOf('.') === -1 && newData.precio.toString().indexOf('.') === -1){
         fetch('/agregar_prod', {
         method: 'POST',
         headers: {
@@ -247,7 +244,7 @@ export default class InventarioTableList extends React.Component {
   EditarProducto(newData) {
     let regex = new RegExp("^[a-z A-Z]+$");
     if(regex.test(newData.material) && regex.test(newData.tipo) && regex.test(newData.piedra)){
-      if(newData.codigo.toString().indexOf('.') == -1 && newData.precio.toString().indexOf('.') == -1){
+      if(newData.codigo.toString().indexOf('.') === -1 && newData.precio.toString().indexOf('.') === -1){
         fetch('/editar_prod/' + newData._id, {
         method: 'POST',
         headers: {
@@ -346,7 +343,7 @@ export default class InventarioTableList extends React.Component {
         if(this.state.perfil.sucursal === '0') { nombresucursal = 'Lo Castillo'}
         if(this.state.perfil.sucursal === '1') { nombresucursal = 'Apumanque'}
         if(this.state.perfil.sucursal === '2') { nombresucursal = 'Vitacura'}
-      if(this.state.periodo == false){
+      if(this.state.periodo === false){
         if(this.state.perfil.gestion_inventario === true){
           return (
             <div style={styles.root}>

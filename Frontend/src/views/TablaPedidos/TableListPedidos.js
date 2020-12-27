@@ -16,7 +16,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import {  Transfer,
           Button,
           Tag,
-          Table, DatePicker } from 'antd';
+          Table } from 'antd';
 
 const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
   <Transfer {...restProps} showSelectAll={false}>
@@ -273,8 +273,8 @@ export default class InventarioTableList extends React.Component {
     let regex = new RegExp("^[ñÑ a-z A-Z]+$");
     let regex3 = new RegExp("^[0-9]+$");
     if(regex.test(this.state.cliente_nombre)){
-      if(this.state.totalnew > 0 && this.state.totalnew.toString().indexOf('.') == -1){
-        if((regex3.test(this.state.cliente_telefono) && (this.state.cliente_telefono).length == 9) || this.state.cliente_telefono == "0"){
+      if(this.state.totalnew > 0 && this.state.totalnew.toString().indexOf('.') === -1){
+        if((regex3.test(this.state.cliente_telefono) && (this.state.cliente_telefono).length === 9) || this.state.cliente_telefono === "0"){
           fetch('/agregar_pedido', {
           method: 'POST',
           headers: {
@@ -318,7 +318,7 @@ export default class InventarioTableList extends React.Component {
     let regex = new RegExp("^[ñÑ a-z A-Z]+$");
     let regex2 = new RegExp("^[0-9]+$");
     if(regex.test(newData.cliente_nombre)){
-      if((regex2.test(newData.cliente_telefono) && (newData.cliente_telefono).length == 9) || newData.cliente_telefono == "0"){
+      if((regex2.test(newData.cliente_telefono) && (newData.cliente_telefono).length === 9) || newData.cliente_telefono === "0"){
         fetch('/editar_pedido/' + newData._id, {
         method: 'POST',
         headers: {
@@ -444,8 +444,8 @@ export default class InventarioTableList extends React.Component {
   }
 
   imprimir = () => {
-    if(this.state.targetKeys.length ==1){
-      if(this.state.targetKeys[0].total >= this.state.abono2 && this.state.abono2.toString().indexOf('.') == -1){
+    if(this.state.targetKeys.length ===1){
+      if(this.state.targetKeys[0].total >= this.state.abono2 && this.state.abono2.toString().indexOf('.') === -1){
         if(this.state.abono2 > 0){
           fetch('/pagar_pedido', {
             method: 'POST',

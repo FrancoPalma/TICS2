@@ -405,6 +405,7 @@ export default class InventarioTableList extends React.Component {
                                 {title: 'Gestión Empleados', field: 'gestion_empleado', type:'boolean'},
                                 { title: 'Gestión Inventario', field: 'gestion_inventario', type:'boolean'},
                                 { title: 'Gestión Privilegios', field: 'gestion_privilegios', type:'boolean'},
+                                { title: 'Privilegio Gerente', field: 'gerente', type:'boolean'},
                                 { title: 'Descuento Permitido', field: 'descuento_permitido', type:'numeric'}]}
                       data={this.state.ListaEmpleados}
                       editable={{
@@ -436,6 +437,7 @@ export default class InventarioTableList extends React.Component {
                                 {title: 'Gestión Empleados', field: 'gestion_empleado', type:'boolean'},
                                 { title: 'Gestión Inventario', field: 'gestion_inventario', type:'boolean'},
                                 { title: 'Gestión Privilegios', field: 'gestion_privilegios', type:'boolean'},
+                                { title: 'Privilegio Gerente', field: 'gerente', type:'boolean'},
                                 { title: 'Descuento Permitido', field: 'descuento_permitido', type:'numeric'}]}
                       data={this.state.ListaEmpleados}
                       editable={{

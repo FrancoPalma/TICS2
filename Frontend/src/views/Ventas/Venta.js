@@ -557,7 +557,7 @@ export default class Ventas extends React.Component {
     let regex3 = new RegExp("^[0-9]+$");
     if(this.state.priv_descuento >= this.state.descuento && this.state.descuento >= 0 && this.state.descuento !== null && this.state.descuento !== ""){
       if(regex.test(this.state.cliente_nombre) && this.state.cliente_nombre.length > 0){
-        if((regex3.test(this.state.cliente_telefono) && (this.state.cliente_telefono).length == 9) || this.state.cliente_telefono == "0"){
+        if((regex3.test(this.state.cliente_telefono) && (this.state.cliente_telefono).length === 9) || this.state.cliente_telefono === "0"){
           if(this.state.targetKeys.length > 0){
             fetch('/crear_venta', {
               method: 'POST',
@@ -611,7 +611,6 @@ export default class Ventas extends React.Component {
   render() {
 
     let mensajeventa;
-    let mensajeventadia;
     if(this.state.completado === 1) {
       mensajeventa = <Alert severity="success">Venta completada</Alert>
     } else if(this.state.completado === 2) {
@@ -631,27 +630,6 @@ export default class Ventas extends React.Component {
       mensajeventa = <Alert severity="error">Excede el descuento maximo permitido.</Alert>
     }else if(this.state.descuento < 0){
       mensajeventa = <Alert severity="error">Valor inválido.</Alert>
-    }
-
-    if(this.state.estado === 1) {
-      mensajeventadia = <Alert severity="success">Hay ventas!</Alert>
-    } else if(this.state.estado === 2) {
-      mensajeventadia = <Alert severity="error">No se encontraron ventas :(</Alert>
-    }else if(this.state.estado === 3) {
-      mensajeventadia = <Alert severity="success">La venta se eliminó correctamente</Alert>
-    }else if(this.state.estado === 4) {
-      mensajeventadia = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
-    }
-
-    let mensajeventaperiodo;
-    if(this.state.estadosucursal === 1) {
-      mensajeventaperiodo = <Alert severity="success">Hay ventas!</Alert>
-    } else if(this.state.estadosucursal === 2) {
-      mensajeventaperiodo = <Alert severity="error">No se encontraron ventas :(</Alert>
-    }else if(this.state.estadosucursal === 3) {
-      mensajeventaperiodo = <Alert severity="success">La venta se eliminó correctamente</Alert>
-    }else if(this.state.estadosucursal === 4) {
-      mensajeventaperiodo = <Alert severity="error">Lo sentimos, hubo un error, vuelva a intentarlo</Alert>
     }
 
     if(this.state.ready === true){

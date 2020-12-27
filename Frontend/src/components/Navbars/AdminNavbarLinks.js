@@ -78,6 +78,7 @@ export default function AdminNavbarLinks() {
                     <MenuItem
                       onClick={handleCloseProfile}
                       className={classes.dropdownItem}
+                      href="/login"
                     >
                     <Link href="/login" color="error">
                       Cerrar Sesión
