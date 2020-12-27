@@ -145,7 +145,7 @@ export default class Ventas extends React.Component {
       priv_dios: false,
       priv_descuento: null,
       ListaVentasDia: null,
-      gerente: false,
+      ver_totales: false,
       totald: 0,
       totalp:0,
       estado:5,
@@ -176,7 +176,7 @@ export default class Ventas extends React.Component {
       vendedor: info.rut,
       sucursal: info.sucursal,
       priv_descuento: info.descuento_permitido,
-      gerente: info.gerente
+      ver_totales: info.ver_totales
     })
     console.log(info.sucursal)
   }
@@ -330,7 +330,7 @@ export default class Ventas extends React.Component {
     let tot0 = 0;
     let tot1 = 0;
     let tot2 = 0;
-    if(this.state.perfil.gerente ===  true){
+    if(this.state.perfil.ver_totales ===  true){
       for(let i = 0; i<this.state.ListaVentasDia.length;i++) {
         if(this.state.ListaVentasDia[i].vigencia === "Vigente"){
           if(this.state.ListaVentasDia[i].sucursal === '0'){
@@ -424,7 +424,7 @@ export default class Ventas extends React.Component {
     let tot0 = 0;
     let tot1 = 0;
     let tot2 = 0;
-    if(this.state.perfil.gerente ===  true){
+    if(this.state.perfil.ver_tota ===  true){
       for(let i = 0; i<this.state.ListaVentasPeriodo.length;i++) {
         if(this.state.ListaVentasPeriodo[i].vigencia === "Vigente"){
           if(this.state.ListaVentasPeriodo[i].sucursal === '0'){
@@ -502,7 +502,7 @@ export default class Ventas extends React.Component {
       if(this.state.perfil.sucursal === '1') { nombresucursal = 'Apumanque'}
       if(this.state.perfil.sucursal === '2') { nombresucursal = 'Vitacura'}
 
-      if(this.state.gerente === true){
+      if(this.state.ver_tota === true){
         if(this.state.priv_dios === false){
             return (
               <div>
