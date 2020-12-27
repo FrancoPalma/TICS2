@@ -37,6 +37,7 @@ const Usuario = require('../app/models/usuario');
         newUsuario.gestion_inventario = req.body.gestion_inventario;
         newUsuario.gestion_privilegios = req.body.gestion_privilegios;
         newUsuario.descuento_permitido = req.body.descuento_permitido;
+        newUsuario.ver_totales = req.body.ver_totales;
         newUsuario.save(function (err) {
           if (err) { throw err; }
           return done(null, newUsuario);
