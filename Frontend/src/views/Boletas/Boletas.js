@@ -521,10 +521,6 @@ export default class Ventas extends React.Component {
                     </Tabs>
                   </AppBar>
                     <TabPanel value={this.state.tabIndexSucursal} index={'0'}>
-                                            {title: 'Tipo', field: 'tipo'},
-                                            { title: 'Fecha', field: 'fecha', type: 'date'},
-                                            {title: 'Vendedor', field: 'vendedor'},
-                                            { title: 'Cliente', field: 'cliente_nombre'},
                       <TabPanel value={this.state.tabIndex} index={0}>
                       {aviso}
                         <div style={styles.root}>
